@@ -7,38 +7,27 @@ export default {
   theme: {
     extend: {
       colors: {
-        // 日式顏色系統
-        washi: {
-          cream: '#e6eed6',
-          light: '#dde2c6',
+        // 優雅的日式顏色系統 - 不使用漸層
+        kinari: '#f8f4e6',      // 生成り（米白色）- 主要背景
+        shirocha: '#ebe5d9',    // 白茶色 - 次要背景/卡片
+        moegi: {
+          DEFAULT: '#aacf53',   // 萌黃色 - 強調色
+          dark: '#8ba845',
+          light: '#c5e084',
         },
-        matcha: {
-          DEFAULT: '#bbc5aa',
-          light: '#c9d1b8',
-          dark: '#a8b298',
+        uguisu: {
+          DEFAULT: '#6c7a52',   // 鶯色（暗綠）- 文字
+          dark: '#4a5238',
+          light: '#8d9b73',
         },
-        vermillion: {
-          DEFAULT: '#a72608',
-          light: '#c93010',
-          dark: '#8a1f06',
+        beni: {
+          DEFAULT: '#c73e3a',   // 紅色 - 重點按鈕
+          dark: '#a32f2c',
+          light: '#d96662',
         },
         sumi: {
-          DEFAULT: '#090c02',
-          light: '#1a1d12',
-          lighter: '#2a2d22',
-        },
-        // 保留原有的 primary 作為備用
-        primary: {
-          50: '#f0e6ed',
-          100: '#e6eed6',
-          200: '#dde2c6',
-          300: '#bbc5aa',
-          400: '#a8b298',
-          500: '#a72608',
-          600: '#8a1f06',
-          700: '#6d1805',
-          800: '#501204',
-          900: '#330c02',
+          DEFAULT: '#2b2b2b',   // 墨色 - 深色文字
+          light: '#4a4a4a',
         },
       },
       animation: {

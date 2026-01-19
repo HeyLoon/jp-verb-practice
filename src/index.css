@@ -7,16 +7,17 @@
   line-height: 1.5;
   font-weight: 400;
 
-  /* 日式暗色模式顏色 */
-  --washi-cream: #e6eed6;
-  --washi-light: #dde2c6;
-  --matcha-green: #bbc5aa;
-  --vermillion: #a72608;
-  --sumi-black: #090c02;
+  /* 優雅的日式顏色 - 更柔和的配色 */
+  --kinari: #f8f4e6;        /* 生成り（米白色）- 主要背景 */
+  --shiro-cha: #ebe5d9;     /* 白茶色 - 次要背景 */
+  --moegi: #aacf53;         /* 萌黃色 - 強調色 */
+  --uguisu: #6c7a52;        /* 鶯色（暗綠）- 深色文字 */
+  --beni: #c73e3a;          /* 紅色 - 重點色 */
+  --sumi: #2b2b2b;          /* 墨色 - 深灰色文字
   
-  color-scheme: dark;
-  color: var(--washi-cream);
-  background-color: var(--sumi-black);
+  color-scheme: light;
+  color: var(--uguisu);
+  background-color: var(--kinari);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -28,7 +29,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: var(--sumi-black);
+  background-color: var(--kinari);
 }
 
 #root {
@@ -56,7 +57,7 @@ body {
 /* 正確答案的閃爍效果 */
 @keyframes flash-green {
   0%, 100% { background-color: transparent; }
-  50% { background-color: rgba(187, 197, 170, 0.3); }
+  50% { background-color: rgba(170, 207, 83, 0.2); }
 }
 
 .flash-correct {
@@ -73,21 +74,21 @@ html {
   scroll-behavior: smooth;
 }
 
-/* 自定義滾動條 - 日式暗色 */
+/* 自定義滾動條 - 優雅日式 */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1a1c15;
+  background: var(--shiro-cha);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--matcha-green);
+  background: var(--uguisu);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--washi-light);
+  background: var(--moegi);
 }
