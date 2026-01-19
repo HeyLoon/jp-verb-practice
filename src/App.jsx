@@ -14,7 +14,9 @@ import {
   X,
   ChevronDown,
   ChevronUp,
-  Info
+  Info,
+  ExternalLink,
+  Volume2
 } from 'lucide-react';
 import verbs from './data/verbs';
 import { 
@@ -27,6 +29,8 @@ import {
   FORM_NAMES,
   FORM_NAMES_EN
 } from './utils/conjugator';
+import { romajiToHiragana, containsJapanese } from './utils/romaji';
+import { speakJapanese, initSpeech } from './utils/speech';
 
 // === 教學資料 ===
 const conjugationGuides = {
@@ -616,14 +620,45 @@ function StatsBar({ currentStreak, maxStreak, totalCorrect, totalAttempts }) {
 // === 元件: 模式 A - 執行變化 ===
 function PerformMode({ question, onSubmit, feedback, userAnswer }) {
   const [inputValue, setInputValue] = useState('');
+  const [convertedValue, setConvertedValue] = useState('');
 
   useEffect(() => {
     setInputValue('');
+    setConvertedValue('');
+    // 自動朗讀動詞
+    speakJapanese(question.verb.dictionary);
   }, [question]);
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setInputValue(value);
+    
+    // 即時轉換羅馬拼音
+    if (!containsJapanese(value)) {
+      const hiragana = romajiToHiragana(value);
+      setConvertedValue(hiragana);
+    } else {
+      setConvertedValue(value);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(inputValue);
+    // 使用轉換後的值提交
+    onSubmit(convertedValue || inputValue);
+  };
+
+  // 答對時朗讀正確答案
+  useEffect(() => {
+    if (feedback?.correct) {
+      setTimeout(() => {
+        speakJapanese(question.answer);
+      }, 500);
+    }
+  }, [feedback]);
+
+  const openJisho = () => {
+    window.open(`https://jisho.org/search/${question.verb.dictionary}`, '_blank');
   };
 
   return (
@@ -635,7 +670,7 @@ function PerformMode({ question, onSubmit, feedback, userAnswer }) {
       className="space-y-6"
     >
       {/* 動詞卡片 */}
-      <div className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-8 text-white shadow-xl">
+      <div className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-8 text-white shadow-xl relative">
         <div className="text-center">
           <div className="flex justify-center gap-2 mb-2">
             <span className="bg-white/20 px-3 py-1 rounded-full text-sm">
@@ -645,7 +680,23 @@ function PerformMode({ question, onSubmit, feedback, userAnswer }) {
               {question.verb.level}
             </span>
           </div>
-          <div className="text-6xl font-bold japanese-text mb-4">{question.verb.dictionary}</div>
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <button
+              onClick={() => speakJapanese(question.verb.dictionary)}
+              className="p-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
+              title="朗讀動詞"
+            >
+              <Volume2 className="w-5 h-5" />
+            </button>
+            <div className="text-6xl font-bold japanese-text">{question.verb.dictionary}</div>
+            <button
+              onClick={openJisho}
+              className="p-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
+              title="在 Jisho.org 查詢"
+            >
+              <ExternalLink className="w-5 h-5" />
+            </button>
+          </div>
           <div className="text-2xl opacity-90 mb-2">{question.verb.reading}</div>
           <div className="text-lg opacity-75">{question.verb.meaning}</div>
         </div>
@@ -663,13 +714,13 @@ function PerformMode({ question, onSubmit, feedback, userAnswer }) {
 
       {/* 輸入區域 */}
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
+        <div className="space-y-2">
           <input
             type="text"
             value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={handleInputChange}
             disabled={feedback !== null}
-            placeholder="請輸入答案 (平假名)"
+            placeholder="請輸入答案 (支援羅馬拼音或平假名)"
             className={`w-full text-3xl japanese-text text-center p-6 rounded-xl border-2 transition-all ${
               feedback === null
                 ? 'border-slate-300 focus:border-primary-500 focus:ring-4 focus:ring-primary-100'
@@ -679,6 +730,12 @@ function PerformMode({ question, onSubmit, feedback, userAnswer }) {
             } outline-none`}
             autoFocus
           />
+          {/* 即時轉換預覽 */}
+          {inputValue && !containsJapanese(inputValue) && convertedValue !== inputValue && (
+            <div className="text-center text-sm text-slate-600">
+              轉換: <span className="japanese-text text-lg font-medium text-indigo-600">{convertedValue}</span>
+            </div>
+          )}
         </div>
 
         {feedback === null ? (
@@ -705,21 +762,37 @@ function PerformMode({ question, onSubmit, feedback, userAnswer }) {
                 <XCircle className="w-8 h-8 text-red-600 flex-shrink-0" />
               )}
               <div className="flex-1">
-                <div className={`text-xl font-bold mb-2 ${feedback.correct ? 'text-green-800' : 'text-red-800'}`}>
+                <div className={`text-xl font-bold mb-3 ${feedback.correct ? 'text-green-800' : 'text-red-800'}`}>
                   {feedback.correct ? '正確! 太棒了!' : '答錯了,再接再厲!'}
                 </div>
-                {!feedback.correct && (
-                  <div className="space-y-2">
-                    <div className="text-slate-700">
-                      <span className="font-semibold">你的答案:</span>{' '}
-                      <span className="japanese-text text-lg">{userAnswer}</span>
-                    </div>
-                    <div className="text-slate-700">
-                      <span className="font-semibold">正確答案:</span>{' '}
-                      <span className="japanese-text text-lg text-green-700 font-bold">{question.answer}</span>
-                    </div>
+                
+                {/* 變化分析 */}
+                <div className="bg-white rounded-lg p-4 space-y-2 border border-slate-200">
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="font-semibold text-slate-700">辭書形:</span>
+                    <span className="japanese-text text-lg">{question.verb.dictionary}</span>
+                    <ChevronRight className="w-4 h-4 text-slate-400" />
+                    <span className="font-semibold text-slate-700">變化:</span>
+                    <span className="text-indigo-600 font-medium">{getQuestionDescription(question.form, question.modifiers)}</span>
                   </div>
-                )}
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="font-semibold text-slate-700">正確答案:</span>
+                    <span className="japanese-text text-xl text-green-700 font-bold">{question.answer}</span>
+                    <button
+                      onClick={() => speakJapanese(question.answer)}
+                      className="p-1 hover:bg-slate-100 rounded transition-colors"
+                      title="朗讀答案"
+                    >
+                      <Volume2 className="w-4 h-4 text-green-600" />
+                    </button>
+                  </div>
+                  {!feedback.correct && userAnswer && (
+                    <div className="flex items-center gap-2 text-sm pt-2 border-t border-slate-200">
+                      <span className="font-semibold text-slate-700">你的答案:</span>
+                      <span className="japanese-text text-lg text-red-600">{userAnswer}</span>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </motion.div>
@@ -745,12 +818,27 @@ function RecognizeMode({ question, onSubmit, feedback }) {
       negative: false,
       past: false
     });
+    // 自動朗讀變化後的動詞
+    speakJapanese(question.answer);
   }, [question]);
+
+  // 答對時再次朗讀
+  useEffect(() => {
+    if (feedback?.correct) {
+      setTimeout(() => {
+        speakJapanese(question.answer);
+      }, 500);
+    }
+  }, [feedback]);
 
   const allForms = Object.values(CONJUGATION_FORMS);
 
   const handleSubmit = () => {
     onSubmit(selectedTags);
+  };
+
+  const openJisho = () => {
+    window.open(`https://jisho.org/search/${question.verb.dictionary}`, '_blank');
   };
 
   return (
@@ -765,7 +853,16 @@ function RecognizeMode({ question, onSubmit, feedback }) {
       <div className="bg-gradient-to-br from-teal-500 to-emerald-600 rounded-2xl p-8 text-white shadow-xl">
         <div className="text-center">
           <div className="text-sm font-medium opacity-80 mb-2">這是什麼變化形式?</div>
-          <div className="text-6xl font-bold japanese-text mb-4">{question.answer}</div>
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <button
+              onClick={() => speakJapanese(question.answer)}
+              className="p-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
+              title="朗讀"
+            >
+              <Volume2 className="w-5 h-5" />
+            </button>
+            <div className="text-6xl font-bold japanese-text">{question.answer}</div>
+          </div>
           <div className="flex justify-center gap-2 mt-4">
             <span className="bg-white/20 px-3 py-1 rounded-full text-sm">
               {getVerbTypeShort(question.verb.type)}
@@ -774,8 +871,15 @@ function RecognizeMode({ question, onSubmit, feedback }) {
               {question.verb.level}
             </span>
           </div>
-          <div className="text-lg opacity-75 mt-2">
-            (來自: {question.verb.dictionary} - {question.verb.meaning})
+          <div className="flex items-center justify-center gap-2 text-lg opacity-75 mt-2">
+            <span>(來自: {question.verb.dictionary} - {question.verb.meaning})</span>
+            <button
+              onClick={openJisho}
+              className="p-1 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
+              title="在 Jisho.org 查詢"
+            >
+              <ExternalLink className="w-4 h-4" />
+            </button>
           </div>
         </div>
       </div>
@@ -866,17 +970,31 @@ function RecognizeMode({ question, onSubmit, feedback }) {
               <XCircle className="w-8 h-8 text-red-600 flex-shrink-0" />
             )}
             <div className="flex-1">
-              <div className={`text-xl font-bold mb-2 ${feedback.correct ? 'text-green-800' : 'text-red-800'}`}>
+              <div className={`text-xl font-bold mb-3 ${feedback.correct ? 'text-green-800' : 'text-red-800'}`}>
                 {feedback.correct ? '正確! 太棒了!' : '答錯了,再接再厲!'}
               </div>
-              {!feedback.correct && (
-                <div className="text-slate-700">
-                  <span className="font-semibold">正確答案:</span>{' '}
-                  <span className="text-lg font-bold text-green-700">
-                    {getQuestionDescription(question.form, question.modifiers)}
-                  </span>
+              
+              {/* 變化分析 */}
+              <div className="bg-white rounded-lg p-4 space-y-2 border border-slate-200">
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="font-semibold text-slate-700">辭書形:</span>
+                  <span className="japanese-text text-lg">{question.verb.dictionary}</span>
+                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                  <span className="font-semibold text-slate-700">變化:</span>
+                  <span className="text-indigo-600 font-medium">{getQuestionDescription(question.form, question.modifiers)}</span>
                 </div>
-              )}
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="font-semibold text-slate-700">變化結果:</span>
+                  <span className="japanese-text text-xl text-green-700 font-bold">{question.answer}</span>
+                  <button
+                    onClick={() => speakJapanese(question.answer)}
+                    className="p-1 hover:bg-slate-100 rounded transition-colors"
+                    title="朗讀"
+                  >
+                    <Volume2 className="w-4 h-4 text-green-600" />
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </motion.div>
@@ -915,6 +1033,11 @@ function App() {
     totalCorrect: 0,
     totalAttempts: 0
   });
+
+  // 初始化語音系統
+  useEffect(() => {
+    initSpeech();
+  }, []);
 
   // 過濾後的動詞列表
   const filteredVerbs = useMemo(() => {
