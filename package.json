@@ -19,8 +19,6 @@
   "scripts": {
     "dev": "bunx --bun vite",
     "build": "bunx --bun vite build",
-    "preview": "bunx --bun vite preview",
-    "deploy": "bun run build && gh-pages -d dist",
-    "install": "bun install"
+    "preview": "bunx --bun vite preview"
   }
 }
