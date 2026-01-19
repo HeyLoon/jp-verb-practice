@@ -1,0 +1,192 @@
+# 日語動詞變化練習 Web App
+
+一個現代化的日語動詞變化練習應用程式,使用 React + Tailwind CSS + Framer Motion 構建,支援 Bun 運行環境。
+
+## ✨ 功能特色
+
+### 📚 豐富的動詞資料庫
+- **180+ 個常用日語動詞** (五段、一段、不規則、サ変動詞)
+- 涵蓋 **JLPT N5 ~ N3** 等級
+- 包含日常生活常用動詞
+
+### 🎯 完整的變化形式支援
+支援 10 種動詞變化形式:
+| 形式 | 日文名 | 說明 |
+|------|--------|------|
+| 辞書形 | Dictionary | 基本形 |
+| ます形 | Polite | 丁寧形 |
+| ない形 | Negative | 否定形 |
+| た形 | Past | 過去形 |
+| て形 | Te-form | 連接形 |
+| 可能形 | Potential | 能力/可能 |
+| 受身形 | Passive | 被動態 |
+| 使役形 | Causative | 使役態 |
+| 命令形 | Imperative | 命令形 |
+| 意志形 | Volitional | 意志形 |
+
+### 🎮 雙練習模式
+- **模式 A - 執行變化**: 看到動詞辭書形,輸入指定的變化形式
+- **模式 B - 識別變化**: 看到已變化的動詞,選擇正確的形式和修飾詞
+
+### 📖 內建教學系統
+- 完整的動詞變化規則說明
+- 四類動詞分類教學 (五段、一段、不規則、サ変)
+- 音便規則速記表
+- 豐富的例句和解釋
+
+### 🎨 現代化 UI/UX
+- 漂亮的卡片式設計與漸層配色
+- Framer Motion 流暢動畫效果
+- 即時反饋 (正確/錯誤動畫)
+- 完全響應式設計 (手機、平板、桌面)
+
+### 📊 學習追蹤
+- 連勝系統 (當前連勝 + 最高連勝)
+- 正確率統計
+- 總題數追蹤
+
+## 🌐 線上 Demo
+
+🎯 **[立即體驗線上版本](https://你的用戶名.github.io/japanese-verb-drill/)**
+
+(部署後請更新此連結)
+
+## 🚀 快速開始
+
+### 使用 Bun (推薦)
+
+```bash
+# 進入專案目錄
+cd japanese-verb-drill
+
+# 安裝依賴
+bun install
+
+# 啟動開發伺服器
+bun run dev
+```
+
+### 使用 npm
+
+```bash
+cd japanese-verb-drill
+npm install
+npm run dev
+```
+
+應用將在 `http://localhost:5173` 啟動。
+
+### 構建生產版本
+
+```bash
+bun run build
+# 或
+npm run build
+```
+
+### 預覽生產版本
+
+```bash
+bun run preview
+# 或
+npm run preview
+```
+
+## 📁 專案結構
+
+```
+japanese-verb-drill/
+├── src/
+│   ├── data/
+│   │   └── verbs.js           # 動詞資料庫 (180+ 動詞)
+│   ├── utils/
+│   │   └── conjugator.js      # 變化邏輯引擎
+│   ├── App.jsx                # 主應用元件
+│   ├── main.jsx               # 入口文件
+│   └── index.css              # 全域樣式
+├── index.html
+├── package.json
+├── vite.config.js
+├── tailwind.config.js
+└── postcss.config.js
+```
+
+## 🎮 使用說明
+
+### 基本操作
+1. **開始練習**: 應用啟動後會自動開始練習
+2. **查看教學**: 點擊右上角 🎓 按鈕開啟教學面板
+3. **調整設定**: 點擊右上角 ⚙️ 按鈕
+4. **重置進度**: 點擊 🔄 按鈕清空統計
+
+### 設定選項
+- **練習模式**: 執行變化 / 識別變化
+- **JLPT 等級**: N5, N4, N3 (可多選)
+- **動詞類型**: 五段、一段、不規則、サ変 (可多選)
+- **變化形式**: 選擇要練習的形式
+- **修飾詞**: 丁寧、否定、過去
+
+## 🛠️ 技術棧
+
+- **Bun** - 高性能 JavaScript 運行環境
+- **React 18** - 使用 Functional Components 和 Hooks
+- **Vite** - 快速的開發構建工具
+- **Tailwind CSS** - 現代化 CSS 框架
+- **Framer Motion** - 動畫庫
+- **Lucide React** - 圖示庫
+
+## 📚 動詞變化引擎
+
+變化引擎 (`src/utils/conjugator.js`) 實現了完整的日語動詞變化邏輯:
+
+### 支援的動詞類型
+- ✅ **五段動詞 (Group I)**: 完整實現五十音圖的段變化
+- ✅ **一段動詞 (Group II)**: 去る加詞尾
+- ✅ **不規則動詞 (Group III)**: する、来る 特殊處理
+- ✅ **サ変動詞**: 名詞 + する 的複合動詞
+
+### 音便規則
+| 詞尾 | た形/て形 | 例子 |
+|------|-----------|------|
+| く | いた/いて | 書く → 書いた |
+| ぐ | いだ/いで | 泳ぐ → 泳いだ |
+| す | した/して | 話す → 話した |
+| つ/う/る | った/って | 待つ → 待った |
+| ぬ/ぶ/む | んだ/んで | 読む → 読んだ |
+| 行く | 行った | (特例) |
+
+## 🚀 部署到 GitHub Pages
+
+詳細部署步驟請參閱 [DEPLOY.md](./DEPLOY.md)
+
+### 快速部署
+
+```bash
+# 1. 初始化 Git repository
+git init
+git add .
+git commit -m "Initial commit"
+
+# 2. 推送到 GitHub
+git remote add origin https://github.com/你的用戶名/japanese-verb-drill.git
+git push -u origin main
+
+# 3. 在 GitHub Repository Settings > Pages 中選擇 "GitHub Actions" 作為 Source
+```
+
+推送後 GitHub Actions 會自動構建和部署,應用將可在以下網址訪問:
+```
+https://你的用戶名.github.io/japanese-verb-drill/
+```
+
+## 📝 授權
+
+MIT License
+
+## 🙏 致謝
+
+此應用為日語學習者提供高效的動詞變化練習工具,適合 JLPT N5-N3 程度的學習者使用。
+
+---
+
+**Happy Learning! 頑張ってください！** 🎌
