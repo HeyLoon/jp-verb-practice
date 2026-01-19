@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+DEPLOY.md
+QUICK_DEPLOY.md
