@@ -1,6 +1,69 @@
 // 日語語音朗讀工具
 // 使用瀏覽器內建的 Web Speech API
 
+// 儲存選定的日語語音
+let cachedJapaneseVoice = null;
+
+/**
+ * 取得純日語語音（排除所有中文語音）
+ */
+function getJapaneseVoice() {
+  const voices = window.speechSynthesis.getVoices();
+  
+  // 列印所有可用語音（用於調試）
+  console.log('所有可用語音:');
+  voices.forEach(voice => {
+    console.log(`- ${voice.name} (${voice.lang})`);
+  });
+  
+  // 過濾出純日語語音，嚴格排除中文
+  const japaneseVoices = voices.filter(voice => {
+    const lang = voice.lang.toLowerCase();
+    const name = voice.name.toLowerCase();
+    
+    // 必須是 ja 開頭
+    if (!lang.startsWith('ja')) return false;
+    
+    // 排除任何包含中文相關關鍵字的語音
+    const chineseKeywords = ['zh', 'cn', 'tw', 'hk', 'chinese', '中文', '普通话', '國語', '粤语'];
+    const hasChinese = chineseKeywords.some(keyword => 
+      lang.includes(keyword) || name.includes(keyword)
+    );
+    
+    if (hasChinese) return false;
+    
+    // 確保是日語相關
+    const japaneseKeywords = ['ja', 'jp', 'japan', 'japanese', '日本'];
+    const hasJapanese = japaneseKeywords.some(keyword => 
+      lang.includes(keyword) || name.includes(keyword)
+    );
+    
+    return hasJapanese;
+  });
+  
+  console.log('過濾後的日語語音:');
+  japaneseVoices.forEach(voice => {
+    console.log(`✓ ${voice.name} (${voice.lang})`);
+  });
+  
+  // 優先順序：
+  // 1. ja-JP 且包含 Google 或 Microsoft
+  // 2. ja-JP
+  // 3. 任何 ja 開頭的
+  const preferredVoice = 
+    japaneseVoices.find(v => v.lang === 'ja-JP' && (v.name.includes('Google') || v.name.includes('Microsoft'))) ||
+    japaneseVoices.find(v => v.lang === 'ja-JP') ||
+    japaneseVoices[0];
+  
+  if (preferredVoice) {
+    console.log('✅ 選定日語語音:', preferredVoice.name, preferredVoice.lang);
+  } else {
+    console.warn('⚠️ 找不到日語語音');
+  }
+  
+  return preferredVoice;
+}
+
 /**
  * 朗讀日文文字
  * @param {string} text - 要朗讀的日文文字
@@ -17,35 +80,42 @@ export function speakJapanese(text, rate = 1.0, pitch = 1.0) {
   // 取消之前的朗讀
   window.speechSynthesis.cancel();
 
-  // 創建語音實例
-  const utterance = new SpeechSynthesisUtterance(text);
-  
-  // 設定語言為日文
-  utterance.lang = 'ja-JP';
-  
-  // 設定語速和音調
-  utterance.rate = rate;
-  utterance.pitch = pitch;
-  utterance.volume = 1.0;
+  // 等待語音列表載入
+  const speak = () => {
+    // 創建語音實例
+    const utterance = new SpeechSynthesisUtterance(text);
+    
+    // 強制設定語言為日文
+    utterance.lang = 'ja-JP';
+    
+    // 設定語速和音調
+    utterance.rate = rate;
+    utterance.pitch = pitch;
+    utterance.volume = 1.0;
 
-  // 嘗試選擇日文語音（排除中文語音）
+    // 選擇日文語音（重新取得以確保最新）
+    const japaneseVoice = getJapaneseVoice();
+    
+    if (japaneseVoice) {
+      utterance.voice = japaneseVoice;
+    } else {
+      console.error('❌ 無法找到日語語音，朗讀可能失敗');
+    }
+
+    // 開始朗讀
+    window.speechSynthesis.speak(utterance);
+  };
+
+  // 如果語音列表為空，等待載入
   const voices = window.speechSynthesis.getVoices();
-  
-  // 優先選擇 ja-JP 語音，並確保不是中文語音
-  const japaneseVoice = voices.find(voice => 
-    voice.lang === 'ja-JP' || 
-    (voice.lang.startsWith('ja') && !voice.lang.startsWith('zh') && !voice.lang.includes('CN') && !voice.lang.includes('TW'))
-  );
-  
-  if (japaneseVoice) {
-    utterance.voice = japaneseVoice;
-    console.log('使用日語語音:', japaneseVoice.name, japaneseVoice.lang);
+  if (voices.length === 0) {
+    console.log('等待語音列表載入...');
+    window.speechSynthesis.onvoiceschanged = () => {
+      speak();
+    };
   } else {
-    console.warn('找不到日語語音，將使用預設語音');
+    speak();
   }
-
-  // 開始朗讀
-  window.speechSynthesis.speak(utterance);
 }
 
 /**
@@ -86,7 +156,7 @@ export function isSpeaking() {
 }
 
 /**
- * 取得可用的日文語音列表
+ * 取得可用的日文語音列表（排除中文語音）
  */
 export function getJapaneseVoices() {
   if (!('speechSynthesis' in window)) {
@@ -94,7 +164,21 @@ export function getJapaneseVoices() {
   }
 
   const voices = window.speechSynthesis.getVoices();
-  return voices.filter(voice => voice.lang.startsWith('ja'));
+  return voices.filter(voice => {
+    const lang = voice.lang.toLowerCase();
+    const name = voice.name.toLowerCase();
+    
+    // 必須是 ja 開頭
+    if (!lang.startsWith('ja')) return false;
+    
+    // 排除中文相關
+    const chineseKeywords = ['zh', 'cn', 'tw', 'hk', 'chinese', '中文', '普通话', '國語', '粤语'];
+    const hasChinese = chineseKeywords.some(keyword => 
+      lang.includes(keyword) || name.includes(keyword)
+    );
+    
+    return !hasChinese;
+  });
 }
 
 /**
@@ -110,6 +194,15 @@ export function initSpeech(callback) {
   // 語音列表載入完成後的回調
   const loadVoices = () => {
     const voices = window.speechSynthesis.getVoices();
+    console.log('📢 語音系統初始化完成，可用語音數:', voices.length);
+    
+    const japaneseVoices = getJapaneseVoices();
+    console.log('🇯🇵 日語語音數:', japaneseVoices.length);
+    
+    if (japaneseVoices.length === 0) {
+      console.error('❌ 警告：系統中沒有日語語音！');
+    }
+    
     if (callback && voices.length > 0) {
       callback(voices);
     }
