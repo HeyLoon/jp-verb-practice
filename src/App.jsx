@@ -1108,6 +1108,7 @@ function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [showTutorial, setShowTutorial] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(null);
+  const [questionId, setQuestionId] = useState(0); // 用於強制重新渲染
   const [feedback, setFeedback] = useState(null);
   const [userAnswer, setUserAnswer] = useState('');
   const [voiceAvailable, setVoiceAvailable] = useState(true); // 語音是否可用
@@ -1144,11 +1145,14 @@ function App() {
     if (filteredVerbs.length === 0) {
       return;
     }
+    // 先重置狀態
+    setFeedback(null);
+    setUserAnswer('');
+    // 然後生成新問題
     const randomVerb = filteredVerbs[Math.floor(Math.random() * filteredVerbs.length)];
     const question = generateQuestion(randomVerb, settings.enabledForms, settings.enabledModifiers);
     setCurrentQuestion(question);
-    setFeedback(null);
-    setUserAnswer('');
+    setQuestionId(prev => prev + 1); // 更新問題ID，強制重新渲染
   };
 
   // 初始化第一個問題
@@ -1281,7 +1285,7 @@ function App() {
             {currentQuestion && (
               settings.mode === 'perform' ? (
                 <PerformMode
-                  key={`perform-${currentQuestion.verb.dictionary}-${currentQuestion.form}`}
+                  key={`perform-${questionId}`}
                   question={currentQuestion}
                   onSubmit={handlePerformSubmit}
                   onNext={generateNewQuestion}
@@ -1290,7 +1294,7 @@ function App() {
                 />
               ) : (
                 <RecognizeMode
-                  key={`recognize-${currentQuestion.answer}`}
+                  key={`recognize-${questionId}`}
                   question={currentQuestion}
                   onSubmit={handleRecognizeSubmit}
                   onNext={generateNewQuestion}

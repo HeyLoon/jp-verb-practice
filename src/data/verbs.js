@@ -60,7 +60,6 @@ export const verbs = [
   { dictionary: '足りる', reading: 'たりる', meaning: '足夠', type: 'ICHIDAN', level: 'N3' },
   { dictionary: '慣れる', reading: 'なれる', meaning: '習慣', type: 'ICHIDAN', level: 'N3' },
   { dictionary: '増える', reading: 'ふえる', meaning: '增加', type: 'ICHIDAN', level: 'N3' },
-  { dictionary: '減る', reading: 'へる', meaning: '減少', type: 'ICHIDAN', level: 'N3' },
   { dictionary: '換える', reading: 'かえる', meaning: '交換', type: 'ICHIDAN', level: 'N3' },
   { dictionary: '受ける', reading: 'うける', meaning: '接受', type: 'ICHIDAN', level: 'N3' },
   { dictionary: '述べる', reading: 'のべる', meaning: '陳述', type: 'ICHIDAN', level: 'N3' },
@@ -115,6 +114,7 @@ export const verbs = [
   { dictionary: '育つ', reading: 'そだつ', meaning: '成長', type: 'GODAN', level: 'N3' },
   { dictionary: '経つ', reading: 'たつ', meaning: '(時間)經過', type: 'GODAN', level: 'N3' },
   { dictionary: '役立つ', reading: 'やくだつ', meaning: '有用', type: 'GODAN', level: 'N3' },
+  { dictionary: '減る', reading: 'へる', meaning: '減少', type: 'GODAN', level: 'N3' },
 
   // ==========================================
   // 五段動詞 - る結尾 - N5
