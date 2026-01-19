@@ -49,7 +49,7 @@
 
 ## 🌐 線上 Demo
 
-🎯 **[立即體驗線上版本](https://你的用戶名.github.io/japanese-verb-drill/)**
+🎯 **[立即體驗線上版本](https://heyloon.github.io/jp-verb-practice/)**
 
 (部署後請更新此連結)
 
