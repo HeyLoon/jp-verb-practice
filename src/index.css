@@ -13,7 +13,7 @@
   --moegi: #aacf53;         /* 萌黃色 - 強調色 */
   --uguisu: #6c7a52;        /* 鶯色（暗綠）- 深色文字 */
   --beni: #c73e3a;          /* 紅色 - 重點色 */
-  --sumi: #2b2b2b;          /* 墨色 - 深灰色文字
+  --sumi: #2b2b2b;          /* 墨色 - 深灰色文字 */
   
   color-scheme: light;
   color: var(--uguisu);
