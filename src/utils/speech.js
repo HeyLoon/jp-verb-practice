@@ -28,12 +28,20 @@ export function speakJapanese(text, rate = 1.0, pitch = 1.0) {
   utterance.pitch = pitch;
   utterance.volume = 1.0;
 
-  // 嘗試選擇日文語音
+  // 嘗試選擇日文語音（排除中文語音）
   const voices = window.speechSynthesis.getVoices();
-  const japaneseVoice = voices.find(voice => voice.lang.startsWith('ja'));
+  
+  // 優先選擇 ja-JP 語音，並確保不是中文語音
+  const japaneseVoice = voices.find(voice => 
+    voice.lang === 'ja-JP' || 
+    (voice.lang.startsWith('ja') && !voice.lang.startsWith('zh') && !voice.lang.includes('CN') && !voice.lang.includes('TW'))
+  );
   
   if (japaneseVoice) {
     utterance.voice = japaneseVoice;
+    console.log('使用日語語音:', japaneseVoice.name, japaneseVoice.lang);
+  } else {
+    console.warn('找不到日語語音，將使用預設語音');
   }
 
   // 開始朗讀

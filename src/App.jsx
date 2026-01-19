@@ -618,7 +618,7 @@ function StatsBar({ currentStreak, maxStreak, totalCorrect, totalAttempts }) {
 }
 
 // === 元件: 模式 A - 執行變化 ===
-function PerformMode({ question, onSubmit, feedback, userAnswer }) {
+function PerformMode({ question, onSubmit, onNext, feedback, userAnswer }) {
   const [inputValue, setInputValue] = useState('');
   const [convertedValue, setConvertedValue] = useState('');
 
@@ -656,6 +656,18 @@ function PerformMode({ question, onSubmit, feedback, userAnswer }) {
       }, 500);
     }
   }, [feedback]);
+
+  // 加入 Enter 鍵監聽
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.key === 'Enter' && feedback !== null) {
+        e.preventDefault();
+        onNext();
+      }
+    };
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [feedback, onNext]);
 
   const openJisho = () => {
     window.open(`https://jisho.org/search/${question.verb.dictionary}`, '_blank');
@@ -748,54 +760,63 @@ function PerformMode({ question, onSubmit, feedback, userAnswer }) {
             <ChevronRight className="w-5 h-5" />
           </button>
         ) : (
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className={`p-6 rounded-xl ${
-              feedback.correct ? 'bg-green-100 border-2 border-green-500' : 'bg-red-100 border-2 border-red-500'
-            }`}
-          >
-            <div className="flex items-start gap-4">
-              {feedback.correct ? (
-                <CheckCircle2 className="w-8 h-8 text-green-600 flex-shrink-0" />
-              ) : (
-                <XCircle className="w-8 h-8 text-red-600 flex-shrink-0" />
-              )}
-              <div className="flex-1">
-                <div className={`text-xl font-bold mb-3 ${feedback.correct ? 'text-green-800' : 'text-red-800'}`}>
-                  {feedback.correct ? '正確! 太棒了!' : '答錯了,再接再厲!'}
-                </div>
-                
-                {/* 變化分析 */}
-                <div className="bg-white rounded-lg p-4 space-y-2 border border-slate-200">
-                  <div className="flex items-center gap-2 text-sm">
-                    <span className="font-semibold text-slate-700">辭書形:</span>
-                    <span className="japanese-text text-lg">{question.verb.dictionary}</span>
-                    <ChevronRight className="w-4 h-4 text-slate-400" />
-                    <span className="font-semibold text-slate-700">變化:</span>
-                    <span className="text-indigo-600 font-medium">{getQuestionDescription(question.form, question.modifiers)}</span>
+          <>
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className={`p-6 rounded-xl ${
+                feedback.correct ? 'bg-green-100 border-2 border-green-500' : 'bg-red-100 border-2 border-red-500'
+              }`}
+            >
+              <div className="flex items-start gap-4">
+                {feedback.correct ? (
+                  <CheckCircle2 className="w-8 h-8 text-green-600 flex-shrink-0" />
+                ) : (
+                  <XCircle className="w-8 h-8 text-red-600 flex-shrink-0" />
+                )}
+                <div className="flex-1">
+                  <div className={`text-xl font-bold mb-3 ${feedback.correct ? 'text-green-800' : 'text-red-800'}`}>
+                    {feedback.correct ? '正確! 太棒了!' : '答錯了,再接再厲!'}
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <span className="font-semibold text-slate-700">正確答案:</span>
-                    <span className="japanese-text text-xl text-green-700 font-bold">{question.answer}</span>
-                    <button
-                      onClick={() => speakJapanese(question.answer)}
-                      className="p-1 hover:bg-slate-100 rounded transition-colors"
-                      title="朗讀答案"
-                    >
-                      <Volume2 className="w-4 h-4 text-green-600" />
-                    </button>
-                  </div>
-                  {!feedback.correct && userAnswer && (
-                    <div className="flex items-center gap-2 text-sm pt-2 border-t border-slate-200">
-                      <span className="font-semibold text-slate-700">你的答案:</span>
-                      <span className="japanese-text text-lg text-red-600">{userAnswer}</span>
+                  
+                  {/* 變化分析 */}
+                  <div className="bg-white rounded-lg p-4 space-y-2 border border-slate-200">
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="font-semibold text-slate-700">辭書形:</span>
+                      <span className="japanese-text text-lg text-slate-800">{question.verb.dictionary}</span>
+                      <ChevronRight className="w-4 h-4 text-slate-400" />
+                      <span className="font-semibold text-slate-700">變化:</span>
+                      <span className="text-indigo-600 font-medium">{getQuestionDescription(question.form, question.modifiers)}</span>
                     </div>
-                  )}
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="font-semibold text-slate-700">正確答案:</span>
+                      <span className="japanese-text text-xl text-green-700 font-bold">{question.answer}</span>
+                      <button
+                        onClick={() => speakJapanese(question.answer)}
+                        className="p-1 hover:bg-slate-100 rounded transition-colors"
+                        title="朗讀答案"
+                      >
+                        <Volume2 className="w-4 h-4 text-green-600" />
+                      </button>
+                    </div>
+                    {!feedback.correct && userAnswer && (
+                      <div className="flex items-center gap-2 text-sm pt-2 border-t border-slate-200">
+                        <span className="font-semibold text-slate-700">你的答案:</span>
+                        <span className="japanese-text text-lg text-red-600">{userAnswer}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+            <button
+              onClick={onNext}
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 px-6 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2"
+            >
+              下一題
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </>
         )}
       </form>
     </motion.div>
@@ -803,7 +824,7 @@ function PerformMode({ question, onSubmit, feedback, userAnswer }) {
 }
 
 // === 元件: 模式 B - 識別變化 ===
-function RecognizeMode({ question, onSubmit, feedback }) {
+function RecognizeMode({ question, onSubmit, onNext, feedback }) {
   const [selectedTags, setSelectedTags] = useState({
     form: null,
     polite: false,
@@ -830,6 +851,18 @@ function RecognizeMode({ question, onSubmit, feedback }) {
       }, 500);
     }
   }, [feedback]);
+
+  // 加入 Enter 鍵監聽
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.key === 'Enter' && feedback !== null) {
+        e.preventDefault();
+        onNext();
+      }
+    };
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [feedback, onNext]);
 
   const allForms = Object.values(CONJUGATION_FORMS);
 
@@ -956,48 +989,57 @@ function RecognizeMode({ question, onSubmit, feedback }) {
           <ChevronRight className="w-5 h-5" />
         </button>
       ) : (
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className={`p-6 rounded-xl ${
-            feedback.correct ? 'bg-green-100 border-2 border-green-500' : 'bg-red-100 border-2 border-red-500'
-          }`}
-        >
-          <div className="flex items-start gap-4">
-            {feedback.correct ? (
-              <CheckCircle2 className="w-8 h-8 text-green-600 flex-shrink-0" />
-            ) : (
-              <XCircle className="w-8 h-8 text-red-600 flex-shrink-0" />
-            )}
-            <div className="flex-1">
-              <div className={`text-xl font-bold mb-3 ${feedback.correct ? 'text-green-800' : 'text-red-800'}`}>
-                {feedback.correct ? '正確! 太棒了!' : '答錯了,再接再厲!'}
-              </div>
-              
-              {/* 變化分析 */}
-              <div className="bg-white rounded-lg p-4 space-y-2 border border-slate-200">
-                <div className="flex items-center gap-2 text-sm">
-                  <span className="font-semibold text-slate-700">辭書形:</span>
-                  <span className="japanese-text text-lg">{question.verb.dictionary}</span>
-                  <ChevronRight className="w-4 h-4 text-slate-400" />
-                  <span className="font-semibold text-slate-700">變化:</span>
-                  <span className="text-indigo-600 font-medium">{getQuestionDescription(question.form, question.modifiers)}</span>
+        <>
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className={`p-6 rounded-xl ${
+              feedback.correct ? 'bg-green-100 border-2 border-green-500' : 'bg-red-100 border-2 border-red-500'
+            }`}
+          >
+            <div className="flex items-start gap-4">
+              {feedback.correct ? (
+                <CheckCircle2 className="w-8 h-8 text-green-600 flex-shrink-0" />
+              ) : (
+                <XCircle className="w-8 h-8 text-red-600 flex-shrink-0" />
+              )}
+              <div className="flex-1">
+                <div className={`text-xl font-bold mb-3 ${feedback.correct ? 'text-green-800' : 'text-red-800'}`}>
+                  {feedback.correct ? '正確! 太棒了!' : '答錯了,再接再厲!'}
                 </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <span className="font-semibold text-slate-700">變化結果:</span>
-                  <span className="japanese-text text-xl text-green-700 font-bold">{question.answer}</span>
-                  <button
-                    onClick={() => speakJapanese(question.answer)}
-                    className="p-1 hover:bg-slate-100 rounded transition-colors"
-                    title="朗讀"
-                  >
-                    <Volume2 className="w-4 h-4 text-green-600" />
-                  </button>
+                
+                {/* 變化分析 */}
+                <div className="bg-white rounded-lg p-4 space-y-2 border border-slate-200">
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="font-semibold text-slate-700">辭書形:</span>
+                    <span className="japanese-text text-lg text-slate-800">{question.verb.dictionary}</span>
+                    <ChevronRight className="w-4 h-4 text-slate-400" />
+                    <span className="font-semibold text-slate-700">變化:</span>
+                    <span className="text-indigo-600 font-medium">{getQuestionDescription(question.form, question.modifiers)}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="font-semibold text-slate-700">變化結果:</span>
+                    <span className="japanese-text text-xl text-green-700 font-bold">{question.answer}</span>
+                    <button
+                      onClick={() => speakJapanese(question.answer)}
+                      className="p-1 hover:bg-slate-100 rounded transition-colors"
+                      title="朗讀"
+                    >
+                      <Volume2 className="w-4 h-4 text-green-600" />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+          <button
+            onClick={onNext}
+            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 px-6 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2"
+          >
+            下一題
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </>
       )}
     </motion.div>
   );
@@ -1077,11 +1119,6 @@ function App() {
       totalCorrect: isCorrect ? prev.totalCorrect + 1 : prev.totalCorrect,
       totalAttempts: prev.totalAttempts + 1
     }));
-
-    // 3秒後自動下一題
-    setTimeout(() => {
-      generateNewQuestion();
-    }, 3000);
   };
 
   // 處理答案提交 (模式 B)
@@ -1102,11 +1139,6 @@ function App() {
       totalCorrect: isCorrect ? prev.totalCorrect + 1 : prev.totalCorrect,
       totalAttempts: prev.totalAttempts + 1
     }));
-
-    // 3秒後自動下一題
-    setTimeout(() => {
-      generateNewQuestion();
-    }, 3000);
   };
 
   // 重置統計
@@ -1183,6 +1215,7 @@ function App() {
                   key={`perform-${currentQuestion.verb.dictionary}-${currentQuestion.form}`}
                   question={currentQuestion}
                   onSubmit={handlePerformSubmit}
+                  onNext={generateNewQuestion}
                   feedback={feedback}
                   userAnswer={userAnswer}
                 />
@@ -1191,6 +1224,7 @@ function App() {
                   key={`recognize-${currentQuestion.answer}`}
                   question={currentQuestion}
                   onSubmit={handleRecognizeSubmit}
+                  onNext={generateNewQuestion}
                   feedback={feedback}
                 />
               )
