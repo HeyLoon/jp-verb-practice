@@ -7,9 +7,16 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #f8fafc;
+  /* 日式暗色模式顏色 */
+  --washi-cream: #e6eed6;
+  --washi-light: #dde2c6;
+  --matcha-green: #bbc5aa;
+  --vermillion: #a72608;
+  --sumi-black: #090c02;
+  
+  color-scheme: dark;
+  color: var(--washi-cream);
+  background-color: var(--sumi-black);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -21,6 +28,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background-color: var(--sumi-black);
 }
 
 #root {
@@ -48,7 +56,7 @@ body {
 /* 正確答案的閃爍效果 */
 @keyframes flash-green {
   0%, 100% { background-color: transparent; }
-  50% { background-color: rgba(34, 197, 94, 0.2); }
+  50% { background-color: rgba(187, 197, 170, 0.3); }
 }
 
 .flash-correct {
@@ -65,21 +73,21 @@ html {
   scroll-behavior: smooth;
 }
 
-/* 自定義滾動條 */
+/* 自定義滾動條 - 日式暗色 */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #1a1c15;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: var(--matcha-green);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: var(--washi-light);
 }

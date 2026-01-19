@@ -7,17 +7,38 @@ export default {
   theme: {
     extend: {
       colors: {
+        // 日式顏色系統
+        washi: {
+          cream: '#e6eed6',
+          light: '#dde2c6',
+        },
+        matcha: {
+          DEFAULT: '#bbc5aa',
+          light: '#c9d1b8',
+          dark: '#a8b298',
+        },
+        vermillion: {
+          DEFAULT: '#a72608',
+          light: '#c93010',
+          dark: '#8a1f06',
+        },
+        sumi: {
+          DEFAULT: '#090c02',
+          light: '#1a1d12',
+          lighter: '#2a2d22',
+        },
+        // 保留原有的 primary 作為備用
         primary: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
+          50: '#f0e6ed',
+          100: '#e6eed6',
+          200: '#dde2c6',
+          300: '#bbc5aa',
+          400: '#a8b298',
+          500: '#a72608',
+          600: '#8a1f06',
+          700: '#6d1805',
+          800: '#501204',
+          900: '#330c02',
         },
       },
       animation: {

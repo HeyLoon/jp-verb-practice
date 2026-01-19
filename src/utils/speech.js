@@ -3,6 +3,46 @@
 
 // 儲存選定的日語語音
 let cachedJapaneseVoice = null;
+let voiceAvailable = null; // null: 未檢查, true: 可用, false: 不可用
+
+/**
+ * 檢查是否有可用的日語語音
+ */
+export function checkJapaneseVoiceAvailability() {
+  if (voiceAvailable !== null) {
+    return voiceAvailable;
+  }
+  
+  if (!('speechSynthesis' in window)) {
+    voiceAvailable = false;
+    return false;
+  }
+  
+  const voices = window.speechSynthesis.getVoices();
+  const japaneseVoices = voices.filter(voice => {
+    const lang = voice.lang.toLowerCase();
+    const name = voice.name.toLowerCase();
+    
+    // 必須是 ja 開頭
+    if (!lang.startsWith('ja')) return false;
+    
+    // 排除任何包含中文相關關鍵字的語音
+    const chineseKeywords = ['zh', 'cn', 'tw', 'hk', 'chinese', '中文', '普通话', '國語', '粤语'];
+    const hasChinese = chineseKeywords.some(keyword => 
+      lang.includes(keyword) || name.includes(keyword)
+    );
+    
+    return !hasChinese;
+  });
+  
+  voiceAvailable = japaneseVoices.length > 0;
+  
+  if (!voiceAvailable) {
+    console.warn('⚠️ 系統中沒有可用的日語語音');
+  }
+  
+  return voiceAvailable;
+}
 
 /**
  * 取得純日語語音（排除所有中文語音）
@@ -77,6 +117,12 @@ export function speakJapanese(text, rate = 1.0, pitch = 1.0) {
     return;
   }
 
+  // 檢查是否有可用的日語語音
+  if (!checkJapaneseVoiceAvailability()) {
+    console.warn('沒有可用的日語語音，跳過朗讀');
+    return;
+  }
+
   // 取消之前的朗讀
   window.speechSynthesis.cancel();
 
@@ -100,6 +146,7 @@ export function speakJapanese(text, rate = 1.0, pitch = 1.0) {
       utterance.voice = japaneseVoice;
     } else {
       console.error('❌ 無法找到日語語音，朗讀可能失敗');
+      return; // 如果找不到日語語音，就不朗讀
     }
 
     // 開始朗讀
@@ -188,6 +235,7 @@ export function getJapaneseVoices() {
 export function initSpeech(callback) {
   if (!('speechSynthesis' in window)) {
     console.warn('此瀏覽器不支援語音合成功能');
+    if (callback) callback(false);
     return;
   }
 
@@ -196,15 +244,15 @@ export function initSpeech(callback) {
     const voices = window.speechSynthesis.getVoices();
     console.log('📢 語音系統初始化完成，可用語音數:', voices.length);
     
-    const japaneseVoices = getJapaneseVoices();
-    console.log('🇯🇵 日語語音數:', japaneseVoices.length);
+    const hasJapanese = checkJapaneseVoiceAvailability();
+    console.log('🇯🇵 日語語音可用:', hasJapanese ? '是' : '否');
     
-    if (japaneseVoices.length === 0) {
-      console.error('❌ 警告：系統中沒有日語語音！');
+    if (!hasJapanese) {
+      console.error('❌ 警告：系統中沒有日語語音！語音功能將被停用。');
     }
     
-    if (callback && voices.length > 0) {
-      callback(voices);
+    if (callback) {
+      callback(hasJapanese);
     }
   };
 
