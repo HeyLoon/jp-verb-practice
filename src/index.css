@@ -7,17 +7,19 @@
   line-height: 1.5;
   font-weight: 400;
 
-  /* 優雅的日式顏色 - 更柔和的配色 */
-  --kinari: #f8f4e6;        /* 生成り（米白色）- 主要背景 */
-  --shiro-cha: #ebe5d9;     /* 白茶色 - 次要背景 */
-  --moegi: #aacf53;         /* 萌黃色 - 強調色 */
-  --uguisu: #6c7a52;        /* 鶯色（暗綠）- 深色文字 */
-  --beni: #c73e3a;          /* 紅色 - 重點色 */
-  --sumi: #2b2b2b;          /* 墨色 - 深灰色文字 */
+  /* Classic Japanese Indigo & Washi Color Scheme */
+  --washi: #FDFBF7;          /* 和紙（Washi Paper）- Main background */
+  --washi-dark: #F3EFE6;     /* Darker washi - Card backgrounds */
+  --aizome: #1E3F66;         /* 藍染（Indigo）- Primary accent */
+  --aizome-light: #2A5280;   /* Light indigo - Hover states */
+  --sumi: #333333;           /* 墨（Ink）- Main text */
+  --sumi-light: #666666;     /* Light ink - Secondary text */
+  --matcha: #6A845F;         /* 抹茶（Matcha）- Success states */
+  --akane: #C55A5A;          /* 茜色（Madder Red）- Error states */
   
   color-scheme: light;
-  color: var(--uguisu);
-  background-color: var(--kinari);
+  color: var(--sumi);
+  background-color: var(--washi);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -29,7 +31,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: var(--kinari);
+  background-color: var(--washi);
 }
 
 #root {
@@ -54,14 +56,14 @@ body {
   animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
 }
 
-/* 正確答案的閃爍效果 */
-@keyframes flash-green {
+/* 正確答案的閃爍效果 - Updated to Matcha */
+@keyframes flash-correct {
   0%, 100% { background-color: transparent; }
-  50% { background-color: rgba(170, 207, 83, 0.2); }
+  50% { background-color: rgba(106, 132, 95, 0.15); }
 }
 
 .flash-correct {
-  animation: flash-green 0.6s ease-in-out;
+  animation: flash-correct 0.6s ease-in-out;
 }
 
 /* 輸入框樣式優化 */
@@ -74,21 +76,21 @@ html {
   scroll-behavior: smooth;
 }
 
-/* 自定義滾動條 - 優雅日式 */
+/* 自定義滾動條 - Classic Japanese Style */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--shiro-cha);
+  background: var(--washi-dark);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--uguisu);
+  background: var(--aizome);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--moegi);
+  background: var(--aizome-light);
 }

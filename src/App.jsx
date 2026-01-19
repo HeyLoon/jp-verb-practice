@@ -194,7 +194,7 @@ function VoiceWarning({ show, onClose }) {
       exit={{ opacity: 0, y: -50 }}
       className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full mx-4"
     >
-      <div className="bg-beni text-white rounded-xl shadow-2xl p-4 border-2 border-beni-light">
+      <div className="bg-akane text-white rounded-xl shadow-2xl p-4 border-2 border-akane-light">
         <div className="flex items-start gap-3">
           <VolumeX className="w-6 h-6 flex-shrink-0 mt-0.5" />
           <div className="flex-1">
@@ -205,7 +205,7 @@ function VoiceWarning({ show, onClose }) {
           </div>
           <button
             onClick={onClose}
-            className="text-white hover:bg-beni-dark rounded-lg p-1 transition-colors"
+            className="text-white hover:bg-akane-dark rounded-lg p-1 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -228,16 +228,16 @@ function TutorialModal({ isOpen, onClose }) {
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="bg-shirocha rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+        className="bg-washi-dark rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col"
       >
         {/* 標題 */}
-        <div className="p-6 border-b border-uguisu/20 bg-moegi text-white">
+        <div className="p-6 border-b border-sumi-light/20 bg-aizome text-white">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <BookOpen className="w-8 h-8" />
               <div>
                 <h2 className="text-2xl font-bold">動詞變化教學</h2>
-                <p className="text-indigo-100 text-sm">Japanese Verb Conjugation Guide</p>
+                <p className="text-washi-dark text-sm">Japanese Verb Conjugation Guide</p>
               </div>
             </div>
             <button 
@@ -250,15 +250,15 @@ function TutorialModal({ isOpen, onClose }) {
         </div>
 
         {/* 動詞類型選擇 */}
-        <div className="flex border-b border-uguisu/20 bg-shirochaer overflow-x-auto">
+        <div className="flex border-b border-sumi-light/20 bg-washi overflow-x-auto">
           {Object.entries(conjugationGuides).map(([type, guide]) => (
             <button
               key={type}
               onClick={() => { setExpandedType(type); setExpandedRule(0); }}
               className={`px-6 py-4 font-medium whitespace-nowrap transition-colors ${
                 expandedType === type
-                  ? 'bg-white text-beni border-b-2 border-beni'
-                  : 'text-uguisu hover:text-sumi hover:bg-shirocha'
+                  ? 'bg-washi text-aizome border-b-2 border-aizome'
+                  : 'text-sumi-light hover:text-sumi hover:bg-washi-dark'
               }`}
             >
               {getVerbTypeShort(type)}
@@ -271,11 +271,11 @@ function TutorialModal({ isOpen, onClose }) {
           {conjugationGuides[expandedType] && (
             <div className="space-y-6">
               {/* 標題與描述 */}
-              <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6">
+              <div className="bg-washi-dark rounded-xl p-6 border border-sumi-light/10">
                 <h3 className="text-xl font-bold text-sumi mb-2">
                   {conjugationGuides[expandedType].title}
                 </h3>
-                <p className="text-uguisu leading-relaxed">
+                <p className="text-sumi-light leading-relaxed">
                   {conjugationGuides[expandedType].description}
                 </p>
               </div>
@@ -285,22 +285,22 @@ function TutorialModal({ isOpen, onClose }) {
                 {conjugationGuides[expandedType].rules.map((rule, idx) => (
                   <div 
                     key={idx}
-                    className="border border-uguisu/20 rounded-xl overflow-hidden"
+                    className="border border-sumi-light/20 rounded-xl overflow-hidden"
                   >
                     <button
                       onClick={() => setExpandedRule(expandedRule === idx ? -1 : idx)}
-                      className="w-full flex items-center justify-between p-4 bg-white hover:bg-shirochaer transition-colors"
+                      className="w-full flex items-center justify-between p-4 bg-washi hover:bg-washi-dark transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="bg-indigo-100 text-beni-dark px-3 py-1 rounded-full text-sm font-medium">
+                        <span className="bg-aizome/10 text-aizome px-3 py-1 rounded-full text-sm font-medium">
                           {rule.form}
                         </span>
                         <span className="text-sumi font-medium">{rule.rule}</span>
                       </div>
                       {expandedRule === idx ? (
-                        <ChevronUp className="w-5 h-5 text-slate-400" />
+                        <ChevronUp className="w-5 h-5 text-sumi-light" />
                       ) : (
-                        <ChevronDown className="w-5 h-5 text-slate-400" />
+                        <ChevronDown className="w-5 h-5 text-sumi-light" />
                       )}
                     </button>
                     
@@ -310,22 +310,22 @@ function TutorialModal({ isOpen, onClose }) {
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: 'auto', opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
-                          className="border-t border-uguisu/20 bg-shirochaer"
+                          className="border-t border-sumi-light/20 bg-washi-dark"
                         >
                           <div className="p-4 space-y-3">
                             {rule.examples.map((ex, exIdx) => (
                               <div 
                                 key={exIdx}
-                                className="flex items-center gap-4 bg-white p-3 rounded-lg shadow-sm"
+                                className="flex items-center gap-4 bg-washi p-3 rounded-lg border border-sumi-light/10"
                               >
                                 <span className="text-2xl font-bold text-sumi japanese-text min-w-[80px]">
                                   {ex.base}
                                 </span>
-                                <ChevronRight className="w-5 h-5 text-slate-400" />
-                                <span className="text-2xl font-bold text-beni japanese-text min-w-[120px]">
+                                <ChevronRight className="w-5 h-5 text-sumi-light" />
+                                <span className="text-2xl font-bold text-aizome japanese-text min-w-[120px]">
                                   {ex.result}
                                 </span>
-                                <span className="text-sm text-slate-500 flex-1">
+                                <span className="text-sm text-sumi-light flex-1">
                                   {ex.explanation}
                                 </span>
                               </div>
@@ -340,34 +340,34 @@ function TutorialModal({ isOpen, onClose }) {
 
               {/* 音便規則詳解 (僅五段動詞) */}
               {expandedType === 'GODAN' && (
-                <div className="bg-shirocha border border-uguisu/20 rounded-xl p-6">
+                <div className="bg-washi-dark border border-sumi-light/20 rounded-xl p-6">
                   <h4 className="font-bold text-sumi mb-4 flex items-center gap-2">
                     <Info className="w-5 h-5" />
                     音便規則速記表
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                    <div className="bg-shirocha p-3 rounded-lg">
-                      <span className="font-bold text-uguisu-light">く → いた/いて</span>
-                      <span className="text-uguisu ml-2">書く → 書いた</span>
+                    <div className="bg-washi p-3 rounded-lg border border-sumi-light/10">
+                      <span className="font-bold text-aizome">く → いた/いて</span>
+                      <span className="text-sumi-light ml-2">書く → 書いた</span>
                     </div>
-                    <div className="bg-shirocha p-3 rounded-lg">
-                      <span className="font-bold text-uguisu-light">ぐ → いだ/いで</span>
-                      <span className="text-uguisu ml-2">泳ぐ → 泳いだ</span>
+                    <div className="bg-washi p-3 rounded-lg border border-sumi-light/10">
+                      <span className="font-bold text-aizome">ぐ → いだ/いで</span>
+                      <span className="text-sumi-light ml-2">泳ぐ → 泳いだ</span>
                     </div>
-                    <div className="bg-shirocha p-3 rounded-lg">
-                      <span className="font-bold text-uguisu-light">す → した/して</span>
-                      <span className="text-uguisu ml-2">話す → 話した</span>
+                    <div className="bg-washi p-3 rounded-lg border border-sumi-light/10">
+                      <span className="font-bold text-aizome">す → した/して</span>
+                      <span className="text-sumi-light ml-2">話す → 話した</span>
                     </div>
-                    <div className="bg-shirocha p-3 rounded-lg">
-                      <span className="font-bold text-uguisu-light">つ/う/る → った/って</span>
-                      <span className="text-uguisu ml-2">待つ → 待った</span>
+                    <div className="bg-washi p-3 rounded-lg border border-sumi-light/10">
+                      <span className="font-bold text-aizome">つ/う/る → った/って</span>
+                      <span className="text-sumi-light ml-2">待つ → 待った</span>
                     </div>
-                    <div className="bg-shirocha p-3 rounded-lg">
-                      <span className="font-bold text-uguisu-light">ぬ/ぶ/む → んだ/んで</span>
-                      <span className="text-uguisu ml-2">読む → 読んだ</span>
+                    <div className="bg-washi p-3 rounded-lg border border-sumi-light/10">
+                      <span className="font-bold text-aizome">ぬ/ぶ/む → んだ/んで</span>
+                      <span className="text-sumi-light ml-2">読む → 読んだ</span>
                     </div>
-                    <div className="bg-shirocha p-3 rounded-lg border-2 border-amber-300">
-                      <span className="font-bold text-red-600">特例: 行く → 行った</span>
+                    <div className="bg-washi p-3 rounded-lg border-2 border-akane">
+                      <span className="font-bold text-akane">特例: 行く → 行った</span>
                     </div>
                   </div>
                 </div>
@@ -377,10 +377,10 @@ function TutorialModal({ isOpen, onClose }) {
         </div>
 
         {/* 底部按鈕 */}
-        <div className="p-6 border-t border-uguisu/20 bg-shirochaer">
+        <div className="p-6 border-t border-sumi-light/20 bg-washi">
           <button
             onClick={onClose}
-            className="w-full bg-beni hover:bg-beni-dark text-white font-semibold py-3 px-6 rounded-xl transition-colors shadow-lg"
+            className="w-full bg-aizome hover:bg-aizome-light text-white font-semibold py-3 px-6 rounded-xl transition-colors"
           >
             開始練習
           </button>
@@ -404,17 +404,17 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="bg-shirocha rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        className="bg-washi-dark rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
       >
-        <div className="p-6 border-b border-uguisu/20 sticky top-0 bg-white z-10">
+        <div className="p-6 border-b border-sumi-light/20 sticky top-0 bg-washi z-10">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold text-sumi flex items-center gap-2">
-              <Settings className="w-6 h-6 text-beni" />
+              <Settings className="w-6 h-6 text-aizome" />
               練習設定
             </h2>
             <button 
               onClick={onClose}
-              className="text-slate-400 hover:text-uguisu transition-colors"
+              className="text-sumi-light hover:text-sumi transition-colors"
             >
               <XCircle className="w-6 h-6" />
             </button>
@@ -430,23 +430,23 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
                 onClick={() => onSettingsChange({ ...settings, mode: 'perform' })}
                 className={`p-4 rounded-xl border-2 transition-all ${
                   settings.mode === 'perform'
-                    ? 'border-beni bg-primary-50 shadow-md'
-                    : 'border-uguisu/20 hover:border-slate-300'
+                    ? 'border-aizome bg-aizome/10 shadow-md'
+                    : 'border-sumi-light/20 hover:border-sumi-light/40'
                 }`}
               >
                 <div className="font-semibold text-sumi">模式 A: 執行變化</div>
-                <div className="text-sm text-uguisu mt-1">看到動詞,輸入變化形式</div>
+                <div className="text-sm text-sumi-light mt-1">看到動詞,輸入變化形式</div>
               </button>
               <button
                 onClick={() => onSettingsChange({ ...settings, mode: 'recognize' })}
                 className={`p-4 rounded-xl border-2 transition-all ${
                   settings.mode === 'recognize'
-                    ? 'border-beni bg-primary-50 shadow-md'
-                    : 'border-uguisu/20 hover:border-slate-300'
+                    ? 'border-aizome bg-aizome/10 shadow-md'
+                    : 'border-sumi-light/20 hover:border-sumi-light/40'
                 }`}
               >
                 <div className="font-semibold text-sumi">模式 B: 識別變化</div>
-                <div className="text-sm text-uguisu mt-1">看到變化,選擇正確形式</div>
+                <div className="text-sm text-sumi-light mt-1">看到變化,選擇正確形式</div>
               </button>
             </div>
           </div>
@@ -460,8 +460,8 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
                   key={level}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg border-2 cursor-pointer transition-all ${
                     settings.enabledLevels.includes(level)
-                      ? 'border-emerald-500 bg-emerald-50'
-                      : 'border-uguisu/20 hover:border-slate-300'
+                      ? 'border-matcha bg-matcha/10'
+                      : 'border-sumi-light/20 hover:border-sumi-light/40'
                   }`}
                 >
                   <input
@@ -475,7 +475,7 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
                         onSettingsChange({ ...settings, enabledLevels: newLevels });
                       }
                     }}
-                    className="w-4 h-4 text-emerald-600 rounded"
+                    className="w-4 h-4 text-matcha rounded"
                   />
                   <span className="font-medium text-sumi">{level}</span>
                 </label>
@@ -492,8 +492,8 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
                   key={type}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg border-2 cursor-pointer transition-all ${
                     settings.enabledTypes.includes(type)
-                      ? 'border-violet-500 bg-violet-50'
-                      : 'border-uguisu/20 hover:border-slate-300'
+                      ? 'border-aizome bg-aizome/10'
+                      : 'border-sumi-light/20 hover:border-sumi-light/40'
                   }`}
                 >
                   <input
@@ -507,7 +507,7 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
                         onSettingsChange({ ...settings, enabledTypes: newTypes });
                       }
                     }}
-                    className="w-4 h-4 text-violet-600 rounded"
+                    className="w-4 h-4 text-aizome rounded"
                   />
                   <span className="font-medium text-sumi">{getVerbTypeShort(type)}</span>
                 </label>
@@ -524,8 +524,8 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
                   key={form}
                   className={`flex items-center gap-2 p-3 rounded-lg border-2 cursor-pointer transition-all ${
                     settings.enabledForms.includes(form)
-                      ? 'border-beni bg-primary-50'
-                      : 'border-uguisu/20 hover:border-slate-300'
+                      ? 'border-aizome bg-aizome/10'
+                      : 'border-sumi-light/20 hover:border-sumi-light/40'
                   }`}
                 >
                   <input
@@ -539,7 +539,7 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
                         onSettingsChange({ ...settings, enabledForms: newForms });
                       }
                     }}
-                    className="w-4 h-4 text-beni rounded"
+                    className="w-4 h-4 text-aizome rounded"
                   />
                   <span className="text-sm font-medium text-sumi">{FORM_NAMES[form]}</span>
                 </label>
@@ -551,7 +551,7 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
           <div>
             <h3 className="text-lg font-semibold text-sumi mb-3">額外修飾詞</h3>
             <div className="space-y-2">
-              <label className="flex items-center gap-3 p-3 rounded-lg border-2 border-uguisu/20 hover:border-slate-300 cursor-pointer transition-all">
+              <label className="flex items-center gap-3 p-3 rounded-lg border-2 border-sumi-light/20 hover:border-sumi-light/40 cursor-pointer transition-all">
                 <input
                   type="checkbox"
                   checked={settings.enabledModifiers.polite}
@@ -559,14 +559,14 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
                     ...settings,
                     enabledModifiers: { ...settings.enabledModifiers, polite: e.target.checked }
                   })}
-                  className="w-4 h-4 text-beni rounded"
+                  className="w-4 h-4 text-aizome rounded"
                 />
                 <div>
                   <div className="font-medium text-sumi">丁寧語 (ます形)</div>
-                  <div className="text-sm text-uguisu">加入禮貌形式的變化</div>
+                  <div className="text-sm text-sumi-light">加入禮貌形式的變化</div>
                 </div>
               </label>
-              <label className="flex items-center gap-3 p-3 rounded-lg border-2 border-uguisu/20 hover:border-slate-300 cursor-pointer transition-all">
+              <label className="flex items-center gap-3 p-3 rounded-lg border-2 border-sumi-light/20 hover:border-sumi-light/40 cursor-pointer transition-all">
                 <input
                   type="checkbox"
                   checked={settings.enabledModifiers.negative}
@@ -574,14 +574,14 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
                     ...settings,
                     enabledModifiers: { ...settings.enabledModifiers, negative: e.target.checked }
                   })}
-                  className="w-4 h-4 text-beni rounded"
+                  className="w-4 h-4 text-aizome rounded"
                 />
                 <div>
                   <div className="font-medium text-sumi">否定形</div>
-                  <div className="text-sm text-uguisu">加入否定變化</div>
+                  <div className="text-sm text-sumi-light">加入否定變化</div>
                 </div>
               </label>
-              <label className="flex items-center gap-3 p-3 rounded-lg border-2 border-uguisu/20 hover:border-slate-300 cursor-pointer transition-all">
+              <label className="flex items-center gap-3 p-3 rounded-lg border-2 border-sumi-light/20 hover:border-sumi-light/40 cursor-pointer transition-all">
                 <input
                   type="checkbox"
                   checked={settings.enabledModifiers.past}
@@ -589,21 +589,21 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
                     ...settings,
                     enabledModifiers: { ...settings.enabledModifiers, past: e.target.checked }
                   })}
-                  className="w-4 h-4 text-beni rounded"
+                  className="w-4 h-4 text-aizome rounded"
                 />
                 <div>
                   <div className="font-medium text-sumi">過去形</div>
-                  <div className="text-sm text-uguisu">加入過去時態</div>
+                  <div className="text-sm text-sumi-light">加入過去時態</div>
                 </div>
               </label>
             </div>
           </div>
         </div>
 
-        <div className="p-6 border-t border-uguisu/20 bg-shirochaer">
+        <div className="p-6 border-t border-sumi-light/20 bg-washi">
           <button
             onClick={onClose}
-            className="w-full bg-beni hover:bg-beni-dark text-white font-semibold py-3 px-6 rounded-xl transition-colors shadow-lg shadow-primary-200"
+            className="w-full bg-aizome hover:bg-aizome-light text-white font-semibold py-3 px-6 rounded-xl transition-colors"
           >
             套用設定
           </button>
@@ -619,28 +619,28 @@ function StatsBar({ currentStreak, maxStreak, totalCorrect, totalAttempts }) {
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-      <div className="bg-beni rounded-xl p-4 text-white shadow-lg">
+      <div className="bg-aizome rounded-xl p-4 text-white">
         <div className="flex items-center gap-2 mb-1">
           <Flame className="w-5 h-5" />
           <span className="text-sm font-medium opacity-90">當前連勝</span>
         </div>
         <div className="text-3xl font-bold">{currentStreak}</div>
       </div>
-      <div className="bg-moegi rounded-xl p-4 text-white shadow-lg">
+      <div className="bg-matcha rounded-xl p-4 text-white">
         <div className="flex items-center gap-2 mb-1">
           <Trophy className="w-5 h-5" />
           <span className="text-sm font-medium opacity-90">最高連勝</span>
         </div>
         <div className="text-3xl font-bold">{maxStreak}</div>
       </div>
-      <div className="bg-moegi-light rounded-xl p-4 text-white shadow-lg">
+      <div className="bg-matcha-light rounded-xl p-4 text-white">
         <div className="flex items-center gap-2 mb-1">
           <CheckCircle2 className="w-5 h-5" />
           <span className="text-sm font-medium opacity-90">正確率</span>
         </div>
         <div className="text-3xl font-bold">{accuracy}%</div>
       </div>
-      <div className="bg-uguisu rounded-xl p-4 text-white shadow-lg">
+      <div className="bg-aizome-light rounded-xl p-4 text-white">
         <div className="flex items-center gap-2 mb-1">
           <Sparkles className="w-5 h-5" />
           <span className="text-sm font-medium opacity-90">總題數</span>
@@ -723,13 +723,13 @@ function PerformMode({ question, onSubmit, onNext, feedback, userAnswer }) {
       className="space-y-6"
     >
       {/* 動詞卡片 */}
-      <div className="bg-beni rounded-2xl p-8 text-white shadow-xl relative">
+      <div className="bg-aizome rounded-2xl p-8 text-white shadow-xl relative">
         <div className="text-center">
           <div className="flex justify-center gap-2 mb-2">
-            <span className="bg-shirocha/20 px-3 py-1 rounded-full text-sm">
+            <span className="bg-washi/20 px-3 py-1 rounded-full text-sm">
               {getVerbTypeShort(question.verb.type)}
             </span>
-            <span className="bg-shirocha/20 px-3 py-1 rounded-full text-sm">
+            <span className="bg-washi/20 px-3 py-1 rounded-full text-sm">
               {question.verb.level}
             </span>
           </div>
@@ -756,9 +756,9 @@ function PerformMode({ question, onSubmit, onNext, feedback, userAnswer }) {
       </div>
 
       {/* 問題說明 */}
-      <div className="bg-shirocha rounded-xl p-6 shadow-lg border-2 border-uguisu/20">
+      <div className="bg-washi-dark rounded-xl p-6 border-2 border-sumi-light/20">
         <div className="text-center">
-          <div className="text-sm text-uguisu mb-2">請變化為:</div>
+          <div className="text-sm text-sumi-light mb-2">請變化為:</div>
           <div className="text-2xl font-bold text-sumi">
             {getQuestionDescription(question.form, question.modifiers)}
           </div>
@@ -777,16 +777,16 @@ function PerformMode({ question, onSubmit, onNext, feedback, userAnswer }) {
             placeholder="請輸入答案 (支援羅馬拼音或平假名)"
             className={`w-full text-3xl japanese-text text-center p-6 rounded-xl border-2 transition-all ${
               feedback === null
-                ? 'border-slate-300 focus:border-beni focus:ring-4 focus:ring-vermillion/20'
+                ? 'border-sumi-light/30 focus:border-aizome focus:ring-4 focus:ring-aizome/20 bg-washi'
                 : feedback.correct
-                ? 'border-green-500 bg-green-50'
-                : 'border-red-500 bg-red-50'
+                ? 'border-matcha bg-matcha/10'
+                : 'border-akane bg-akane/10'
             } outline-none`}
           />
           {/* 即時轉換預覽 */}
           {inputValue && !containsJapanese(inputValue) && convertedValue !== inputValue && (
-            <div className="text-center text-sm text-uguisu">
-              轉換: <span className="japanese-text text-lg font-medium text-beni">{convertedValue}</span>
+            <div className="text-center text-sm text-sumi-light">
+              轉換: <span className="japanese-text text-lg font-medium text-aizome">{convertedValue}</span>
             </div>
           )}
         </div>
@@ -795,7 +795,7 @@ function PerformMode({ question, onSubmit, onNext, feedback, userAnswer }) {
           <button
             type="submit"
             disabled={!inputValue.trim()}
-            className="w-full bg-beni hover:bg-beni-dark disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-semibold py-4 px-6 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2"
+            className="w-full bg-aizome hover:bg-aizome-light disabled:bg-sumi-light/30 disabled:cursor-not-allowed text-white font-semibold py-4 px-6 rounded-xl transition-all flex items-center justify-center gap-2"
           >
             提交答案
             <ChevronRight className="w-5 h-5" />
@@ -806,44 +806,44 @@ function PerformMode({ question, onSubmit, onNext, feedback, userAnswer }) {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               className={`p-6 rounded-xl ${
-                feedback.correct ? 'bg-green-100 border-2 border-green-500' : 'bg-red-100 border-2 border-red-500'
+                feedback.correct ? 'bg-matcha/10 border-2 border-matcha' : 'bg-akane/10 border-2 border-akane'
               }`}
             >
               <div className="flex items-start gap-4">
                 {feedback.correct ? (
-                  <CheckCircle2 className="w-8 h-8 text-green-600 flex-shrink-0" />
+                  <CheckCircle2 className="w-8 h-8 text-matcha-dark flex-shrink-0" />
                 ) : (
-                  <XCircle className="w-8 h-8 text-red-600 flex-shrink-0" />
+                  <XCircle className="w-8 h-8 text-akane-dark flex-shrink-0" />
                 )}
                 <div className="flex-1">
-                  <div className={`text-xl font-bold mb-3 ${feedback.correct ? 'text-green-800' : 'text-red-800'}`}>
+                  <div className={`text-xl font-bold mb-3 ${feedback.correct ? 'text-matcha-dark' : 'text-akane-dark'}`}>
                     {feedback.correct ? '正確! 太棒了!' : '答錯了,再接再厲!'}
                   </div>
                   
                   {/* 變化分析 */}
-                  <div className="bg-shirocha rounded-lg p-4 space-y-2 border border-uguisu/20">
+                  <div className="bg-washi-dark rounded-lg p-4 space-y-2 border border-sumi-light/20">
                     <div className="flex items-center gap-2 text-sm">
                       <span className="font-semibold text-sumi">辭書形:</span>
                       <span className="japanese-text text-lg text-sumi">{question.verb.dictionary}</span>
-                      <ChevronRight className="w-4 h-4 text-slate-400" />
+                      <ChevronRight className="w-4 h-4 text-sumi-light" />
                       <span className="font-semibold text-sumi">變化:</span>
-                      <span className="text-beni font-medium">{getQuestionDescription(question.form, question.modifiers)}</span>
+                      <span className="text-aizome font-medium">{getQuestionDescription(question.form, question.modifiers)}</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
                       <span className="font-semibold text-sumi">正確答案:</span>
-                      <span className="japanese-text text-xl text-green-700 font-bold">{question.answer}</span>
+                      <span className="japanese-text text-xl text-matcha-dark font-bold">{question.answer}</span>
                       <button
                         onClick={() => speakJapanese(question.answer)}
-                        className="p-1 hover:bg-shirocha rounded transition-colors"
+                        className="p-1 hover:bg-washi rounded transition-colors"
                         title="朗讀答案"
                       >
-                        <Volume2 className="w-4 h-4 text-green-600" />
+                        <Volume2 className="w-4 h-4 text-matcha-dark" />
                       </button>
                     </div>
                     {!feedback.correct && userAnswer && (
-                      <div className="flex items-center gap-2 text-sm pt-2 border-t border-uguisu/20">
+                      <div className="flex items-center gap-2 text-sm pt-2 border-t border-sumi-light/20">
                         <span className="font-semibold text-sumi">你的答案:</span>
-                        <span className="japanese-text text-lg text-red-600">{userAnswer}</span>
+                        <span className="japanese-text text-lg text-akane-dark">{userAnswer}</span>
                       </div>
                     )}
                   </div>
@@ -852,7 +852,7 @@ function PerformMode({ question, onSubmit, onNext, feedback, userAnswer }) {
             </motion.div>
             <button
               onClick={onNext}
-              className="w-full bg-beni hover:bg-beni-dark text-white font-semibold py-4 px-6 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2"
+              className="w-full bg-aizome hover:bg-aizome-light text-white font-semibold py-4 px-6 rounded-xl transition-all flex items-center justify-center gap-2"
             >
               下一題
               <ChevronRight className="w-5 h-5" />
@@ -924,7 +924,7 @@ function RecognizeMode({ question, onSubmit, onNext, feedback }) {
       className="space-y-6"
     >
       {/* 變化後的動詞卡片 */}
-      <div className="bg-moegi rounded-2xl p-8 text-white shadow-xl">
+      <div className="bg-matcha rounded-2xl p-8 text-white shadow-xl">
         <div className="text-center">
           <div className="text-sm font-medium opacity-80 mb-2">這是什麼變化形式?</div>
           <div className="flex items-center justify-center gap-3 mb-4">
@@ -938,10 +938,10 @@ function RecognizeMode({ question, onSubmit, onNext, feedback }) {
             <div className="text-6xl font-bold japanese-text">{question.answer}</div>
           </div>
           <div className="flex justify-center gap-2 mt-4">
-            <span className="bg-shirocha/20 px-3 py-1 rounded-full text-sm">
+            <span className="bg-washi/20 px-3 py-1 rounded-full text-sm">
               {getVerbTypeShort(question.verb.type)}
             </span>
-            <span className="bg-shirocha/20 px-3 py-1 rounded-full text-sm">
+            <span className="bg-washi/20 px-3 py-1 rounded-full text-sm">
               {question.verb.level}
             </span>
           </div>
@@ -959,7 +959,7 @@ function RecognizeMode({ question, onSubmit, onNext, feedback }) {
       </div>
 
       {/* 選擇變化形式 */}
-      <div className="bg-shirocha rounded-xl p-6 shadow-lg border-2 border-uguisu/20">
+      <div className="bg-washi-dark rounded-xl p-6 border-2 border-sumi-light/20">
         <div className="text-sm font-semibold text-sumi mb-3">選擇變化形式:</div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {allForms.map(form => (
@@ -969,8 +969,8 @@ function RecognizeMode({ question, onSubmit, onNext, feedback }) {
               disabled={feedback !== null}
               className={`p-3 rounded-lg border-2 transition-all font-medium ${
                 selectedTags.form === form
-                  ? 'border-beni bg-primary-50 text-beni-dark'
-                  : 'border-uguisu/20 hover:border-slate-300 text-sumi'
+                  ? 'border-aizome bg-aizome/10 text-aizome'
+                  : 'border-sumi-light/20 hover:border-sumi-light/40 text-sumi'
               } ${feedback !== null && 'cursor-not-allowed opacity-60'}`}
             >
               {FORM_NAMES[form]}
@@ -980,7 +980,7 @@ function RecognizeMode({ question, onSubmit, onNext, feedback }) {
       </div>
 
       {/* 選擇修飾詞 */}
-      <div className="bg-shirocha rounded-xl p-6 shadow-lg border-2 border-uguisu/20">
+      <div className="bg-washi-dark rounded-xl p-6 border-2 border-sumi-light/20">
         <div className="text-sm font-semibold text-sumi mb-3">選擇修飾詞 (可多選):</div>
         <div className="flex flex-wrap gap-2">
           <button
@@ -988,8 +988,8 @@ function RecognizeMode({ question, onSubmit, onNext, feedback }) {
             disabled={feedback !== null}
             className={`px-4 py-2 rounded-lg border-2 transition-all font-medium ${
               selectedTags.polite
-                ? 'border-blue-500 bg-blue-50 text-blue-700'
-                : 'border-uguisu/20 hover:border-slate-300 text-sumi'
+                ? 'border-aizome bg-aizome/10 text-aizome'
+                : 'border-sumi-light/20 hover:border-sumi-light/40 text-sumi'
             } ${feedback !== null && 'cursor-not-allowed opacity-60'}`}
           >
             丁寧
@@ -999,8 +999,8 @@ function RecognizeMode({ question, onSubmit, onNext, feedback }) {
             disabled={feedback !== null}
             className={`px-4 py-2 rounded-lg border-2 transition-all font-medium ${
               selectedTags.negative
-                ? 'border-purple-500 bg-purple-50 text-purple-700'
-                : 'border-uguisu/20 hover:border-slate-300 text-sumi'
+                ? 'border-akane bg-akane/10 text-akane'
+                : 'border-sumi-light/20 hover:border-sumi-light/40 text-sumi'
             } ${feedback !== null && 'cursor-not-allowed opacity-60'}`}
           >
             否定
@@ -1010,8 +1010,8 @@ function RecognizeMode({ question, onSubmit, onNext, feedback }) {
             disabled={feedback !== null}
             className={`px-4 py-2 rounded-lg border-2 transition-all font-medium ${
               selectedTags.past
-                ? 'border-orange-500 bg-orange-50 text-orange-700'
-                : 'border-uguisu/20 hover:border-slate-300 text-sumi'
+                ? 'border-matcha bg-matcha/10 text-matcha-dark'
+                : 'border-sumi-light/20 hover:border-sumi-light/40 text-sumi'
             } ${feedback !== null && 'cursor-not-allowed opacity-60'}`}
           >
             過去
@@ -1024,7 +1024,7 @@ function RecognizeMode({ question, onSubmit, onNext, feedback }) {
         <button
           onClick={handleSubmit}
           disabled={!selectedTags.form}
-          className="w-full bg-beni hover:bg-beni-dark disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-semibold py-4 px-6 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2"
+          className="w-full bg-aizome hover:bg-aizome-light disabled:bg-sumi-light/30 disabled:cursor-not-allowed text-white font-semibold py-4 px-6 rounded-xl transition-all flex items-center justify-center gap-2"
         >
           提交答案
           <ChevronRight className="w-5 h-5" />
@@ -1035,38 +1035,38 @@ function RecognizeMode({ question, onSubmit, onNext, feedback }) {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             className={`p-6 rounded-xl ${
-              feedback.correct ? 'bg-green-100 border-2 border-green-500' : 'bg-red-100 border-2 border-red-500'
+              feedback.correct ? 'bg-matcha/10 border-2 border-matcha' : 'bg-akane/10 border-2 border-akane'
             }`}
           >
             <div className="flex items-start gap-4">
               {feedback.correct ? (
-                <CheckCircle2 className="w-8 h-8 text-green-600 flex-shrink-0" />
+                <CheckCircle2 className="w-8 h-8 text-matcha-dark flex-shrink-0" />
               ) : (
-                <XCircle className="w-8 h-8 text-red-600 flex-shrink-0" />
+                <XCircle className="w-8 h-8 text-akane-dark flex-shrink-0" />
               )}
               <div className="flex-1">
-                <div className={`text-xl font-bold mb-3 ${feedback.correct ? 'text-green-800' : 'text-red-800'}`}>
+                <div className={`text-xl font-bold mb-3 ${feedback.correct ? 'text-matcha-dark' : 'text-akane-dark'}`}>
                   {feedback.correct ? '正確! 太棒了!' : '答錯了,再接再厲!'}
                 </div>
                 
                 {/* 變化分析 */}
-                <div className="bg-shirocha rounded-lg p-4 space-y-2 border border-uguisu/20">
+                <div className="bg-washi-dark rounded-lg p-4 space-y-2 border border-sumi-light/20">
                   <div className="flex items-center gap-2 text-sm">
                     <span className="font-semibold text-sumi">辭書形:</span>
                     <span className="japanese-text text-lg text-sumi">{question.verb.dictionary}</span>
-                    <ChevronRight className="w-4 h-4 text-slate-400" />
+                    <ChevronRight className="w-4 h-4 text-sumi-light" />
                     <span className="font-semibold text-sumi">變化:</span>
-                    <span className="text-beni font-medium">{getQuestionDescription(question.form, question.modifiers)}</span>
+                    <span className="text-aizome font-medium">{getQuestionDescription(question.form, question.modifiers)}</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <span className="font-semibold text-sumi">變化結果:</span>
-                    <span className="japanese-text text-xl text-green-700 font-bold">{question.answer}</span>
+                    <span className="japanese-text text-xl text-matcha-dark font-bold">{question.answer}</span>
                     <button
                       onClick={() => speakJapanese(question.answer)}
-                      className="p-1 hover:bg-shirocha rounded transition-colors"
+                      className="p-1 hover:bg-washi rounded transition-colors"
                       title="朗讀"
                     >
-                      <Volume2 className="w-4 h-4 text-green-600" />
+                      <Volume2 className="w-4 h-4 text-matcha-dark" />
                     </button>
                   </div>
                 </div>
@@ -1075,7 +1075,7 @@ function RecognizeMode({ question, onSubmit, onNext, feedback }) {
           </motion.div>
           <button
             onClick={onNext}
-            className="w-full bg-beni hover:bg-beni-dark text-white font-semibold py-4 px-6 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2"
+            className="w-full bg-aizome hover:bg-aizome-light text-white font-semibold py-4 px-6 rounded-xl transition-all flex items-center justify-center gap-2"
           >
             下一題
             <ChevronRight className="w-5 h-5" />
@@ -1207,7 +1207,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-kinari">
+    <div className="min-h-screen bg-washi">
       {/* 語音警告 */}
       <AnimatePresence>
         {showVoiceWarning && (
@@ -1219,7 +1219,7 @@ function App() {
       </AnimatePresence>
 
       {/* 頂部導航 */}
-      <div className="bg-shirocha backdrop-blur-md border-b border-uguisu/20 shadow-lg sticky top-0 z-40">
+      <div className="bg-washi-dark backdrop-blur-md border-b border-sumi-light/20 sticky top-0 z-40">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -1232,7 +1232,7 @@ function App() {
               />
               <div>
                 <h1 className="text-2xl font-bold text-sumi">日語動詞變化練習</h1>
-                <p className="text-sm text-uguisu">
+                <p className="text-sm text-sumi-light">
                   {filteredVerbs.length} 個動詞 | JLPT {settings.enabledLevels.join('/')}
                 </p>
               </div>
@@ -1240,21 +1240,21 @@ function App() {
             <div className="flex gap-2">
               <button
                 onClick={() => setShowTutorial(true)}
-                className="p-3 rounded-xl bg-moegi/10 hover:bg-moegi/15 text-sumi transition-colors"
+                className="p-3 rounded-xl bg-aizome/10 hover:bg-aizome/20 text-aizome transition-colors"
                 title="變化教學"
               >
                 <GraduationCap className="w-5 h-5" />
               </button>
               <button
                 onClick={handleReset}
-                className="p-3 rounded-xl bg-moegi/10 hover:bg-moegi/15 text-sumi transition-colors"
+                className="p-3 rounded-xl bg-matcha/10 hover:bg-matcha/20 text-matcha-dark transition-colors"
                 title="重置統計"
               >
                 <RotateCcw className="w-5 h-5" />
               </button>
               <button
                 onClick={() => setShowSettings(true)}
-                className="p-3 rounded-xl bg-beni/80 hover:bg-beni text-sumi transition-colors"
+                className="p-3 rounded-xl bg-aizome hover:bg-aizome-light text-white transition-colors"
                 title="設定"
               >
                 <Settings className="w-5 h-5" />
@@ -1269,13 +1269,13 @@ function App() {
         <StatsBar {...stats} />
 
         {filteredVerbs.length === 0 ? (
-          <div className="bg-shirocha rounded-2xl p-8 text-center shadow-lg">
+          <div className="bg-washi-dark rounded-2xl p-8 text-center border-2 border-sumi-light/20">
             <div className="text-6xl mb-4">😅</div>
             <h3 className="text-xl font-bold text-sumi mb-2">沒有符合條件的動詞</h3>
-            <p className="text-uguisu mb-4">請調整設定中的 JLPT 等級或動詞類型</p>
+            <p className="text-sumi-light mb-4">請調整設定中的 JLPT 等級或動詞類型</p>
             <button
               onClick={() => setShowSettings(true)}
-              className="bg-beni hover:bg-beni-dark text-white font-semibold py-2 px-6 rounded-xl transition-colors"
+              className="bg-aizome hover:bg-aizome-light text-white font-semibold py-2 px-6 rounded-xl transition-colors"
             >
               開啟設定
             </button>

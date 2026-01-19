@@ -7,27 +7,38 @@ export default {
   theme: {
     extend: {
       colors: {
-        // 優雅的日式顏色系統 - 不使用漸層
-        kinari: '#f8f4e6',      // 生成り（米白色）- 主要背景
-        shirocha: '#ebe5d9',    // 白茶色 - 次要背景/卡片
-        moegi: {
-          DEFAULT: '#aacf53',   // 萌黃色 - 強調色
-          dark: '#8ba845',
-          light: '#c5e084',
+        // Classic Japanese Indigo & Washi Paper Color Scheme
+        
+        // Background (Washi Paper)
+        washi: {
+          DEFAULT: '#FDFBF7',    // Main app background - pure washi paper
+          dark: '#F3EFE6',       // Card backgrounds, contrast areas
         },
-        uguisu: {
-          DEFAULT: '#6c7a52',   // 鶯色（暗綠）- 文字
-          dark: '#4a5238',
-          light: '#8d9b73',
+        
+        // Primary Accent (Aizome Indigo)
+        aizome: {
+          DEFAULT: '#1E3F66',    // Primary buttons, active tabs, main titles
+          light: '#2A5280',      // Hover states on buttons
+          dark: '#152D4A',       // Darker variant for pressed states
         },
-        beni: {
-          DEFAULT: '#c73e3a',   // 紅色 - 重點按鈕
-          dark: '#a32f2c',
-          light: '#d96662',
-        },
+        
+        // Text & Borders (Sumi Ink)
         sumi: {
-          DEFAULT: '#2b2b2b',   // 墨色 - 深色文字
-          light: '#4a4a4a',
+          DEFAULT: '#333333',    // Main body text
+          light: '#666666',      // Secondary text, labels, subtle borders
+          lighter: '#999999',    // Tertiary text, disabled states
+        },
+        
+        // Feedback States
+        matcha: {
+          DEFAULT: '#6A845F',    // Correct/Success states
+          light: '#8BA177',      // Light variant for backgrounds
+          dark: '#556B4C',       // Dark variant for emphasis
+        },
+        akane: {
+          DEFAULT: '#C55A5A',    // Incorrect/Error states
+          light: '#D97B7B',      // Light variant for backgrounds
+          dark: '#A04747',       // Dark variant for emphasis
         },
       },
       animation: {
