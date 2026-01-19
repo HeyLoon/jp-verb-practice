@@ -652,7 +652,7 @@ function StatsBar({ currentStreak, maxStreak, totalCorrect, totalAttempts }) {
 }
 
 // === 元件: 模式 A - 執行變化 ===
-function PerformMode({ question, onSubmit, onNext, feedback, userAnswer }) {
+function PerformMode({ question, onSubmit, onNext, feedback, userAnswer, voiceAvailable }) {
   const [inputValue, setInputValue] = useState('');
   const [convertedValue, setConvertedValue] = useState('');
   const inputRef = useRef(null); // 新增 ref
@@ -734,13 +734,15 @@ function PerformMode({ question, onSubmit, onNext, feedback, userAnswer }) {
             </span>
           </div>
           <div className="flex items-center justify-center gap-3 mb-4">
-            <button
-              onClick={() => speakJapanese(question.verb.dictionary)}
-              className="p-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
-              title="朗讀動詞"
-            >
-              <Volume2 className="w-5 h-5" />
-            </button>
+            {voiceAvailable && (
+              <button
+                onClick={() => speakJapanese(question.verb.dictionary)}
+                className="p-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
+                title="朗讀動詞"
+              >
+                <Volume2 className="w-5 h-5" />
+              </button>
+            )}
             <div className="text-6xl font-bold japanese-text">{question.verb.dictionary}</div>
             <button
               onClick={openJisho}
@@ -832,13 +834,15 @@ function PerformMode({ question, onSubmit, onNext, feedback, userAnswer }) {
                     <div className="flex items-center gap-2 text-sm">
                       <span className="font-semibold text-sumi">正確答案:</span>
                       <span className="japanese-text text-xl text-matcha-dark font-bold">{question.answer}</span>
-                      <button
-                        onClick={() => speakJapanese(question.answer)}
-                        className="p-1 hover:bg-washi rounded transition-colors"
-                        title="朗讀答案"
-                      >
-                        <Volume2 className="w-4 h-4 text-matcha-dark" />
-                      </button>
+                      {voiceAvailable && (
+                        <button
+                          onClick={() => speakJapanese(question.answer)}
+                          className="p-1 hover:bg-washi rounded transition-colors"
+                          title="朗讀答案"
+                        >
+                          <Volume2 className="w-4 h-4 text-matcha-dark" />
+                        </button>
+                      )}
                     </div>
                     {!feedback.correct && userAnswer && (
                       <div className="flex items-center gap-2 text-sm pt-2 border-t border-sumi-light/20">
@@ -865,7 +869,7 @@ function PerformMode({ question, onSubmit, onNext, feedback, userAnswer }) {
 }
 
 // === 元件: 模式 B - 識別變化 ===
-function RecognizeMode({ question, onSubmit, onNext, feedback }) {
+function RecognizeMode({ question, onSubmit, onNext, feedback, voiceAvailable }) {
   const [selectedTags, setSelectedTags] = useState({
     form: null,
     polite: false,
@@ -915,6 +919,14 @@ function RecognizeMode({ question, onSubmit, onNext, feedback }) {
     window.open(`https://jisho.org/search/${question.verb.dictionary}`, '_blank');
   };
 
+  // 判斷修飾詞是否應該被禁用
+  // ない形 = NEGATIVE form，所以「否定」修飾詞應該被禁用
+  // ます形 = POLITE form，所以「丁寧」修飾詞應該被禁用  
+  // た形 = PAST form，所以「過去」修飾詞應該被禁用
+  const isNegativeDisabled = selectedTags.form === CONJUGATION_FORMS.NEGATIVE;
+  const isPoliteDisabled = selectedTags.form === CONJUGATION_FORMS.POLITE;
+  const isPastDisabled = selectedTags.form === CONJUGATION_FORMS.PAST;
+
   return (
     <motion.div
       key={question.answer}
@@ -928,13 +940,15 @@ function RecognizeMode({ question, onSubmit, onNext, feedback }) {
         <div className="text-center">
           <div className="text-sm font-medium opacity-80 mb-2">這是什麼變化形式?</div>
           <div className="flex items-center justify-center gap-3 mb-4">
-            <button
-              onClick={() => speakJapanese(question.answer)}
-              className="p-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
-              title="朗讀"
-            >
-              <Volume2 className="w-5 h-5" />
-            </button>
+            {voiceAvailable && (
+              <button
+                onClick={() => speakJapanese(question.answer)}
+                className="p-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
+                title="朗讀"
+              >
+                <Volume2 className="w-5 h-5" />
+              </button>
+            )}
             <div className="text-6xl font-bold japanese-text">{question.answer}</div>
           </div>
           <div className="flex justify-center gap-2 mt-4">
@@ -965,7 +979,22 @@ function RecognizeMode({ question, onSubmit, onNext, feedback }) {
           {allForms.map(form => (
             <button
               key={form}
-              onClick={() => setSelectedTags({ ...selectedTags, form })}
+              onClick={() => {
+                const newTags = { ...selectedTags, form };
+                // 當選擇ない形時，自動清除否定修飾詞
+                if (form === CONJUGATION_FORMS.NEGATIVE) {
+                  newTags.negative = false;
+                }
+                // 當選擇ます形時，自動清除丁寧修飾詞
+                if (form === CONJUGATION_FORMS.POLITE) {
+                  newTags.polite = false;
+                }
+                // 當選擇た形時，自動清除過去修飾詞
+                if (form === CONJUGATION_FORMS.PAST) {
+                  newTags.past = false;
+                }
+                setSelectedTags(newTags);
+              }}
               disabled={feedback !== null}
               className={`p-3 rounded-lg border-2 transition-all font-medium ${
                 selectedTags.form === form
@@ -984,35 +1013,44 @@ function RecognizeMode({ question, onSubmit, onNext, feedback }) {
         <div className="text-sm font-semibold text-sumi mb-3">選擇修飾詞 (可多選):</div>
         <div className="flex flex-wrap gap-2">
           <button
-            onClick={() => setSelectedTags({ ...selectedTags, polite: !selectedTags.polite })}
-            disabled={feedback !== null}
+            onClick={() => !isPoliteDisabled && setSelectedTags({ ...selectedTags, polite: !selectedTags.polite })}
+            disabled={feedback !== null || isPoliteDisabled}
             className={`px-4 py-2 rounded-lg border-2 transition-all font-medium ${
-              selectedTags.polite
+              isPoliteDisabled
+                ? 'border-sumi-light/10 bg-sumi-light/5 text-sumi-light/40 cursor-not-allowed'
+                : selectedTags.polite
                 ? 'border-aizome bg-aizome/10 text-aizome'
                 : 'border-sumi-light/20 hover:border-sumi-light/40 text-sumi'
-            } ${feedback !== null && 'cursor-not-allowed opacity-60'}`}
+            } ${feedback !== null && !isPoliteDisabled && 'cursor-not-allowed opacity-60'}`}
+            title={isPoliteDisabled ? 'ます形已包含丁寧' : ''}
           >
             丁寧
           </button>
           <button
-            onClick={() => setSelectedTags({ ...selectedTags, negative: !selectedTags.negative })}
-            disabled={feedback !== null}
+            onClick={() => !isNegativeDisabled && setSelectedTags({ ...selectedTags, negative: !selectedTags.negative })}
+            disabled={feedback !== null || isNegativeDisabled}
             className={`px-4 py-2 rounded-lg border-2 transition-all font-medium ${
-              selectedTags.negative
+              isNegativeDisabled
+                ? 'border-sumi-light/10 bg-sumi-light/5 text-sumi-light/40 cursor-not-allowed'
+                : selectedTags.negative
                 ? 'border-akane bg-akane/10 text-akane'
                 : 'border-sumi-light/20 hover:border-sumi-light/40 text-sumi'
-            } ${feedback !== null && 'cursor-not-allowed opacity-60'}`}
+            } ${feedback !== null && !isNegativeDisabled && 'cursor-not-allowed opacity-60'}`}
+            title={isNegativeDisabled ? 'ない形已包含否定' : ''}
           >
             否定
           </button>
           <button
-            onClick={() => setSelectedTags({ ...selectedTags, past: !selectedTags.past })}
-            disabled={feedback !== null}
+            onClick={() => !isPastDisabled && setSelectedTags({ ...selectedTags, past: !selectedTags.past })}
+            disabled={feedback !== null || isPastDisabled}
             className={`px-4 py-2 rounded-lg border-2 transition-all font-medium ${
-              selectedTags.past
+              isPastDisabled
+                ? 'border-sumi-light/10 bg-sumi-light/5 text-sumi-light/40 cursor-not-allowed'
+                : selectedTags.past
                 ? 'border-matcha bg-matcha/10 text-matcha-dark'
                 : 'border-sumi-light/20 hover:border-sumi-light/40 text-sumi'
-            } ${feedback !== null && 'cursor-not-allowed opacity-60'}`}
+            } ${feedback !== null && !isPastDisabled && 'cursor-not-allowed opacity-60'}`}
+            title={isPastDisabled ? 'た形已包含過去' : ''}
           >
             過去
           </button>
@@ -1061,13 +1099,15 @@ function RecognizeMode({ question, onSubmit, onNext, feedback }) {
                   <div className="flex items-center gap-2 text-sm">
                     <span className="font-semibold text-sumi">變化結果:</span>
                     <span className="japanese-text text-xl text-matcha-dark font-bold">{question.answer}</span>
-                    <button
-                      onClick={() => speakJapanese(question.answer)}
-                      className="p-1 hover:bg-washi rounded transition-colors"
-                      title="朗讀"
-                    >
-                      <Volume2 className="w-4 h-4 text-matcha-dark" />
-                    </button>
+                    {voiceAvailable && (
+                      <button
+                        onClick={() => speakJapanese(question.answer)}
+                        className="p-1 hover:bg-washi rounded transition-colors"
+                        title="朗讀"
+                      >
+                        <Volume2 className="w-4 h-4 text-matcha-dark" />
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -1291,6 +1331,7 @@ function App() {
                   onNext={generateNewQuestion}
                   feedback={feedback}
                   userAnswer={userAnswer}
+                  voiceAvailable={voiceAvailable}
                 />
               ) : (
                 <RecognizeMode
@@ -1299,6 +1340,7 @@ function App() {
                   onSubmit={handleRecognizeSubmit}
                   onNext={generateNewQuestion}
                   feedback={feedback}
+                  voiceAvailable={voiceAvailable}
                 />
               )
             )}
