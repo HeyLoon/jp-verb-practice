@@ -263,7 +263,7 @@ function TutorialModal({ isOpen, onClose }) {
             <button
               key={type}
               onClick={() => setActiveTab(type)}
-              className={`px-6 py-3 font-semibold transition-all relative ${
+              className={`px-6 py-3 font-semibold transition-colors relative ${
                 activeTab === type
                   ? 'text-jp-primary'
                   : 'text-gray-500 hover:text-jp-text'
@@ -271,8 +271,7 @@ function TutorialModal({ isOpen, onClose }) {
             >
               {getVerbTypeShort(type)}
               {activeTab === type && (
-                <motion.div
-                  layoutId="activeTab"
+                <div
                   className="absolute bottom-0 left-0 right-0 h-0.5 bg-jp-primary"
                 />
               )}
