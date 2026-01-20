@@ -541,119 +541,72 @@ export function getVerbTypeShort(type) {
 export function getMeaningExplanation(voice, mode, modifiers = {}) {
   const { polite, negative, past } = modifiers;
   
-  // === Voice 層的基礎語感 ===
-  let voiceMeaning = '';
-  switch (voice) {
-    case VOICES.DICTIONARY:
-      voiceMeaning = '';
-      break;
-    case VOICES.POTENTIAL:
-      voiceMeaning = '能夠/可以';
-      break;
-    case VOICES.PASSIVE:
-      voiceMeaning = '被';
-      break;
-    case VOICES.CAUSATIVE:
-      voiceMeaning = '使/讓';
-      break;
-    case VOICES.CAUSATIVE_PASSIVE:
-      voiceMeaning = '被迫/被要求';
-      break;
-  }
+  // === 構建語感說明 ===
+  let explanation = '';
   
-  // === Mode 層的語感修飾 ===
-  let modeMeaning = '';
-  let timeExpression = '';
+  // 處理不同的 Voice
+  const voicePrefix = {
+    [VOICES.DICTIONARY]: '',
+    [VOICES.POTENTIAL]: '能夠',
+    [VOICES.PASSIVE]: '被',
+    [VOICES.CAUSATIVE]: '讓/使',
+    [VOICES.CAUSATIVE_PASSIVE]: '被迫'
+  }[voice] || '';
   
+  // 處理不同的 Mode
   switch (mode) {
     case MODES.STANDARD:
-      // 標準形根據修飾詞決定
-      if (past) {
-        timeExpression = negative ? '沒有' : '了';
+      // 標準形
+      if (polite) {
+        // 丁寧語
+        if (negative && past) {
+          explanation = `${voicePrefix ? voicePrefix + '～' : ''}沒有～（禮貌）`;
+        } else if (negative) {
+          explanation = `${voicePrefix ? voicePrefix + '～' : ''}不～（禮貌）`;
+        } else if (past) {
+          explanation = `${voicePrefix ? voicePrefix + '～' : ''}～了（禮貌）`;
+        } else {
+          explanation = `${voicePrefix ? voicePrefix + '～' : ''}～（禮貌）`;
+        }
       } else {
-        timeExpression = negative ? '不' : '';
+        // 普通形
+        if (negative && past) {
+          explanation = `${voicePrefix ? voicePrefix + '～' : ''}沒有～`;
+        } else if (negative) {
+          explanation = `${voicePrefix ? voicePrefix + '～' : ''}不～`;
+        } else if (past) {
+          explanation = `${voicePrefix ? voicePrefix + '～' : ''}～了`;
+        } else {
+          explanation = `${voicePrefix ? voicePrefix + '～' : ''}～`;
+        }
       }
-      modeMeaning = '';
       break;
       
     case MODES.TE_FORM:
+      // て形
       if (negative) {
-        modeMeaning = '不～的話/不～而';
-        timeExpression = '';
+        explanation = `${voicePrefix ? voicePrefix + '～' : ''}不～而`;
       } else {
-        modeMeaning = '～然後/～著';
-        timeExpression = '';
+        explanation = `${voicePrefix ? voicePrefix + '～' : ''}～然後/～著`;
       }
       break;
       
     case MODES.VOLITIONAL:
+      // 意向形
       if (polite) {
-        modeMeaning = '一起～吧（禮貌）';
+        explanation = `${voicePrefix ? '一起' + voicePrefix + '～' : '一起～'}吧（禮貌）`;
       } else {
-        modeMeaning = '～吧/打算～';
+        explanation = `${voicePrefix ? voicePrefix + '～' : ''}～吧`;
       }
-      timeExpression = '';
       break;
       
     case MODES.IMPERATIVE:
-      modeMeaning = '～！（命令）';
-      timeExpression = '';
+      // 命令形
+      explanation = `${voicePrefix ? voicePrefix + '～' : ''}～！（命令）`;
       break;
   }
   
-  // === 組合語感 ===
-  let fullMeaning = '';
-  
-  // 處理丁寧語（標準形）
-  if (mode === MODES.STANDARD && polite) {
-    if (voice === VOICES.DICTIONARY) {
-      fullMeaning = negative 
-        ? (past ? '沒有～（禮貌）' : '不～（禮貌）')
-        : (past ? '～了（禮貌）' : '～（禮貌）');
-    } else {
-      fullMeaning = `${timeExpression}${voiceMeaning}～（禮貌）`;
-    }
-  } 
-  // 處理て形
-  else if (mode === MODES.TE_FORM) {
-    if (voice === VOICES.DICTIONARY) {
-      fullMeaning = negative ? '不～而/沒～' : '～然後/～著';
-    } else {
-      fullMeaning = negative 
-        ? `不${voiceMeaning}～而`
-        : `${voiceMeaning}～然後`;
-    }
-  }
-  // 處理意向形
-  else if (mode === MODES.VOLITIONAL) {
-    if (voice === VOICES.DICTIONARY) {
-      fullMeaning = polite ? '一起～吧（禮貌）' : '～吧/打算～';
-    } else {
-      fullMeaning = polite 
-        ? `一起${voiceMeaning}～吧（禮貌）`
-        : `${voiceMeaning}～吧`;
-    }
-  }
-  // 處理命令形
-  else if (mode === MODES.IMPERATIVE) {
-    fullMeaning = voice === VOICES.DICTIONARY 
-      ? '～！（命令）' 
-      : `${voiceMeaning}～！（命令）`;
-  }
-  // 處理標準形（非丁寧語）
-  else {
-    if (voice === VOICES.DICTIONARY) {
-      fullMeaning = negative 
-        ? (past ? '沒有～' : '不～')
-        : (past ? '～了' : '～');
-    } else {
-      const negPrefix = negative ? '不' : '';
-      const timePrefix = past ? '了' : '';
-      fullMeaning = `${timePrefix}${negPrefix}${voiceMeaning}～`;
-    }
-  }
-  
-  return fullMeaning;
+  return explanation;
 }
 
 /**

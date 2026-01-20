@@ -1026,7 +1026,7 @@ function PerformMode({ question, onSubmit, onNext, feedback, userAnswer, voiceAv
                     </div>
                     <div className="flex items-center gap-2 text-sm">
                       <span className="font-semibold text-jp-text">語感:</span>
-                      <span className="text-jp-accent font-medium">{getMeaningExplanation(question.voice, question.mode, question.modifiers)}{question.verb.meaning}</span>
+                      <span className="text-jp-text text-base font-semibold">{getMeaningExplanation(question.voice, question.mode, question.modifiers)}{question.verb.meaning}</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
                       <span className="font-semibold text-jp-text">正確答案:</span>
@@ -1390,7 +1390,7 @@ function RecognizeMode({ question, onSubmit, onNext, feedback, voiceAvailable, s
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <span className="font-semibold text-jp-text">語感:</span>
-                    <span className="text-jp-accent font-medium">{getMeaningExplanation(question.voice, question.mode, question.modifiers)}{question.verb.meaning}</span>
+                    <span className="text-jp-text text-base font-semibold">{getMeaningExplanation(question.voice, question.mode, question.modifiers)}{question.verb.meaning}</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <span className="font-semibold text-jp-text">變化結果:</span>
