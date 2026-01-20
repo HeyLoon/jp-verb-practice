@@ -1640,7 +1640,7 @@ function App() {
       </div>
 
       {/* 主要內容 */}
-      <div className="relative flex justify-center gap-6 px-4 py-8">
+      <div className="relative lg:flex lg:justify-center lg:gap-6 px-4 py-8">
         {/* 左側統計（寬螢幕） */}
         <div className="hidden lg:flex flex-col gap-4 w-48 flex-shrink-0 sticky top-24 self-start">
           <div className="bg-jp-primary rounded-xl p-4 text-white shadow-lg">
@@ -1660,7 +1660,7 @@ function App() {
         </div>
 
         {/* 中間主要內容 */}
-        <div className="max-w-4xl w-full">
+        <div className="w-full lg:max-w-4xl mx-auto lg:mx-0">
           {/* 上方統計（窄螢幕） */}
           <div className="lg:hidden mb-6">
             <StatsBar {...stats} />
