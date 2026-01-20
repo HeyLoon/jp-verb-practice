@@ -536,7 +536,7 @@ export function getVerbTypeShort(type) {
 
 /**
  * 將變化後的答案轉換為純平假名版本
- * 策略：找到答案中源自辭書形的部分，替換為讀音
+ * 策略：找到變化後答案中源自辭書形的部分，替換為讀音
  */
 export function getHiraganaAnswer(conjugatedAnswer, verb) {
   const dictionary = verb.dictionary;
@@ -547,39 +547,29 @@ export function getHiraganaAnswer(conjugatedAnswer, verb) {
     return conjugatedAnswer;
   }
   
-  // 策略：找出辭書形和讀音的差異位置（漢字部分）
-  // 例如：「曲がる」vs「まがる」→ 差異在第0位的「曲」vs「ま」
-  // 變化後：「曲がれて」→ 應該轉換為「まがれて」
+  // 策略：從後往前找到共同的假名後綴
+  // 例如：「成功する」和「せいこうする」的共同後綴是「する」
+  // 例如：「曲がる」和「まがる」的共同後綴是「がる」
   
-  // 從前往後找，找到第一個不同的字符位置
-  let diffStart = 0;
-  for (let i = 0; i < Math.min(dictionary.length, reading.length); i++) {
-    if (dictionary[i] !== reading[i]) {
-      diffStart = i;
+  let commonSuffixLength = 0;
+  for (let i = 1; i <= Math.min(dictionary.length, reading.length); i++) {
+    if (dictionary[dictionary.length - i] === reading[reading.length - i]) {
+      commonSuffixLength = i;
+    } else {
       break;
     }
   }
   
-  // 從後往前找，找到最後一個不同的字符位置
-  let diffEnd = dictionary.length;
-  let readingEnd = reading.length;
-  for (let i = 1; i <= Math.min(dictionary.length - diffStart, reading.length - diffStart); i++) {
-    if (dictionary[dictionary.length - i] !== reading[reading.length - i]) {
-      diffEnd = dictionary.length - i + 1;
-      readingEnd = reading.length - i + 1;
-      break;
-    }
+  // 提取前綴部分（漢字部分）
+  const kanjiPrefix = dictionary.substring(0, dictionary.length - commonSuffixLength);
+  const hiraganaPrefix = reading.substring(0, reading.length - commonSuffixLength);
+  
+  // 如果變化後的答案包含漢字前綴，替換它
+  if (kanjiPrefix && conjugatedAnswer.includes(kanjiPrefix)) {
+    return conjugatedAnswer.replace(kanjiPrefix, hiraganaPrefix);
   }
   
-  // 如果變化後的答案以辭書形開頭，替換漢字部分
-  const dictPrefix = dictionary.substring(diffStart, diffEnd);
-  const readingPrefix = reading.substring(diffStart, readingEnd);
-  
-  if (conjugatedAnswer.includes(dictPrefix)) {
-    return conjugatedAnswer.replace(dictPrefix, readingPrefix);
-  }
-  
-  // 如果沒有找到匹配，返回原答案
+  // 如果沒有找到匹配（可能動詞完全變化了），返回原答案
   return conjugatedAnswer;
 }
 
