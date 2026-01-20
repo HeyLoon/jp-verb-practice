@@ -1629,8 +1629,49 @@ function App() {
       </div>
 
       {/* 主要內容 */}
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <StatsBar {...stats} />
+      <div className="relative">
+        {/* 左側統計（寬螢幕） */}
+        <div className="hidden lg:block fixed left-8 top-1/2 -translate-y-1/2 space-y-4 w-48">
+          <div className="bg-jp-primary rounded-xl p-4 text-white shadow-lg">
+            <div className="flex items-center gap-2 mb-1">
+              <Flame className="w-5 h-5" />
+              <span className="text-sm font-medium opacity-90">當前連勝</span>
+            </div>
+            <div className="text-3xl font-bold">{stats.currentStreak}</div>
+          </div>
+          <div className="bg-jp-text rounded-xl p-4 text-white shadow-lg">
+            <div className="flex items-center gap-2 mb-1">
+              <Trophy className="w-5 h-5" />
+              <span className="text-sm font-medium opacity-90">最高連勝</span>
+            </div>
+            <div className="text-3xl font-bold">{stats.maxStreak}</div>
+          </div>
+        </div>
+
+        {/* 右側統計（寬螢幕） */}
+        <div className="hidden lg:block fixed right-8 top-1/2 -translate-y-1/2 space-y-4 w-48">
+          <div className="bg-jp-accent rounded-xl p-4 text-white shadow-lg">
+            <div className="flex items-center gap-2 mb-1">
+              <CheckCircle2 className="w-5 h-5" />
+              <span className="text-sm font-medium opacity-90">正確率</span>
+            </div>
+            <div className="text-3xl font-bold">{stats.totalAttempts > 0 ? Math.round((stats.totalCorrect / stats.totalAttempts) * 100) : 0}%</div>
+          </div>
+          <div className="bg-jp-secondary rounded-xl p-4 text-white shadow-lg">
+            <div className="flex items-center gap-2 mb-1">
+              <Sparkles className="w-5 h-5" />
+              <span className="text-sm font-medium opacity-90">總題數</span>
+            </div>
+            <div className="text-3xl font-bold">{stats.totalAttempts}</div>
+          </div>
+        </div>
+
+        {/* 中間主要內容 */}
+        <div className="max-w-4xl mx-auto px-4 py-8">
+          {/* 上方統計（窄螢幕） */}
+          <div className="lg:hidden mb-6">
+            <StatsBar {...stats} />
+          </div>
 
         {filteredVerbs.length === 0 ? (
           <div className="bg-white rounded-2xl p-8 text-center border-2 border-gray-200">
@@ -1680,6 +1721,7 @@ function App() {
             )}
           </AnimatePresence>
         )}
+        </div>
       </div>
 
       {/* 設定模態框 */}
