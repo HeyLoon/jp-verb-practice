@@ -826,7 +826,7 @@ function QuestionTable({ question }) {
 }
 
 // === 元件: 模式 A - 執行變化 ===
-function PerformMode({ question, onSubmit, onNext, feedback, userAnswer, voiceAvailable, showVerbGroupHint }) {
+function PerformMode({ question, onSubmit, onNext, feedback, userAnswer, voiceAvailable, showVerbGroupHint, onInputStart }) {
   const [inputValue, setInputValue] = useState('');
   const [convertedValue, setConvertedValue] = useState('');
   const inputRef = useRef(null); // 新增 ref
@@ -854,6 +854,12 @@ function PerformMode({ question, onSubmit, onNext, feedback, userAnswer, voiceAv
 
   const handleInputChange = (e) => {
     const value = e.target.value;
+    
+    // 當使用者開始輸入時，清除上一題的反饋狀態
+    if (feedback !== null && inputValue.length === 0 && value.length > 0) {
+      onInputStart?.();
+    }
+    
     setInputValue(value);
     
     // 即時轉換羅馬拼音
@@ -1176,7 +1182,7 @@ function InteractiveQuestionTable({ selectedTags, onTagToggle, disabled }) {
 }
 
 // === 元件: 模式 B - 識別變化 ===
-function RecognizeMode({ question, onSubmit, onNext, feedback, voiceAvailable, showVerbGroupHint }) {
+function RecognizeMode({ question, onSubmit, onNext, feedback, voiceAvailable, showVerbGroupHint, onInputStart }) {
   const [selectedTags, setSelectedTags] = useState({
     voice: null,
     mode: null,
@@ -1246,6 +1252,11 @@ function RecognizeMode({ question, onSubmit, onNext, feedback, voiceAvailable, s
   };
 
   const handleTagToggle = (type, value) => {
+    // 當使用者開始選擇標籤時，清除上一題的反饋狀態
+    if (feedback !== null) {
+      onInputStart?.();
+    }
+    
     if (type === 'voice') {
       setSelectedTags(prev => ({ ...prev, voice: value }));
     } else if (type === 'mode') {
@@ -1618,6 +1629,7 @@ function App() {
                   userAnswer={userAnswer}
                   voiceAvailable={voiceAvailable}
                   showVerbGroupHint={settings.showVerbGroupHint}
+                  onInputStart={() => setFeedback(null)}
                 />
               ) : (
                 <RecognizeMode
@@ -1628,6 +1640,7 @@ function App() {
                   feedback={feedback}
                   voiceAvailable={voiceAvailable}
                   showVerbGroupHint={settings.showVerbGroupHint}
+                  onInputStart={() => setFeedback(null)}
                 />
               )
             )}
