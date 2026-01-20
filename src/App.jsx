@@ -322,7 +322,7 @@ function TutorialModal({ isOpen, onClose }) {
                                   {ex.base}
                                 </span>
                                 <ChevronRight className="w-3 h-3 text-gray-400 flex-shrink-0" />
-                                <span className="japanese-text font-bold text-jp-primary">
+                                <span className="japanese-text font-bold text-jp-secondary">
                                   {ex.result}
                                 </span>
                               </div>
@@ -912,7 +912,7 @@ function PerformMode({ question, onSubmit, onNext, feedback, userAnswer, voiceAv
       className="space-y-6"
     >
       {/* 動詞卡片 */}
-      <div className="bg-jp-primary rounded-2xl p-8 text-white shadow-xl relative">
+      <div className="bg-jp-text rounded-2xl p-8 text-white shadow-xl relative">
         <div className="text-center">
           {showVerbGroupHint && (
             <div className="flex justify-center gap-2 mb-2">
