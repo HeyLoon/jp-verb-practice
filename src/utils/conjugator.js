@@ -560,24 +560,24 @@ export function getMeaningExplanation(voice, mode, modifiers = {}) {
       if (polite) {
         // 丁寧語
         if (negative && past) {
-          explanation = `${voicePrefix ? voicePrefix + '～' : ''}沒有～（禮貌）`;
+          explanation = voicePrefix ? `沒有${voicePrefix}～（禮貌）` : '沒有～（禮貌）';
         } else if (negative) {
-          explanation = `${voicePrefix ? voicePrefix + '～' : ''}不～（禮貌）`;
+          explanation = voicePrefix ? `不${voicePrefix}～（禮貌）` : '不～（禮貌）';
         } else if (past) {
-          explanation = `${voicePrefix ? voicePrefix + '～' : ''}～了（禮貌）`;
+          explanation = voicePrefix ? `${voicePrefix}～了（禮貌）` : '～了（禮貌）';
         } else {
-          explanation = `${voicePrefix ? voicePrefix + '～' : ''}～（禮貌）`;
+          explanation = voicePrefix ? `${voicePrefix}～（禮貌）` : '～（禮貌）';
         }
       } else {
         // 普通形
         if (negative && past) {
-          explanation = `${voicePrefix ? voicePrefix + '～' : ''}沒有～`;
+          explanation = voicePrefix ? `沒有${voicePrefix}～` : '沒有～';
         } else if (negative) {
-          explanation = `${voicePrefix ? voicePrefix + '～' : ''}不～`;
+          explanation = voicePrefix ? `不${voicePrefix}～` : '不～';
         } else if (past) {
-          explanation = `${voicePrefix ? voicePrefix + '～' : ''}～了`;
+          explanation = voicePrefix ? `${voicePrefix}～了` : '～了';
         } else {
-          explanation = `${voicePrefix ? voicePrefix + '～' : ''}～`;
+          explanation = voicePrefix ? `${voicePrefix}～` : '做～';
         }
       }
       break;
@@ -585,24 +585,24 @@ export function getMeaningExplanation(voice, mode, modifiers = {}) {
     case MODES.TE_FORM:
       // て形
       if (negative) {
-        explanation = `${voicePrefix ? voicePrefix + '～' : ''}不～而`;
+        explanation = voicePrefix ? `不${voicePrefix}～的情況下（連接）` : '不～的情況下（連接）';
       } else {
-        explanation = `${voicePrefix ? voicePrefix + '～' : ''}～然後/～著`;
+        explanation = voicePrefix ? `${voicePrefix}～然後/著（連接）` : '～然後/～著（連接）';
       }
       break;
       
     case MODES.VOLITIONAL:
       // 意向形
       if (polite) {
-        explanation = `${voicePrefix ? '一起' + voicePrefix + '～' : '一起～'}吧（禮貌）`;
+        explanation = voicePrefix ? `一起${voicePrefix}～吧（禮貌）` : '一起～吧（禮貌）';
       } else {
-        explanation = `${voicePrefix ? voicePrefix + '～' : ''}～吧`;
+        explanation = voicePrefix ? `${voicePrefix}～吧` : '～吧';
       }
       break;
       
     case MODES.IMPERATIVE:
       // 命令形
-      explanation = `${voicePrefix ? voicePrefix + '～' : ''}～！（命令）`;
+      explanation = voicePrefix ? `${voicePrefix}～！（命令）` : '～！（命令）';
       break;
   }
   
