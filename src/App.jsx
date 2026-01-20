@@ -199,7 +199,7 @@ function VoiceWarning({ show, onClose }) {
       exit={{ opacity: 0, y: -50 }}
       className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full mx-4"
     >
-      <div className="bg-akane text-white rounded-xl shadow-2xl p-4 border-2 border-akane-light">
+      <div className="bg-jp-secondary text-white rounded-xl shadow-2xl p-4 border-2 border-jp-secondary/60">
         <div className="flex items-start gap-3">
           <VolumeX className="w-6 h-6 flex-shrink-0 mt-0.5" />
           <div className="flex-1">
@@ -210,7 +210,7 @@ function VoiceWarning({ show, onClose }) {
           </div>
           <button
             onClick={onClose}
-            className="text-white hover:bg-akane-dark rounded-lg p-1 transition-colors"
+            className="text-white hover:bg-jp-secondary/80 rounded-lg p-1 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -233,16 +233,16 @@ function TutorialModal({ isOpen, onClose }) {
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="bg-washi-dark rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+        className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col"
       >
         {/* 標題 */}
-        <div className="p-6 border-b border-sumi-light/20 bg-aizome text-white">
+        <div className="p-6 border-b border-gray-200 bg-jp-primary text-white">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <BookOpen className="w-8 h-8" />
               <div>
                 <h2 className="text-2xl font-bold">動詞變化教學</h2>
-                <p className="text-washi-dark text-sm">Japanese Verb Conjugation Guide</p>
+                <p className="text-white/80 text-sm">Japanese Verb Conjugation Guide</p>
               </div>
             </div>
             <button 
@@ -255,15 +255,15 @@ function TutorialModal({ isOpen, onClose }) {
         </div>
 
         {/* 動詞類型選擇 */}
-        <div className="flex border-b border-sumi-light/20 bg-washi overflow-x-auto">
+        <div className="flex border-b border-gray-200 bg-white overflow-x-auto">
           {Object.entries(conjugationGuides).map(([type, guide]) => (
             <button
               key={type}
               onClick={() => { setExpandedType(type); setExpandedRule(0); }}
               className={`px-6 py-4 font-medium whitespace-nowrap transition-colors ${
                 expandedType === type
-                  ? 'bg-washi text-aizome border-b-2 border-aizome'
-                  : 'text-sumi-light hover:text-sumi hover:bg-washi-dark'
+                  ? 'bg-white text-jp-text border-b-2 border-jp-primary'
+                  : 'text-gray-500 hover:text-jp-text hover:bg-gray-50'
               }`}
             >
               {getVerbTypeShort(type)}
@@ -276,11 +276,11 @@ function TutorialModal({ isOpen, onClose }) {
           {conjugationGuides[expandedType] && (
             <div className="space-y-6">
               {/* 標題與描述 */}
-              <div className="bg-washi-dark rounded-xl p-6 border border-sumi-light/10">
-                <h3 className="text-xl font-bold text-sumi mb-2">
+              <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                <h3 className="text-xl font-bold text-jp-text mb-2">
                   {conjugationGuides[expandedType].title}
                 </h3>
-                <p className="text-sumi-light leading-relaxed">
+                <p className="text-gray-600 leading-relaxed">
                   {conjugationGuides[expandedType].description}
                 </p>
               </div>
@@ -290,22 +290,22 @@ function TutorialModal({ isOpen, onClose }) {
                 {conjugationGuides[expandedType].rules.map((rule, idx) => (
                   <div 
                     key={idx}
-                    className="border border-sumi-light/20 rounded-xl overflow-hidden"
+                    className="border border-gray-200 rounded-xl overflow-hidden"
                   >
                     <button
                       onClick={() => setExpandedRule(expandedRule === idx ? -1 : idx)}
-                      className="w-full flex items-center justify-between p-4 bg-washi hover:bg-washi-dark transition-colors"
+                      className="w-full flex items-center justify-between p-4 bg-white hover:bg-gray-50 transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="bg-aizome/10 text-aizome px-3 py-1 rounded-full text-sm font-medium">
+                        <span className="bg-jp-primary/20 text-jp-text px-3 py-1 rounded-full text-sm font-medium">
                           {rule.form}
                         </span>
-                        <span className="text-sumi font-medium">{rule.rule}</span>
+                        <span className="text-jp-text font-medium">{rule.rule}</span>
                       </div>
                       {expandedRule === idx ? (
-                        <ChevronUp className="w-5 h-5 text-sumi-light" />
+                        <ChevronUp className="w-5 h-5 text-gray-500" />
                       ) : (
-                        <ChevronDown className="w-5 h-5 text-sumi-light" />
+                        <ChevronDown className="w-5 h-5 text-gray-500" />
                       )}
                     </button>
                     
@@ -315,22 +315,22 @@ function TutorialModal({ isOpen, onClose }) {
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: 'auto', opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
-                          className="border-t border-sumi-light/20 bg-washi-dark"
+                          className="border-t border-gray-200 bg-gray-50"
                         >
                           <div className="p-4 space-y-3">
                             {rule.examples.map((ex, exIdx) => (
                               <div 
                                 key={exIdx}
-                                className="flex items-center gap-4 bg-washi p-3 rounded-lg border border-sumi-light/10"
+                                className="flex items-center gap-4 bg-white p-3 rounded-lg border border-gray-200"
                               >
-                                <span className="text-2xl font-bold text-sumi japanese-text min-w-[80px]">
+                                <span className="text-2xl font-bold text-jp-text japanese-text min-w-[80px]">
                                   {ex.base}
                                 </span>
-                                <ChevronRight className="w-5 h-5 text-sumi-light" />
-                                <span className="text-2xl font-bold text-aizome japanese-text min-w-[120px]">
+                                <ChevronRight className="w-5 h-5 text-gray-400" />
+                                <span className="text-2xl font-bold text-jp-primary japanese-text min-w-[120px]">
                                   {ex.result}
                                 </span>
-                                <span className="text-sm text-sumi-light flex-1">
+                                <span className="text-sm text-gray-600 flex-1">
                                   {ex.explanation}
                                 </span>
                               </div>
@@ -345,34 +345,34 @@ function TutorialModal({ isOpen, onClose }) {
 
               {/* 音便規則詳解 (僅五段動詞) */}
               {expandedType === 'GODAN' && (
-                <div className="bg-washi-dark border border-sumi-light/20 rounded-xl p-6">
-                  <h4 className="font-bold text-sumi mb-4 flex items-center gap-2">
+                <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
+                  <h4 className="font-bold text-jp-text mb-4 flex items-center gap-2">
                     <Info className="w-5 h-5" />
                     音便規則速記表
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                    <div className="bg-washi p-3 rounded-lg border border-sumi-light/10">
-                      <span className="font-bold text-aizome">く → いた/いて</span>
-                      <span className="text-sumi-light ml-2">書く → 書いた</span>
+                    <div className="bg-white p-3 rounded-lg border border-gray-200">
+                      <span className="font-bold text-jp-primary">く → いた/いて</span>
+                      <span className="text-gray-600 ml-2">書く → 書いた</span>
                     </div>
-                    <div className="bg-washi p-3 rounded-lg border border-sumi-light/10">
-                      <span className="font-bold text-aizome">ぐ → いだ/いで</span>
-                      <span className="text-sumi-light ml-2">泳ぐ → 泳いだ</span>
+                    <div className="bg-white p-3 rounded-lg border border-gray-200">
+                      <span className="font-bold text-jp-primary">ぐ → いだ/いで</span>
+                      <span className="text-gray-600 ml-2">泳ぐ → 泳いだ</span>
                     </div>
-                    <div className="bg-washi p-3 rounded-lg border border-sumi-light/10">
-                      <span className="font-bold text-aizome">す → した/して</span>
-                      <span className="text-sumi-light ml-2">話す → 話した</span>
+                    <div className="bg-white p-3 rounded-lg border border-gray-200">
+                      <span className="font-bold text-jp-primary">す → した/して</span>
+                      <span className="text-gray-600 ml-2">話す → 話した</span>
                     </div>
-                    <div className="bg-washi p-3 rounded-lg border border-sumi-light/10">
-                      <span className="font-bold text-aizome">つ/う/る → った/って</span>
-                      <span className="text-sumi-light ml-2">待つ → 待った</span>
+                    <div className="bg-white p-3 rounded-lg border border-gray-200">
+                      <span className="font-bold text-jp-primary">つ/う/る → った/って</span>
+                      <span className="text-gray-600 ml-2">待つ → 待った</span>
                     </div>
-                    <div className="bg-washi p-3 rounded-lg border border-sumi-light/10">
-                      <span className="font-bold text-aizome">ぬ/ぶ/む → んだ/んで</span>
-                      <span className="text-sumi-light ml-2">読む → 読んだ</span>
+                    <div className="bg-white p-3 rounded-lg border border-gray-200">
+                      <span className="font-bold text-jp-primary">ぬ/ぶ/む → んだ/んで</span>
+                      <span className="text-gray-600 ml-2">読む → 読んだ</span>
                     </div>
-                    <div className="bg-washi p-3 rounded-lg border-2 border-akane">
-                      <span className="font-bold text-akane">特例: 行く → 行った</span>
+                    <div className="bg-white p-3 rounded-lg border-2 border-jp-secondary">
+                      <span className="font-bold text-jp-secondary">特例: 行く → 行った</span>
                     </div>
                   </div>
                 </div>
@@ -382,10 +382,10 @@ function TutorialModal({ isOpen, onClose }) {
         </div>
 
         {/* 底部按鈕 */}
-        <div className="p-6 border-t border-sumi-light/20 bg-washi">
+        <div className="p-6 border-t border-gray-200 bg-white">
           <button
             onClick={onClose}
-            className="w-full bg-aizome hover:bg-aizome-light text-white font-semibold py-3 px-6 rounded-xl transition-colors"
+            className="w-full bg-jp-primary hover:bg-jp-primary/90 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
           >
             開始練習
           </button>
@@ -410,17 +410,17 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="bg-washi-dark rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
       >
-        <div className="p-6 border-b border-sumi-light/20 sticky top-0 bg-washi z-10">
+        <div className="p-6 border-b border-gray-200 sticky top-0 bg-white z-10">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-sumi flex items-center gap-2">
-              <Settings className="w-6 h-6 text-aizome" />
+            <h2 className="text-2xl font-bold text-jp-text flex items-center gap-2">
+              <Settings className="w-6 h-6 text-jp-primary" />
               練習設定
             </h2>
             <button 
               onClick={onClose}
-              className="text-sumi-light hover:text-sumi transition-colors"
+              className="text-gray-500 hover:text-jp-text transition-colors"
             >
               <XCircle className="w-6 h-6" />
             </button>
@@ -430,44 +430,44 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
         <div className="p-6 space-y-6">
           {/* 練習模式選擇 */}
           <div>
-            <h3 className="text-lg font-semibold text-sumi mb-3">練習模式</h3>
+            <h3 className="text-lg font-semibold text-jp-text mb-3">練習模式</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <button
                 onClick={() => onSettingsChange({ ...settings, mode: 'perform' })}
                 className={`p-4 rounded-xl border-2 transition-all ${
                   settings.mode === 'perform'
-                    ? 'border-aizome bg-aizome/10 shadow-md'
-                    : 'border-sumi-light/20 hover:border-sumi-light/40'
+                    ? 'border-jp-primary bg-jp-primary/10 shadow-md'
+                    : 'border-gray-200 hover:border-gray-300'
                 }`}
               >
-                <div className="font-semibold text-sumi">模式 A: 執行變化</div>
-                <div className="text-sm text-sumi-light mt-1">看到動詞,輸入變化形式</div>
+                <div className="font-semibold text-jp-text">模式 A: 執行變化</div>
+                <div className="text-sm text-gray-600 mt-1">看到動詞,輸入變化形式</div>
               </button>
               <button
                 onClick={() => onSettingsChange({ ...settings, mode: 'recognize' })}
                 className={`p-4 rounded-xl border-2 transition-all ${
                   settings.mode === 'recognize'
-                    ? 'border-aizome bg-aizome/10 shadow-md'
-                    : 'border-sumi-light/20 hover:border-sumi-light/40'
+                    ? 'border-jp-primary bg-jp-primary/10 shadow-md'
+                    : 'border-gray-200 hover:border-gray-300'
                 }`}
               >
-                <div className="font-semibold text-sumi">模式 B: 識別變化</div>
-                <div className="text-sm text-sumi-light mt-1">看到變化,選擇正確形式</div>
+                <div className="font-semibold text-jp-text">模式 B: 識別變化</div>
+                <div className="text-sm text-gray-600 mt-1">看到變化,選擇正確形式</div>
               </button>
             </div>
           </div>
 
           {/* JLPT 等級選擇 */}
           <div>
-            <h3 className="text-lg font-semibold text-sumi mb-3">JLPT 等級</h3>
+            <h3 className="text-lg font-semibold text-jp-text mb-3">JLPT 等級</h3>
             <div className="flex flex-wrap gap-2">
               {levels.map(level => (
                 <label
                   key={level}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg border-2 cursor-pointer transition-all ${
                     settings.enabledLevels.includes(level)
-                      ? 'border-matcha bg-matcha/10'
-                      : 'border-sumi-light/20 hover:border-sumi-light/40'
+                      ? 'border-jp-accent bg-jp-accent/20'
+                      : 'border-gray-200 hover:border-gray-300'
                   }`}
                 >
                   <input
@@ -481,9 +481,9 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
                         onSettingsChange({ ...settings, enabledLevels: newLevels });
                       }
                     }}
-                    className="w-4 h-4 text-matcha rounded"
+                    className="w-4 h-4 text-jp-accent rounded"
                   />
-                  <span className="font-medium text-sumi">{level}</span>
+                  <span className="font-medium text-jp-text">{level}</span>
                 </label>
               ))}
             </div>
@@ -491,15 +491,15 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
 
           {/* 動詞類型選擇 */}
           <div>
-            <h3 className="text-lg font-semibold text-sumi mb-3">動詞類型</h3>
+            <h3 className="text-lg font-semibold text-jp-text mb-3">動詞類型</h3>
             <div className="flex flex-wrap gap-2">
               {verbTypes.map(type => (
                 <label
                   key={type}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg border-2 cursor-pointer transition-all ${
                     settings.enabledTypes.includes(type)
-                      ? 'border-aizome bg-aizome/10'
-                      : 'border-sumi-light/20 hover:border-sumi-light/40'
+                      ? 'border-jp-primary bg-jp-primary/10'
+                      : 'border-gray-200 hover:border-gray-300'
                   }`}
                 >
                   <input
@@ -513,9 +513,9 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
                         onSettingsChange({ ...settings, enabledTypes: newTypes });
                       }
                     }}
-                    className="w-4 h-4 text-aizome rounded"
+                    className="w-4 h-4 text-jp-primary rounded"
                   />
-                  <span className="font-medium text-sumi">{getVerbTypeShort(type)}</span>
+                  <span className="font-medium text-jp-text">{getVerbTypeShort(type)}</span>
                 </label>
               ))}
             </div>
@@ -523,16 +523,16 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
 
           {/* Voice Selection (Layer A: 態) */}
           <div>
-            <h3 className="text-lg font-semibold text-sumi mb-3">Voice (態) - Layer A</h3>
-            <div className="text-sm text-sumi-light mb-2">選擇要練習的動詞態 (基本形、可能形、受身形等)</div>
+            <h3 className="text-lg font-semibold text-jp-text mb-3">第一層：態</h3>
+            <div className="text-sm text-gray-600 mb-2">選擇要練習的動詞態（基本形、可能形、受身形等）</div>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {allVoices.map(voice => (
                 <label
                   key={voice}
                   className={`flex items-center gap-2 p-3 rounded-lg border-2 cursor-pointer transition-all ${
                     settings.enabledVoices.includes(voice)
-                      ? 'border-aizome bg-aizome/10'
-                      : 'border-sumi-light/20 hover:border-sumi-light/40'
+                      ? 'border-jp-primary bg-jp-primary/10'
+                      : 'border-gray-200 hover:border-gray-300'
                   }`}
                 >
                   <input
@@ -546,9 +546,9 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
                         onSettingsChange({ ...settings, enabledVoices: newVoices });
                       }
                     }}
-                    className="w-4 h-4 text-aizome rounded"
+                    className="w-4 h-4 text-jp-primary rounded"
                   />
-                  <span className="text-sm font-medium text-sumi">{VOICE_NAMES[voice]}</span>
+                  <span className="text-sm font-medium text-jp-text">{VOICE_NAMES[voice]}</span>
                 </label>
               ))}
             </div>
@@ -556,16 +556,16 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
 
           {/* Mode Selection (Layer B: 模式) */}
           <div>
-            <h3 className="text-lg font-semibold text-sumi mb-3">Mode (模式) - Layer B</h3>
-            <div className="text-sm text-sumi-light mb-2">選擇要練習的動詞模式 (標準形、て形、意向形等)</div>
+            <h3 className="text-lg font-semibold text-jp-text mb-3">第二層：模式</h3>
+            <div className="text-sm text-gray-600 mb-2">選擇要練習的動詞模式（標準形、て形、意向形等）</div>
             <div className="grid grid-cols-2 sm:grid-cols-2 gap-2">
               {allModes.map(mode => (
                 <label
                   key={mode}
                   className={`flex items-center gap-2 p-3 rounded-lg border-2 cursor-pointer transition-all ${
                     settings.enabledModes.includes(mode)
-                      ? 'border-aizome bg-aizome/10'
-                      : 'border-sumi-light/20 hover:border-sumi-light/40'
+                      ? 'border-jp-primary bg-jp-primary/10'
+                      : 'border-gray-200 hover:border-gray-300'
                   }`}
                 >
                   <input
@@ -579,9 +579,9 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
                         onSettingsChange({ ...settings, enabledModes: newModes });
                       }
                     }}
-                    className="w-4 h-4 text-aizome rounded"
+                    className="w-4 h-4 text-jp-primary rounded"
                   />
-                  <span className="text-sm font-medium text-sumi">{MODE_NAMES[mode]}</span>
+                  <span className="text-sm font-medium text-jp-text">{MODE_NAMES[mode]}</span>
                 </label>
               ))}
             </div>
@@ -589,10 +589,10 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
 
           {/* Modifier Selection (Layer C: 修飾詞) */}
           <div>
-            <h3 className="text-lg font-semibold text-sumi mb-3">Modifiers (修飾詞) - Layer C</h3>
-            <div className="text-sm text-sumi-light mb-2">選擇要練習的修飾詞 (丁寧、否定、過去)</div>
+            <h3 className="text-lg font-semibold text-jp-text mb-3">第三層：修飾詞</h3>
+            <div className="text-sm text-gray-600 mb-2">選擇要練習的修飾詞（丁寧、否定、過去）</div>
             <div className="space-y-2">
-              <label className="flex items-center gap-3 p-3 rounded-lg border-2 border-sumi-light/20 hover:border-sumi-light/40 cursor-pointer transition-all">
+              <label className="flex items-center gap-3 p-3 rounded-lg border-2 border-gray-200 hover:border-gray-300 cursor-pointer transition-all">
                 <input
                   type="checkbox"
                   checked={settings.enabledModifiers.polite}
@@ -600,14 +600,14 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
                     ...settings,
                     enabledModifiers: { ...settings.enabledModifiers, polite: e.target.checked }
                   })}
-                  className="w-4 h-4 text-aizome rounded"
+                  className="w-4 h-4 text-jp-primary rounded"
                 />
                 <div>
-                  <div className="font-medium text-sumi">丁寧 (Polite)</div>
-                  <div className="text-sm text-sumi-light">加入禮貌形式的變化 (です・ます)</div>
+                  <div className="font-medium text-jp-text">丁寧</div>
+                  <div className="text-sm text-gray-600">加入禮貌形式的變化（です・ます）</div>
                 </div>
               </label>
-              <label className="flex items-center gap-3 p-3 rounded-lg border-2 border-sumi-light/20 hover:border-sumi-light/40 cursor-pointer transition-all">
+              <label className="flex items-center gap-3 p-3 rounded-lg border-2 border-gray-200 hover:border-gray-300 cursor-pointer transition-all">
                 <input
                   type="checkbox"
                   checked={settings.enabledModifiers.negative}
@@ -615,14 +615,14 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
                     ...settings,
                     enabledModifiers: { ...settings.enabledModifiers, negative: e.target.checked }
                   })}
-                  className="w-4 h-4 text-aizome rounded"
+                  className="w-4 h-4 text-jp-primary rounded"
                 />
                 <div>
-                  <div className="font-medium text-sumi">否定 (Negative)</div>
-                  <div className="text-sm text-sumi-light">加入否定變化 (ない)</div>
+                  <div className="font-medium text-jp-text">否定</div>
+                  <div className="text-sm text-gray-600">加入否定變化（ない）</div>
                 </div>
               </label>
-              <label className="flex items-center gap-3 p-3 rounded-lg border-2 border-sumi-light/20 hover:border-sumi-light/40 cursor-pointer transition-all">
+              <label className="flex items-center gap-3 p-3 rounded-lg border-2 border-gray-200 hover:border-gray-300 cursor-pointer transition-all">
                 <input
                   type="checkbox"
                   checked={settings.enabledModifiers.past}
@@ -630,21 +630,21 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
                     ...settings,
                     enabledModifiers: { ...settings.enabledModifiers, past: e.target.checked }
                   })}
-                  className="w-4 h-4 text-aizome rounded"
+                  className="w-4 h-4 text-jp-primary rounded"
                 />
                 <div>
-                  <div className="font-medium text-sumi">過去 (Past)</div>
-                  <div className="text-sm text-sumi-light">加入過去時態 (た)</div>
+                  <div className="font-medium text-jp-text">過去</div>
+                  <div className="text-sm text-gray-600">加入過去時態（た）</div>
                 </div>
               </label>
             </div>
           </div>
         </div>
 
-        <div className="p-6 border-t border-sumi-light/20 bg-washi">
+        <div className="p-6 border-t border-gray-200 bg-white">
           <button
             onClick={onClose}
-            className="w-full bg-aizome hover:bg-aizome-light text-white font-semibold py-3 px-6 rounded-xl transition-colors"
+            className="w-full bg-jp-primary hover:bg-jp-primary/90 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
           >
             套用設定
           </button>
@@ -660,28 +660,28 @@ function StatsBar({ currentStreak, maxStreak, totalCorrect, totalAttempts }) {
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-      <div className="bg-aizome rounded-xl p-4 text-white">
+      <div className="bg-jp-primary rounded-xl p-4 text-white">
         <div className="flex items-center gap-2 mb-1">
           <Flame className="w-5 h-5" />
           <span className="text-sm font-medium opacity-90">當前連勝</span>
         </div>
         <div className="text-3xl font-bold">{currentStreak}</div>
       </div>
-      <div className="bg-matcha rounded-xl p-4 text-white">
+      <div className="bg-jp-accent rounded-xl p-4 text-white">
         <div className="flex items-center gap-2 mb-1">
           <Trophy className="w-5 h-5" />
           <span className="text-sm font-medium opacity-90">最高連勝</span>
         </div>
         <div className="text-3xl font-bold">{maxStreak}</div>
       </div>
-      <div className="bg-matcha-light rounded-xl p-4 text-white">
+      <div className="bg-jp-accent/80 rounded-xl p-4 text-white">
         <div className="flex items-center gap-2 mb-1">
           <CheckCircle2 className="w-5 h-5" />
           <span className="text-sm font-medium opacity-90">正確率</span>
         </div>
         <div className="text-3xl font-bold">{accuracy}%</div>
       </div>
-      <div className="bg-aizome-light rounded-xl p-4 text-white">
+      <div className="bg-jp-text rounded-xl p-4 text-white">
         <div className="flex items-center gap-2 mb-1">
           <Sparkles className="w-5 h-5" />
           <span className="text-sm font-medium opacity-90">總題數</span>
@@ -732,26 +732,26 @@ function QuestionTable({ question }) {
     <div className="space-y-4">
       {/* 提示文字 */}
       <div className="text-center">
-        <div className="text-xl font-bold text-sumi">Conjugate it to:</div>
+        <div className="text-xl font-bold text-jp-text">請變化為：</div>
       </div>
 
       {/* 三層表格 */}
-      <div className="bg-sumi-light/10 rounded-xl overflow-hidden border-2 border-sumi-light/20">
+      <div className="bg-gray-50 rounded-xl overflow-hidden border-2 border-gray-200">
         
-        {/* === Layer A: Voice (態) === */}
-        <div className="bg-sumi/90 text-white px-6 py-2 text-center font-semibold text-sm">
-          Layer A: Voice (態)
+        {/* === 第一層：態 === */}
+        <div className="bg-jp-text text-white px-6 py-2 text-center font-semibold text-sm">
+          第一層：態
         </div>
-        <div className="grid grid-cols-5 border-b-2 border-sumi-light/30">
+        <div className="grid grid-cols-5 border-b-2 border-gray-200">
           {allVoices.map(voice => {
             const selected = isVoiceSelected(voice);
             return (
               <div
                 key={voice}
-                className={`px-3 py-3 text-center border-r last:border-r-0 border-sumi-light/20 transition-all ${
+                className={`px-3 py-3 text-center border-r last:border-r-0 border-gray-200 transition-all ${
                   selected
-                    ? 'bg-matcha text-white font-bold'
-                    : 'bg-washi-dark text-sumi-light'
+                    ? 'bg-jp-accent text-white font-bold'
+                    : 'bg-white text-gray-600'
                 }`}
               >
                 <div className="text-xs">{VOICE_NAMES[voice]}</div>
@@ -760,20 +760,20 @@ function QuestionTable({ question }) {
           })}
         </div>
 
-        {/* === Layer B: Mode (模式) === */}
-        <div className="bg-sumi/90 text-white px-6 py-2 text-center font-semibold text-sm">
-          Layer B: Mode (模式)
+        {/* === 第二層：模式 === */}
+        <div className="bg-jp-text text-white px-6 py-2 text-center font-semibold text-sm">
+          第二層：模式
         </div>
-        <div className="grid grid-cols-4 border-b-2 border-sumi-light/30">
+        <div className="grid grid-cols-4 border-b-2 border-gray-200">
           {allModes.map(mode => {
             const selected = isModeSelected(mode);
             return (
               <div
                 key={mode}
-                className={`px-3 py-3 text-center border-r last:border-r-0 border-sumi-light/20 transition-all ${
+                className={`px-3 py-3 text-center border-r last:border-r-0 border-gray-200 transition-all ${
                   selected
-                    ? 'bg-matcha text-white font-bold'
-                    : 'bg-washi-dark text-sumi-light'
+                    ? 'bg-jp-accent text-white font-bold'
+                    : 'bg-white text-gray-600'
                 }`}
               >
                 <div className="text-xs">{MODE_NAMES[mode]}</div>
@@ -782,9 +782,9 @@ function QuestionTable({ question }) {
           })}
         </div>
 
-        {/* === Layer C: Modifiers (修飾詞) === */}
-        <div className="bg-sumi/90 text-white px-6 py-2 text-center font-semibold text-sm">
-          Layer C: Modifiers (修飾詞)
+        {/* === 第三層：修飾詞 === */}
+        <div className="bg-jp-text text-white px-6 py-2 text-center font-semibold text-sm">
+          第三層：修飾詞
         </div>
         <div className="grid grid-cols-3">
           {allModifiers.map(modifier => {
@@ -793,16 +793,16 @@ function QuestionTable({ question }) {
             return (
               <div
                 key={modifier.key}
-                className={`px-4 py-3 text-center border-r last:border-r-0 border-sumi-light/20 ${
+                className={`px-4 py-3 text-center border-r last:border-r-0 border-gray-200 ${
                   !allowed
-                    ? 'bg-sumi-light/10 opacity-40'
+                    ? 'bg-gray-100 opacity-40'
                     : selected
-                      ? 'bg-matcha text-white font-bold'
-                      : 'bg-washi-dark text-sumi-light'
+                      ? 'bg-jp-accent text-white font-bold'
+                      : 'bg-white text-gray-600'
                 }`}
               >
                 <div className="text-xs">{modifier.labelCN}</div>
-                {!allowed && <div className="text-[10px] text-sumi-lighter mt-1">(不適用)</div>}
+                {!allowed && <div className="text-[10px] text-gray-500 mt-1">(不適用)</div>}
               </div>
             );
           })}
@@ -884,13 +884,13 @@ function PerformMode({ question, onSubmit, onNext, feedback, userAnswer, voiceAv
       className="space-y-6"
     >
       {/* 動詞卡片 */}
-      <div className="bg-aizome rounded-2xl p-8 text-white shadow-xl relative">
+      <div className="bg-jp-primary rounded-2xl p-8 text-white shadow-xl relative">
         <div className="text-center">
           <div className="flex justify-center gap-2 mb-2">
-            <span className="bg-washi/20 px-3 py-1 rounded-full text-sm">
+            <span className="bg-white/20 px-3 py-1 rounded-full text-sm">
               {getVerbTypeShort(question.verb.type)}
             </span>
-            <span className="bg-washi/20 px-3 py-1 rounded-full text-sm">
+            <span className="bg-white/20 px-3 py-1 rounded-full text-sm">
               {question.verb.level}
             </span>
           </div>
@@ -933,16 +933,16 @@ function PerformMode({ question, onSubmit, onNext, feedback, userAnswer, voiceAv
             placeholder="請輸入答案 (支援羅馬拼音或平假名)"
             className={`w-full text-3xl japanese-text text-center p-6 rounded-xl border-2 transition-all ${
               feedback === null
-                ? 'border-sumi-light/30 focus:border-aizome focus:ring-4 focus:ring-aizome/20 bg-washi'
+                ? 'border-gray-300 focus:border-jp-primary focus:ring-4 focus:ring-jp-primary/20 bg-white'
                 : feedback.correct
-                ? 'border-matcha bg-matcha/10'
-                : 'border-akane bg-akane/10'
+                ? 'border-jp-accent bg-jp-accent/10'
+                : 'border-jp-secondary bg-jp-secondary/10'
             } outline-none`}
           />
           {/* 即時轉換預覽 */}
           {inputValue && !containsJapanese(inputValue) && convertedValue !== inputValue && (
-            <div className="text-center text-sm text-sumi-light">
-              轉換: <span className="japanese-text text-lg font-medium text-aizome">{convertedValue}</span>
+            <div className="text-center text-sm text-gray-600">
+              轉換: <span className="japanese-text text-lg font-medium text-jp-primary">{convertedValue}</span>
             </div>
           )}
         </div>
@@ -951,7 +951,7 @@ function PerformMode({ question, onSubmit, onNext, feedback, userAnswer, voiceAv
           <button
             type="submit"
             disabled={!inputValue.trim()}
-            className="w-full bg-aizome hover:bg-aizome-light disabled:bg-sumi-light/30 disabled:cursor-not-allowed text-white font-semibold py-4 px-6 rounded-xl transition-all flex items-center justify-center gap-2"
+            className="w-full bg-jp-primary hover:bg-jp-primary/90 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold py-4 px-6 rounded-xl transition-all flex items-center justify-center gap-2"
           >
             提交答案
             <ChevronRight className="w-5 h-5" />
@@ -962,46 +962,46 @@ function PerformMode({ question, onSubmit, onNext, feedback, userAnswer, voiceAv
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               className={`p-6 rounded-xl ${
-                feedback.correct ? 'bg-matcha/10 border-2 border-matcha' : 'bg-akane/10 border-2 border-akane'
+                feedback.correct ? 'bg-jp-accent/20 border-2 border-jp-accent' : 'bg-jp-secondary/20 border-2 border-jp-secondary'
               }`}
             >
               <div className="flex items-start gap-4">
                 {feedback.correct ? (
-                  <CheckCircle2 className="w-8 h-8 text-matcha-dark flex-shrink-0" />
+                  <CheckCircle2 className="w-8 h-8 text-jp-accent flex-shrink-0" />
                 ) : (
-                  <XCircle className="w-8 h-8 text-akane-dark flex-shrink-0" />
+                  <XCircle className="w-8 h-8 text-jp-secondary flex-shrink-0" />
                 )}
                 <div className="flex-1">
-                  <div className={`text-xl font-bold mb-3 ${feedback.correct ? 'text-matcha-dark' : 'text-akane-dark'}`}>
+                  <div className={`text-xl font-bold mb-3 ${feedback.correct ? 'text-jp-accent' : 'text-jp-secondary'}`}>
                     {feedback.correct ? '正確! 太棒了!' : '答錯了,再接再厲!'}
                   </div>
                   
                   {/* 變化分析 */}
-                  <div className="bg-washi-dark rounded-lg p-4 space-y-2 border border-sumi-light/20">
+                  <div className="bg-gray-50 rounded-lg p-4 space-y-2 border border-gray-200">
                     <div className="flex items-center gap-2 text-sm">
-                      <span className="font-semibold text-sumi">辭書形:</span>
-                      <span className="japanese-text text-lg text-sumi">{question.verb.dictionary}</span>
-                      <ChevronRight className="w-4 h-4 text-sumi-light" />
-                      <span className="font-semibold text-sumi">變化:</span>
-                      <span className="text-aizome font-medium">{getQuestionDescription(question.voice, question.mode, question.modifiers)}</span>
+                      <span className="font-semibold text-jp-text">辭書形:</span>
+                      <span className="japanese-text text-lg text-jp-text">{question.verb.dictionary}</span>
+                      <ChevronRight className="w-4 h-4 text-gray-400" />
+                      <span className="font-semibold text-jp-text">變化:</span>
+                      <span className="text-jp-primary font-medium">{getQuestionDescription(question.voice, question.mode, question.modifiers)}</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
-                      <span className="font-semibold text-sumi">正確答案:</span>
-                      <span className="japanese-text text-xl text-matcha-dark font-bold">{question.answer}</span>
+                      <span className="font-semibold text-jp-text">正確答案:</span>
+                      <span className="japanese-text text-xl text-jp-accent font-bold">{question.answer}</span>
                       {voiceAvailable && (
                         <button
                           onClick={() => speakJapanese(question.answer)}
-                          className="p-1 hover:bg-washi rounded transition-colors"
+                          className="p-1 hover:bg-gray-100 rounded transition-colors"
                           title="朗讀答案"
                         >
-                          <Volume2 className="w-4 h-4 text-matcha-dark" />
+                          <Volume2 className="w-4 h-4 text-jp-accent" />
                         </button>
                       )}
                     </div>
                     {!feedback.correct && userAnswer && (
-                      <div className="flex items-center gap-2 text-sm pt-2 border-t border-sumi-light/20">
-                        <span className="font-semibold text-sumi">你的答案:</span>
-                        <span className="japanese-text text-lg text-akane-dark">{userAnswer}</span>
+                      <div className="flex items-center gap-2 text-sm pt-2 border-t border-gray-200">
+                        <span className="font-semibold text-jp-text">你的答案:</span>
+                        <span className="japanese-text text-lg text-jp-secondary">{userAnswer}</span>
                       </div>
                     )}
                   </div>
@@ -1010,7 +1010,7 @@ function PerformMode({ question, onSubmit, onNext, feedback, userAnswer, voiceAv
             </motion.div>
             <button
               onClick={onNext}
-              className="w-full bg-aizome hover:bg-aizome-light text-white font-semibold py-4 px-6 rounded-xl transition-all flex items-center justify-center gap-2"
+              className="w-full bg-jp-primary hover:bg-jp-primary/90 text-white font-semibold py-4 px-6 rounded-xl transition-all flex items-center justify-center gap-2"
             >
               下一題
               <ChevronRight className="w-5 h-5" />
@@ -1058,17 +1058,17 @@ function InteractiveQuestionTable({ selectedTags, onTagToggle, disabled }) {
     <div className="space-y-4">
       {/* 提示文字 */}
       <div className="text-center">
-        <div className="text-xl font-bold text-sumi">Select the conjugation:</div>
+        <div className="text-xl font-bold text-jp-text">請選擇變化形式：</div>
       </div>
 
       {/* 三層表格 */}
-      <div className="bg-sumi-light/10 rounded-xl overflow-hidden border-2 border-sumi-light/20">
+      <div className="bg-gray-50 rounded-xl overflow-hidden border-2 border-gray-200">
         
-        {/* === Layer A: Voice (態) === */}
-        <div className="bg-sumi/90 text-white px-6 py-2 text-center font-semibold text-sm">
-          Layer A: Voice (態)
+        {/* === 第一層：態 === */}
+        <div className="bg-jp-text text-white px-6 py-2 text-center font-semibold text-sm">
+          第一層：態
         </div>
-        <div className="grid grid-cols-5 border-b-2 border-sumi-light/30">
+        <div className="grid grid-cols-5 border-b-2 border-gray-200">
           {allVoices.map(voice => {
             const selected = selectedTags.voice === voice;
             return (
@@ -1076,10 +1076,10 @@ function InteractiveQuestionTable({ selectedTags, onTagToggle, disabled }) {
                 key={voice}
                 onClick={() => !disabled && onTagToggle('voice', voice)}
                 disabled={disabled}
-                className={`px-3 py-3 text-center border-r last:border-r-0 border-sumi-light/20 transition-all ${
+                className={`px-3 py-3 text-center border-r last:border-r-0 border-gray-200 transition-all ${
                   selected
-                    ? 'bg-matcha text-white font-bold'
-                    : 'bg-washi-dark text-sumi hover:bg-matcha/10'
+                    ? 'bg-jp-accent text-white font-bold'
+                    : 'bg-white text-gray-600 hover:bg-jp-accent/20'
                 } ${disabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
               >
                 <div className="text-xs">{VOICE_NAMES[voice]}</div>
@@ -1088,11 +1088,11 @@ function InteractiveQuestionTable({ selectedTags, onTagToggle, disabled }) {
           })}
         </div>
 
-        {/* === Layer B: Mode (模式) === */}
-        <div className="bg-sumi/90 text-white px-6 py-2 text-center font-semibold text-sm">
-          Layer B: Mode (模式)
+        {/* === 第二層：模式 === */}
+        <div className="bg-jp-text text-white px-6 py-2 text-center font-semibold text-sm">
+          第二層：模式
         </div>
-        <div className="grid grid-cols-4 border-b-2 border-sumi-light/30">
+        <div className="grid grid-cols-4 border-b-2 border-gray-200">
           {allModes.map(mode => {
             const selected = selectedTags.mode === mode;
             return (
@@ -1100,10 +1100,10 @@ function InteractiveQuestionTable({ selectedTags, onTagToggle, disabled }) {
                 key={mode}
                 onClick={() => !disabled && onTagToggle('mode', mode)}
                 disabled={disabled}
-                className={`px-3 py-3 text-center border-r last:border-r-0 border-sumi-light/20 transition-all ${
+                className={`px-3 py-3 text-center border-r last:border-r-0 border-gray-200 transition-all ${
                   selected
-                    ? 'bg-matcha text-white font-bold'
-                    : 'bg-washi-dark text-sumi hover:bg-matcha/10'
+                    ? 'bg-jp-accent text-white font-bold'
+                    : 'bg-white text-gray-600 hover:bg-jp-accent/20'
                 } ${disabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
               >
                 <div className="text-xs">{MODE_NAMES[mode]}</div>
@@ -1112,9 +1112,9 @@ function InteractiveQuestionTable({ selectedTags, onTagToggle, disabled }) {
           })}
         </div>
 
-        {/* === Layer C: Modifiers (修飾詞) === */}
-        <div className="bg-sumi/90 text-white px-6 py-2 text-center font-semibold text-sm">
-          Layer C: Modifiers (修飾詞)
+        {/* === 第三層：修飾詞 === */}
+        <div className="bg-jp-text text-white px-6 py-2 text-center font-semibold text-sm">
+          第三層：修飾詞
         </div>
         <div className="grid grid-cols-3">
           {allModifiers.map(modifier => {
@@ -1126,12 +1126,12 @@ function InteractiveQuestionTable({ selectedTags, onTagToggle, disabled }) {
                 key={modifier.key}
                 onClick={() => !modDisabled && onTagToggle('modifier', modifier.key)}
                 disabled={modDisabled}
-                className={`px-4 py-3 text-center border-r last:border-r-0 border-sumi-light/20 transition-all ${
+                className={`px-4 py-3 text-center border-r last:border-r-0 border-gray-200 transition-all ${
                   modDisabled
-                    ? 'bg-sumi-light/10 text-sumi-lighter cursor-not-allowed opacity-40'
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed opacity-40'
                     : selected
-                      ? 'bg-matcha text-white font-bold cursor-pointer'
-                      : 'bg-washi-dark text-sumi cursor-pointer hover:bg-matcha/10'
+                      ? 'bg-jp-accent text-white font-bold cursor-pointer'
+                      : 'bg-white text-gray-600 cursor-pointer hover:bg-jp-accent/20'
                 }`}
               >
                 <div className="text-xs">{modifier.labelCN}</div>
@@ -1233,7 +1233,7 @@ function RecognizeMode({ question, onSubmit, onNext, feedback, voiceAvailable })
       className="space-y-6"
     >
       {/* 變化後的動詞卡片 */}
-      <div className="bg-matcha rounded-2xl p-8 text-white shadow-xl">
+      <div className="bg-jp-accent rounded-2xl p-8 text-white shadow-xl">
         <div className="text-center">
           <div className="text-sm font-medium opacity-80 mb-2">這是什麼變化形式?</div>
           <div className="flex items-center justify-center gap-3 mb-4">
@@ -1249,10 +1249,10 @@ function RecognizeMode({ question, onSubmit, onNext, feedback, voiceAvailable })
             <div className="text-6xl font-bold japanese-text">{question.answer}</div>
           </div>
           <div className="flex justify-center gap-2 mt-4">
-            <span className="bg-washi/20 px-3 py-1 rounded-full text-sm">
+            <span className="bg-white/20 px-3 py-1 rounded-full text-sm">
               {getVerbTypeShort(question.verb.type)}
             </span>
-            <span className="bg-washi/20 px-3 py-1 rounded-full text-sm">
+            <span className="bg-white/20 px-3 py-1 rounded-full text-sm">
               {question.verb.level}
             </span>
           </div>
@@ -1281,7 +1281,7 @@ function RecognizeMode({ question, onSubmit, onNext, feedback, voiceAvailable })
         <button
           onClick={handleSubmit}
           disabled={!selectedTags.voice || !selectedTags.mode}
-          className="w-full bg-aizome hover:bg-aizome-light disabled:bg-sumi-light/30 disabled:cursor-not-allowed text-white font-semibold py-4 px-6 rounded-xl transition-all flex items-center justify-center gap-2"
+          className="w-full bg-jp-primary hover:bg-jp-primary/90 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold py-4 px-6 rounded-xl transition-all flex items-center justify-center gap-2"
         >
           提交答案
           <ChevronRight className="w-5 h-5" />
@@ -1292,39 +1292,39 @@ function RecognizeMode({ question, onSubmit, onNext, feedback, voiceAvailable })
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             className={`p-6 rounded-xl ${
-              feedback.correct ? 'bg-matcha/10 border-2 border-matcha' : 'bg-akane/10 border-2 border-akane'
+              feedback.correct ? 'bg-jp-accent/20 border-2 border-jp-accent' : 'bg-jp-secondary/20 border-2 border-jp-secondary'
             }`}
           >
             <div className="flex items-start gap-4">
               {feedback.correct ? (
-                <CheckCircle2 className="w-8 h-8 text-matcha-dark flex-shrink-0" />
+                <CheckCircle2 className="w-8 h-8 text-jp-accent flex-shrink-0" />
               ) : (
-                <XCircle className="w-8 h-8 text-akane-dark flex-shrink-0" />
+                <XCircle className="w-8 h-8 text-jp-secondary flex-shrink-0" />
               )}
               <div className="flex-1">
-                <div className={`text-xl font-bold mb-3 ${feedback.correct ? 'text-matcha-dark' : 'text-akane-dark'}`}>
-                  {feedback.correct ? '正確! 太棒了!' : '答錯了,再接再厲!'}
+                <div className={`text-xl font-bold mb-3 ${feedback.correct ? 'text-jp-accent' : 'text-jp-secondary'}`}>
+                  {feedback.correct ? '正確! 太棒了!' : '答錯了,再接再厵!'}
                 </div>
                 
                 {/* 變化分析 */}
-                <div className="bg-washi-dark rounded-lg p-4 space-y-2 border border-sumi-light/20">
+                <div className="bg-gray-50 rounded-lg p-4 space-y-2 border border-gray-200">
                   <div className="flex items-center gap-2 text-sm">
-                    <span className="font-semibold text-sumi">辭書形:</span>
-                    <span className="japanese-text text-lg text-sumi">{question.verb.dictionary}</span>
-                    <ChevronRight className="w-4 h-4 text-sumi-light" />
-                    <span className="font-semibold text-sumi">變化:</span>
-                    <span className="text-aizome font-medium">{getQuestionDescription(question.voice, question.mode, question.modifiers)}</span>
+                    <span className="font-semibold text-jp-text">辭書形:</span>
+                    <span className="japanese-text text-lg text-jp-text">{question.verb.dictionary}</span>
+                    <ChevronRight className="w-4 h-4 text-gray-400" />
+                    <span className="font-semibold text-jp-text">變化:</span>
+                    <span className="text-jp-primary font-medium">{getQuestionDescription(question.voice, question.mode, question.modifiers)}</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    <span className="font-semibold text-sumi">變化結果:</span>
-                    <span className="japanese-text text-xl text-matcha-dark font-bold">{question.answer}</span>
+                    <span className="font-semibold text-jp-text">變化結果:</span>
+                    <span className="japanese-text text-xl text-jp-accent font-bold">{question.answer}</span>
                     {voiceAvailable && (
                       <button
                         onClick={() => speakJapanese(question.answer)}
-                        className="p-1 hover:bg-washi rounded transition-colors"
+                        className="p-1 hover:bg-gray-100 rounded transition-colors"
                         title="朗讀"
                       >
-                        <Volume2 className="w-4 h-4 text-matcha-dark" />
+                        <Volume2 className="w-4 h-4 text-jp-accent" />
                       </button>
                     )}
                   </div>
@@ -1334,7 +1334,7 @@ function RecognizeMode({ question, onSubmit, onNext, feedback, voiceAvailable })
           </motion.div>
           <button
             onClick={onNext}
-            className="w-full bg-aizome hover:bg-aizome-light text-white font-semibold py-4 px-6 rounded-xl transition-all flex items-center justify-center gap-2"
+            className="w-full bg-jp-primary hover:bg-jp-primary/90 text-white font-semibold py-4 px-6 rounded-xl transition-all flex items-center justify-center gap-2"
           >
             下一題
             <ChevronRight className="w-5 h-5" />
@@ -1477,7 +1477,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-washi">
+    <div className="min-h-screen bg-jp-bg">
       {/* 語音警告 */}
       <AnimatePresence>
         {showVoiceWarning && (
@@ -1489,7 +1489,7 @@ function App() {
       </AnimatePresence>
 
       {/* 頂部導航 */}
-      <div className="bg-washi-dark backdrop-blur-md border-b border-sumi-light/20 sticky top-0 z-40">
+      <div className="bg-white backdrop-blur-md border-b border-gray-200 sticky top-0 z-40">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -1501,8 +1501,8 @@ function App() {
                 onError={(e) => { e.target.style.display = 'none'; }}
               />
               <div>
-                <h1 className="text-2xl font-bold text-sumi">日語動詞變化練習</h1>
-                <p className="text-sm text-sumi-light">
+                <h1 className="text-2xl font-bold text-jp-text">日語動詞變化練習</h1>
+                <p className="text-sm text-gray-600">
                   {filteredVerbs.length} 個動詞 | JLPT {settings.enabledLevels.join('/')}
                 </p>
               </div>
@@ -1510,21 +1510,21 @@ function App() {
             <div className="flex gap-2">
               <button
                 onClick={() => setShowTutorial(true)}
-                className="p-3 rounded-xl bg-aizome/10 hover:bg-aizome/20 text-aizome transition-colors"
+                className="p-3 rounded-xl bg-jp-primary/10 hover:bg-jp-primary/20 text-jp-primary transition-colors"
                 title="變化教學"
               >
                 <GraduationCap className="w-5 h-5" />
               </button>
               <button
                 onClick={handleReset}
-                className="p-3 rounded-xl bg-matcha/10 hover:bg-matcha/20 text-matcha-dark transition-colors"
+                className="p-3 rounded-xl bg-jp-accent/20 hover:bg-jp-accent/30 text-jp-accent transition-colors"
                 title="重置統計"
               >
                 <RotateCcw className="w-5 h-5" />
               </button>
               <button
                 onClick={() => setShowSettings(true)}
-                className="p-3 rounded-xl bg-aizome hover:bg-aizome-light text-white transition-colors"
+                className="p-3 rounded-xl bg-jp-primary hover:bg-jp-primary/90 text-white transition-colors"
                 title="設定"
               >
                 <Settings className="w-5 h-5" />
@@ -1539,13 +1539,13 @@ function App() {
         <StatsBar {...stats} />
 
         {filteredVerbs.length === 0 ? (
-          <div className="bg-washi-dark rounded-2xl p-8 text-center border-2 border-sumi-light/20">
+          <div className="bg-white rounded-2xl p-8 text-center border-2 border-gray-200">
             <div className="text-6xl mb-4">😅</div>
-            <h3 className="text-xl font-bold text-sumi mb-2">沒有符合條件的動詞</h3>
-            <p className="text-sumi-light mb-4">請調整設定中的 JLPT 等級或動詞類型</p>
+            <h3 className="text-xl font-bold text-jp-text mb-2">沒有符合條件的動詞</h3>
+            <p className="text-gray-600 mb-4">請調整設定中的 JLPT 等級或動詞類型</p>
             <button
               onClick={() => setShowSettings(true)}
-              className="bg-aizome hover:bg-aizome-light text-white font-semibold py-2 px-6 rounded-xl transition-colors"
+              className="bg-jp-primary hover:bg-jp-primary/90 text-white font-semibold py-2 px-6 rounded-xl transition-colors"
             >
               開啟設定
             </button>
