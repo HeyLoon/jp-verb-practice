@@ -1,62 +1,68 @@
-// 日語動詞變化引擎
-// 支援四類動詞的各種變化形式: GODAN, ICHIDAN, IRREGULAR, SURU
+// 日語動詞變化引擎 - 正交系統 (Orthogonal System)
+// 三層架構: Voice (態) -> Mode (模式) -> Modifiers (修飾詞)
 
 /**
- * 動詞變化形式
+ * Layer A: Voice (動詞的態 - The Base)
  */
-export const CONJUGATION_FORMS = {
-  DICTIONARY: 'dictionary',       // 辞書形
-  POLITE: 'polite',              // 丁寧形 (ます形)
-  NEGATIVE: 'negative',          // 否定形 (ない形)
-  PAST: 'past',                  // 過去形 (た形)
-  TE_FORM: 'te',                 // て形
-  POTENTIAL: 'potential',        // 可能形
-  PASSIVE: 'passive',            // 受身形
-  CAUSATIVE: 'causative',        // 使役形
-  IMPERATIVE: 'imperative',      // 命令形
-  VOLITIONAL: 'volitional',      // 意志形
+export const VOICES = {
+  DICTIONARY: 'dictionary',           // 基本形
+  POTENTIAL: 'potential',             // 可能形
+  PASSIVE: 'passive',                 // 受身形
+  CAUSATIVE: 'causative',             // 使役形
+  CAUSATIVE_PASSIVE: 'causativePassive', // 使役受身形
+};
+
+export const VOICE_NAMES = {
+  [VOICES.DICTIONARY]: '基本形',
+  [VOICES.POTENTIAL]: '可能形',
+  [VOICES.PASSIVE]: '受身形',
+  [VOICES.CAUSATIVE]: '使役形',
+  [VOICES.CAUSATIVE_PASSIVE]: '使役受身形',
 };
 
 /**
- * 變化形式的名稱映射
+ * Layer B: Mode (動詞的模式 - The Ending Type)
  */
-export const FORM_NAMES = {
-  [CONJUGATION_FORMS.DICTIONARY]: '辞書形',
-  [CONJUGATION_FORMS.POLITE]: 'ます形',
-  [CONJUGATION_FORMS.NEGATIVE]: 'ない形',
-  [CONJUGATION_FORMS.PAST]: 'た形',
-  [CONJUGATION_FORMS.TE_FORM]: 'て形',
-  [CONJUGATION_FORMS.POTENTIAL]: '可能形',
-  [CONJUGATION_FORMS.PASSIVE]: '受身形',
-  [CONJUGATION_FORMS.CAUSATIVE]: '使役形',
-  [CONJUGATION_FORMS.IMPERATIVE]: '命令形',
-  [CONJUGATION_FORMS.VOLITIONAL]: '意志形',
+export const MODES = {
+  STANDARD: 'standard',       // 標準形 (允許所有修飾詞)
+  TE_FORM: 'te',             // て形 (只允許否定)
+  VOLITIONAL: 'volitional',  // 意向形 (只允許丁寧)
+  IMPERATIVE: 'imperative',  // 命令形 (不允許任何修飾詞)
+};
+
+export const MODE_NAMES = {
+  [MODES.STANDARD]: '標準形',
+  [MODES.TE_FORM]: 'て形',
+  [MODES.VOLITIONAL]: '意向形',
+  [MODES.IMPERATIVE]: '命令形',
 };
 
 /**
- * 變化形式的英文名稱
- */
-export const FORM_NAMES_EN = {
-  [CONJUGATION_FORMS.DICTIONARY]: 'Dictionary',
-  [CONJUGATION_FORMS.POLITE]: 'Polite (masu)',
-  [CONJUGATION_FORMS.NEGATIVE]: 'Negative (nai)',
-  [CONJUGATION_FORMS.PAST]: 'Past (ta)',
-  [CONJUGATION_FORMS.TE_FORM]: 'Te-form',
-  [CONJUGATION_FORMS.POTENTIAL]: 'Potential',
-  [CONJUGATION_FORMS.PASSIVE]: 'Passive',
-  [CONJUGATION_FORMS.CAUSATIVE]: 'Causative',
-  [CONJUGATION_FORMS.IMPERATIVE]: 'Imperative',
-  [CONJUGATION_FORMS.VOLITIONAL]: 'Volitional',
-};
-
-/**
- * 修飾詞類型
+ * Layer C: Modifiers (修飾詞 - The Switches)
  */
 export const MODIFIERS = {
-  POLITE_STYLE: 'politeStyle',    // 丁寧語
-  NEGATIVE: 'negative',           // 否定
-  PAST: 'past',                   // 過去
+  POLITE: 'polite',       // 丁寧 (です・ます)
+  NEGATIVE: 'negative',   // 否定 (ない)
+  PAST: 'past',          // 過去 (た)
 };
+
+export const MODIFIER_NAMES = {
+  [MODIFIERS.POLITE]: '丁寧',
+  [MODIFIERS.NEGATIVE]: '否定',
+  [MODIFIERS.PAST]: '過去',
+};
+
+/**
+ * 定義每個 Mode 允許的 Modifiers
+ */
+export const MODE_ALLOWED_MODIFIERS = {
+  [MODES.STANDARD]: [MODIFIERS.POLITE, MODIFIERS.NEGATIVE, MODIFIERS.PAST],
+  [MODES.TE_FORM]: [MODIFIERS.NEGATIVE],  // て形只允許否定 (なくて/ないで)
+  [MODES.VOLITIONAL]: [MODIFIERS.POLITE], // 意向形只允許丁寧 (ましょう)
+  [MODES.IMPERATIVE]: [],                  // 命令形不允許任何修飾詞
+};
+
+// ==================== 輔助函數 ====================
 
 /**
  * 五段動詞的音便規則 (た形和て形)
@@ -95,7 +101,7 @@ function getGodanTaTeForm(verb, isTeForm = false) {
 }
 
 /**
- * 五段動詞的a段變化 (用於否定形、使役形等)
+ * 五段動詞的 a 段變化 (用於否定形、使役形等)
  */
 function getGodanARow(verb) {
   const lastChar = verb.charAt(verb.length - 1);
@@ -110,7 +116,7 @@ function getGodanARow(verb) {
 }
 
 /**
- * 五段動詞的e段變化 (用於可能形、命令形等)
+ * 五段動詞的 e 段變化 (用於可能形、命令形等)
  */
 function getGodanERow(verb) {
   const lastChar = verb.charAt(verb.length - 1);
@@ -125,7 +131,7 @@ function getGodanERow(verb) {
 }
 
 /**
- * 五段動詞的i段變化 (用於ます形)
+ * 五段動詞的 i 段變化 (用於ます形)
  */
 function getGodanIRow(verb) {
   const lastChar = verb.charAt(verb.length - 1);
@@ -140,7 +146,7 @@ function getGodanIRow(verb) {
 }
 
 /**
- * 五段動詞的o段變化 (用於意志形)
+ * 五段動詞的 o 段變化 (用於意志形)
  */
 function getGodanORow(verb) {
   const lastChar = verb.charAt(verb.length - 1);
@@ -161,250 +167,321 @@ function getSuruStem(verb) {
   return verb.slice(0, -2);
 }
 
+// ==================== 核心變化函數 ====================
+
 /**
- * 主要變化函數
+ * Step 1: 將辭書形轉換為指定的 Voice (態)
  */
-export function conjugate(verb, type, form, modifiers = {}) {
-  const { politeStyle = false, negative = false, past = false } = modifiers;
-  
-  // 辭書形
-  if (form === CONJUGATION_FORMS.DICTIONARY) {
-    return verb.dictionary;
+function transformToVoice(baseVerb, verbType, voice) {
+  // 如果是基本形，直接返回
+  if (voice === VOICES.DICTIONARY) {
+    return baseVerb;
   }
-  
-  const baseVerb = verb.dictionary;
-  const verbType = verb.type;
-  
-  // === SURU 複合動詞處理 ===
+
+  // SURU 動詞特殊處理
   if (verbType === 'SURU') {
-    const suruStem = getSuruStem(baseVerb);
-    
-    if (form === CONJUGATION_FORMS.POLITE) {
-      if (past && negative) return suruStem + 'しませんでした';
-      if (past) return suruStem + 'しました';
-      if (negative) return suruStem + 'しません';
-      return suruStem + 'します';
-    }
-    if (form === CONJUGATION_FORMS.NEGATIVE) {
-      if (past && politeStyle) return suruStem + 'しませんでした';
-      if (past) return suruStem + 'しなかった';
-      if (politeStyle) return suruStem + 'しません';
-      return suruStem + 'しない';
-    }
-    if (form === CONJUGATION_FORMS.PAST) {
-      if (negative && politeStyle) return suruStem + 'しませんでした';
-      if (negative) return suruStem + 'しなかった';
-      if (politeStyle) return suruStem + 'しました';
-      return suruStem + 'した';
-    }
-    if (form === CONJUGATION_FORMS.TE_FORM) return suruStem + 'して';
-    if (form === CONJUGATION_FORMS.POTENTIAL) return suruStem + 'できる';
-    if (form === CONJUGATION_FORMS.PASSIVE) return suruStem + 'される';
-    if (form === CONJUGATION_FORMS.CAUSATIVE) return suruStem + 'させる';
-    if (form === CONJUGATION_FORMS.IMPERATIVE) return suruStem + 'しろ';
-    if (form === CONJUGATION_FORMS.VOLITIONAL) return suruStem + 'しよう';
+    const stem = getSuruStem(baseVerb);
+    if (voice === VOICES.POTENTIAL) return stem + 'できる';
+    if (voice === VOICES.PASSIVE) return stem + 'される';
+    if (voice === VOICES.CAUSATIVE) return stem + 'させる';
+    if (voice === VOICES.CAUSATIVE_PASSIVE) return stem + 'させられる';
   }
-  
-  // === ます形 (Polite Form) ===
-  if (form === CONJUGATION_FORMS.POLITE) {
-    let stem;
-    if (verbType === 'ICHIDAN') {
-      stem = baseVerb.slice(0, -1);
-    } else if (verbType === 'GODAN') {
-      stem = getGodanIRow(baseVerb);
-    } else if (baseVerb === 'する') {
-      stem = 'し';
-    } else if (baseVerb === '来る') {
-      stem = '来';
-    }
-    
-    if (past && negative) return stem + 'ませんでした';
-    if (past) return stem + 'ました';
-    if (negative) return stem + 'ません';
-    return stem + 'ます';
+
+  // 一段動詞
+  if (verbType === 'ICHIDAN') {
+    const stem = baseVerb.slice(0, -1);
+    if (voice === VOICES.POTENTIAL) return stem + 'られる';
+    if (voice === VOICES.PASSIVE) return stem + 'られる';
+    if (voice === VOICES.CAUSATIVE) return stem + 'させる';
+    if (voice === VOICES.CAUSATIVE_PASSIVE) return stem + 'させられる';
   }
-  
-  // === ない形 (Negative Form) ===
-  if (form === CONJUGATION_FORMS.NEGATIVE) {
-    let stem;
-    if (verbType === 'ICHIDAN') {
-      stem = baseVerb.slice(0, -1);
-    } else if (verbType === 'GODAN') {
-      stem = getGodanARow(baseVerb);
-    } else if (baseVerb === 'する') {
-      stem = 'し';
-    } else if (baseVerb === '来る') {
-      stem = '来';
-    }
-    
-    if (past && politeStyle) return stem + 'ませんでした';
-    if (past) return stem + 'なかった';
-    if (politeStyle) return stem + 'ません';
-    return stem + 'ない';
+
+  // 五段動詞
+  if (verbType === 'GODAN') {
+    if (voice === VOICES.POTENTIAL) return getGodanERow(baseVerb) + 'る';
+    if (voice === VOICES.PASSIVE) return getGodanARow(baseVerb) + 'れる';
+    if (voice === VOICES.CAUSATIVE) return getGodanARow(baseVerb) + 'せる';
+    if (voice === VOICES.CAUSATIVE_PASSIVE) return getGodanARow(baseVerb) + 'せられる';
   }
-  
-  // === た形 (Past Form) ===
-  if (form === CONJUGATION_FORMS.PAST) {
-    if (verbType === 'ICHIDAN') {
-      const stem = baseVerb.slice(0, -1);
-      if (negative && politeStyle) return stem + 'ませんでした';
-      if (negative) return stem + 'なかった';
-      if (politeStyle) return stem + 'ました';
-      return stem + 'た';
-    } else if (verbType === 'GODAN') {
-      if (negative && politeStyle) return getGodanIRow(baseVerb) + 'ませんでした';
-      if (negative) return getGodanARow(baseVerb) + 'なかった';
-      if (politeStyle) return getGodanIRow(baseVerb) + 'ました';
-      return getGodanTaTeForm(baseVerb, false);
-    } else if (baseVerb === 'する') {
-      if (negative && politeStyle) return 'しませんでした';
-      if (negative) return 'しなかった';
-      if (politeStyle) return 'しました';
-      return 'した';
-    } else if (baseVerb === '来る') {
-      if (negative && politeStyle) return '来ませんでした';
-      if (negative) return '来なかった';
-      if (politeStyle) return '来ました';
-      return '来た';
-    }
+
+  // 不規則動詞
+  if (baseVerb === 'する') {
+    if (voice === VOICES.POTENTIAL) return 'できる';
+    if (voice === VOICES.PASSIVE) return 'される';
+    if (voice === VOICES.CAUSATIVE) return 'させる';
+    if (voice === VOICES.CAUSATIVE_PASSIVE) return 'させられる';
   }
-  
-  // === て形 (Te Form) ===
-  if (form === CONJUGATION_FORMS.TE_FORM) {
-    if (verbType === 'ICHIDAN') {
-      return baseVerb.slice(0, -1) + 'て';
-    } else if (verbType === 'GODAN') {
-      return getGodanTaTeForm(baseVerb, true);
-    } else if (baseVerb === 'する') {
-      return 'して';
-    } else if (baseVerb === '来る') {
-      return '来て';
-    }
+
+  if (baseVerb === '来る') {
+    if (voice === VOICES.POTENTIAL) return '来られる';
+    if (voice === VOICES.PASSIVE) return '来られる';
+    if (voice === VOICES.CAUSATIVE) return '来させる';
+    if (voice === VOICES.CAUSATIVE_PASSIVE) return '来させられる';
   }
-  
-  // === 可能形 (Potential Form) ===
-  if (form === CONJUGATION_FORMS.POTENTIAL) {
-    let potentialForm;
-    if (verbType === 'ICHIDAN') {
-      potentialForm = baseVerb.slice(0, -1) + 'られる';
-    } else if (verbType === 'GODAN') {
-      potentialForm = getGodanERow(baseVerb) + 'る';
-    } else if (baseVerb === 'する') {
-      potentialForm = 'できる';
-    } else if (baseVerb === '来る') {
-      potentialForm = '来られる';
-    }
-    
-    if (past && negative) return potentialForm.slice(0, -1) + 'なかった';
-    if (past) return potentialForm.slice(0, -1) + 'た';
-    if (negative) return potentialForm.slice(0, -1) + 'ない';
-    return potentialForm;
-  }
-  
-  // === 受身形 (Passive Form) ===
-  if (form === CONJUGATION_FORMS.PASSIVE) {
-    if (verbType === 'ICHIDAN') {
-      return baseVerb.slice(0, -1) + 'られる';
-    } else if (verbType === 'GODAN') {
-      return getGodanARow(baseVerb) + 'れる';
-    } else if (baseVerb === 'する') {
-      return 'される';
-    } else if (baseVerb === '来る') {
-      return '来られる';
-    }
-  }
-  
-  // === 使役形 (Causative Form) ===
-  if (form === CONJUGATION_FORMS.CAUSATIVE) {
-    if (verbType === 'ICHIDAN') {
-      return baseVerb.slice(0, -1) + 'させる';
-    } else if (verbType === 'GODAN') {
-      return getGodanARow(baseVerb) + 'せる';
-    } else if (baseVerb === 'する') {
-      return 'させる';
-    } else if (baseVerb === '来る') {
-      return '来させる';
-    }
-  }
-  
-  // === 命令形 (Imperative Form) ===
-  if (form === CONJUGATION_FORMS.IMPERATIVE) {
-    if (verbType === 'ICHIDAN') {
-      return baseVerb.slice(0, -1) + 'ろ';
-    } else if (verbType === 'GODAN') {
-      return getGodanERow(baseVerb);
-    } else if (baseVerb === 'する') {
-      return 'しろ';
-    } else if (baseVerb === '来る') {
-      return '来い';
-    }
-  }
-  
-  // === 意志形 (Volitional Form) ===
-  if (form === CONJUGATION_FORMS.VOLITIONAL) {
-    if (verbType === 'ICHIDAN') {
-      return baseVerb.slice(0, -1) + 'よう';
-    } else if (verbType === 'GODAN') {
-      return getGodanORow(baseVerb) + 'う';
-    } else if (baseVerb === 'する') {
-      return 'しよう';
-    } else if (baseVerb === '来る') {
-      return '来よう';
-    }
-  }
-  
+
   return baseVerb;
 }
 
 /**
- * 生成隨機題目
+ * Step 2: 將 Voiced 動詞轉換為指定的 Mode (模式)
+ * 並應用 Modifiers (修飾詞)
  */
-export function generateQuestion(verb, enabledForms, enabledModifiers) {
-  // 從啟用的形式中隨機選擇
-  const randomForm = enabledForms[Math.floor(Math.random() * enabledForms.length)];
-  
-  // 生成修飾詞組合
-  const modifiers = {};
-  
-  // 某些形式不適用修飾詞
-  const noModifierForms = [CONJUGATION_FORMS.DICTIONARY, CONJUGATION_FORMS.TE_FORM, CONJUGATION_FORMS.IMPERATIVE];
-  
-  if (!noModifierForms.includes(randomForm)) {
-    // 隨機決定是否加上修飾詞
-    if (enabledModifiers.polite && Math.random() > 0.5) {
-      modifiers.politeStyle = true;
+function applyModeAndModifiers(voicedVerb, originalVerbType, voice, mode, modifiers = {}) {
+  const { polite = false, negative = false, past = false } = modifiers;
+
+  // 判斷 voiced verb 的類型
+  // 可能形、受身形、使役形等都會變成一段動詞
+  let effectiveType = originalVerbType;
+  if (voice !== VOICES.DICTIONARY && !voicedVerb.endsWith('する')) {
+    effectiveType = 'ICHIDAN'; // 態變化後通常變成一段動詞
+  }
+
+  // === Mode: IMPERATIVE (命令形) ===
+  // 命令形不允許任何修飾詞
+  if (mode === MODES.IMPERATIVE) {
+    if (effectiveType === 'ICHIDAN' || voice !== VOICES.DICTIONARY) {
+      return voicedVerb.slice(0, -1) + 'ろ';
     }
-    if (enabledModifiers.negative && Math.random() > 0.5) {
-      modifiers.negative = true;
+    if (effectiveType === 'GODAN') {
+      return getGodanERow(voicedVerb);
     }
-    if (enabledModifiers.past && Math.random() > 0.5) {
-      modifiers.past = true;
+    if (voicedVerb === 'する') return 'しろ';
+    if (voicedVerb === '来る') return '来い';
+  }
+
+  // === Mode: VOLITIONAL (意向形) ===
+  // 意向形只允許 polite 修飾詞
+  if (mode === MODES.VOLITIONAL) {
+    let volitionalForm;
+    
+    if (effectiveType === 'ICHIDAN' || voice !== VOICES.DICTIONARY) {
+      volitionalForm = voicedVerb.slice(0, -1) + 'よう';
+    } else if (effectiveType === 'GODAN') {
+      volitionalForm = getGodanORow(voicedVerb) + 'う';
+    } else if (voicedVerb === 'する') {
+      volitionalForm = 'しよう';
+    } else if (voicedVerb === '来る') {
+      volitionalForm = '来よう';
+    }
+
+    // 如果有 polite，轉成ましょう
+    if (polite) {
+      let masuStem;
+      if (effectiveType === 'ICHIDAN' || voice !== VOICES.DICTIONARY) {
+        masuStem = voicedVerb.slice(0, -1);
+      } else if (effectiveType === 'GODAN') {
+        masuStem = getGodanIRow(voicedVerb);
+      } else if (voicedVerb === 'する') {
+        masuStem = 'し';
+      } else if (voicedVerb === '来る') {
+        masuStem = '来';
+      }
+      return masuStem + 'ましょう';
+    }
+
+    return volitionalForm;
+  }
+
+  // === Mode: TE_FORM (て形) ===
+  // て形允許 negative 修飾詞
+  if (mode === MODES.TE_FORM) {
+    let teForm;
+    
+    if (effectiveType === 'ICHIDAN' || voice !== VOICES.DICTIONARY) {
+      teForm = voicedVerb.slice(0, -1) + 'て';
+    } else if (effectiveType === 'GODAN') {
+      teForm = getGodanTaTeForm(voicedVerb, true);
+    } else if (voicedVerb === 'する') {
+      teForm = 'して';
+    } else if (voicedVerb === '来る') {
+      teForm = '来て';
+    }
+
+    // 如果有 negative，轉成なくて/ないで
+    if (negative) {
+      let naiStem;
+      if (effectiveType === 'ICHIDAN' || voice !== VOICES.DICTIONARY) {
+        naiStem = voicedVerb.slice(0, -1);
+      } else if (effectiveType === 'GODAN') {
+        naiStem = getGodanARow(voicedVerb);
+      } else if (voicedVerb === 'する') {
+        naiStem = 'し';
+      } else if (voicedVerb === '来る') {
+        naiStem = '来';
+      }
+      return naiStem + 'なくて';
+    }
+
+    return teForm;
+  }
+
+  // === Mode: STANDARD (標準形) ===
+  // 標準形允許所有修飾詞組合: polite, negative, past
+  if (mode === MODES.STANDARD) {
+    // 取得ます形詞幹和ない形詞幹
+    let masuStem, naiStem;
+    
+    if (effectiveType === 'ICHIDAN' || voice !== VOICES.DICTIONARY) {
+      masuStem = voicedVerb.slice(0, -1);
+      naiStem = voicedVerb.slice(0, -1);
+    } else if (effectiveType === 'GODAN') {
+      masuStem = getGodanIRow(voicedVerb);
+      naiStem = getGodanARow(voicedVerb);
+    } else if (voicedVerb === 'する') {
+      masuStem = 'し';
+      naiStem = 'し';
+    } else if (voicedVerb === '来る') {
+      masuStem = '来';
+      naiStem = '来';
+    }
+
+    // 處理 8 種組合
+    // 1. Plain Present Affirmative: 食べる
+    if (!polite && !negative && !past) {
+      return voicedVerb;
+    }
+
+    // 2. Plain Present Negative: 食べない
+    if (!polite && negative && !past) {
+      return naiStem + 'ない';
+    }
+
+    // 3. Plain Past Affirmative: 食べた
+    if (!polite && !negative && past) {
+      if (effectiveType === 'ICHIDAN' || voice !== VOICES.DICTIONARY) {
+        return voicedVerb.slice(0, -1) + 'た';
+      }
+      if (effectiveType === 'GODAN') {
+        return getGodanTaTeForm(voicedVerb, false);
+      }
+      if (voicedVerb === 'する') return 'した';
+      if (voicedVerb === '来る') return '来た';
+    }
+
+    // 4. Plain Past Negative: 食べなかった
+    if (!polite && negative && past) {
+      return naiStem + 'なかった';
+    }
+
+    // 5. Polite Present Affirmative: 食べます
+    if (polite && !negative && !past) {
+      return masuStem + 'ます';
+    }
+
+    // 6. Polite Present Negative: 食べません
+    if (polite && negative && !past) {
+      return masuStem + 'ません';
+    }
+
+    // 7. Polite Past Affirmative: 食べました
+    if (polite && !negative && past) {
+      return masuStem + 'ました';
+    }
+
+    // 8. Polite Past Negative: 食べませんでした
+    if (polite && negative && past) {
+      return masuStem + 'ませんでした';
     }
   }
+
+  return voicedVerb;
+}
+
+/**
+ * 主要變化函數 (New Orthogonal System)
+ * @param {Object} verb - 動詞對象
+ * @param {string} voice - Voice (態): DICTIONARY, POTENTIAL, PASSIVE, CAUSATIVE, CAUSATIVE_PASSIVE
+ * @param {string} mode - Mode (模式): STANDARD, TE_FORM, VOLITIONAL, IMPERATIVE
+ * @param {Object} modifiers - Modifiers (修飾詞): { polite, negative, past }
+ */
+export function conjugate(verb, voice, mode, modifiers = {}) {
+  const baseVerb = verb.dictionary;
+  const verbType = verb.type;
+
+  // Step 1: Transform to Voice
+  const voicedVerb = transformToVoice(baseVerb, verbType, voice);
+
+  // Step 2: Apply Mode and Modifiers
+  const result = applyModeAndModifiers(voicedVerb, verbType, voice, mode, modifiers);
+
+  return result;
+}
+
+/**
+ * 生成隨機題目 (使用新的正交系統)
+ */
+export function generateQuestion(verb, enabledVoices, enabledModes, enabledModifiers) {
+  // 隨機選擇 Voice
+  const randomVoice = enabledVoices[Math.floor(Math.random() * enabledVoices.length)];
   
-  const answer = conjugate(verb, verb.type, randomForm, modifiers);
+  // 隨機選擇 Mode
+  const randomMode = enabledModes[Math.floor(Math.random() * enabledModes.length)];
   
+  // 根據 Mode 決定可用的 Modifiers
+  const allowedModifiers = MODE_ALLOWED_MODIFIERS[randomMode];
+  const modifiers = {};
+
+  // 只在允許的範圍內隨機添加修飾詞
+  if (allowedModifiers.includes(MODIFIERS.POLITE) && enabledModifiers.polite && Math.random() > 0.5) {
+    modifiers.polite = true;
+  }
+  if (allowedModifiers.includes(MODIFIERS.NEGATIVE) && enabledModifiers.negative && Math.random() > 0.5) {
+    modifiers.negative = true;
+  }
+  if (allowedModifiers.includes(MODIFIERS.PAST) && enabledModifiers.past && Math.random() > 0.5) {
+    modifiers.past = true;
+  }
+
+  const answer = conjugate(verb, randomVoice, randomMode, modifiers);
+
   return {
     verb,
-    form: randomForm,
+    voice: randomVoice,
+    mode: randomMode,
     modifiers,
     answer
   };
 }
 
 /**
- * 生成問題描述文字
+ * 生成問題描述文字 (使用新的正交系統)
  */
-export function getQuestionDescription(form, modifiers = {}) {
+export function getQuestionDescription(voice, mode, modifiers = {}) {
   const parts = [];
-  
-  if (modifiers.negative) parts.push('否定');
-  if (modifiers.past) parts.push('過去');
-  if (modifiers.politeStyle) parts.push('丁寧');
-  
-  parts.push(FORM_NAMES[form]);
-  
+
+  // Layer A: Voice
+  if (voice !== VOICES.DICTIONARY) {
+    parts.push(VOICE_NAMES[voice]);
+  }
+
+  // Layer B: Mode
+  if (mode !== MODES.STANDARD) {
+    parts.push(MODE_NAMES[mode]);
+  }
+
+  // Layer C: Modifiers
+  const modifierParts = [];
+  if (modifiers.polite) modifierParts.push(MODIFIER_NAMES[MODIFIERS.POLITE]);
+  if (modifiers.negative) modifierParts.push(MODIFIER_NAMES[MODIFIERS.NEGATIVE]);
+  if (modifiers.past) modifierParts.push(MODIFIER_NAMES[MODIFIERS.PAST]);
+
+  if (modifierParts.length > 0) {
+    parts.push(...modifierParts);
+  }
+
+  // 如果什麼都沒有，就是基本形
+  if (parts.length === 0) {
+    return '基本形（辭書形）';
+  }
+
   return parts.join(' + ');
+}
+
+/**
+ * 檢查修飾詞是否被允許
+ */
+export function isModifierAllowed(mode, modifier) {
+  return MODE_ALLOWED_MODIFIERS[mode]?.includes(modifier) || false;
 }
 
 /**
@@ -437,10 +514,14 @@ export default {
   conjugate,
   generateQuestion,
   getQuestionDescription,
+  isModifierAllowed,
   getVerbTypeName,
   getVerbTypeShort,
-  CONJUGATION_FORMS,
-  FORM_NAMES,
-  FORM_NAMES_EN,
-  MODIFIERS
+  VOICES,
+  VOICE_NAMES,
+  MODES,
+  MODE_NAMES,
+  MODIFIERS,
+  MODIFIER_NAMES,
+  MODE_ALLOWED_MODIFIERS
 };
