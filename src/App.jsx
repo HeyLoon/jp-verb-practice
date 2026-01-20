@@ -192,6 +192,17 @@ const conjugationGuides = {
 
 // === 元件: 語音警告提示 ===
 function VoiceWarning({ show, onClose }) {
+  // 5秒後自動關閉
+  useEffect(() => {
+    if (show) {
+      const timer = setTimeout(() => {
+        onClose();
+      }, 5000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [show, onClose]);
+
   if (!show) return null;
 
   return (
@@ -1629,9 +1640,9 @@ function App() {
       </div>
 
       {/* 主要內容 */}
-      <div className="relative">
+      <div className="relative flex justify-center gap-6 px-4 py-8">
         {/* 左側統計（寬螢幕） */}
-        <div className="hidden lg:block fixed left-8 top-1/2 -translate-y-1/2 space-y-4 w-48">
+        <div className="hidden lg:flex flex-col gap-4 w-48 flex-shrink-0 sticky top-24 self-start">
           <div className="bg-jp-primary rounded-xl p-4 text-white shadow-lg">
             <div className="flex items-center gap-2 mb-1">
               <Flame className="w-5 h-5" />
@@ -1648,26 +1659,8 @@ function App() {
           </div>
         </div>
 
-        {/* 右側統計（寬螢幕） */}
-        <div className="hidden lg:block fixed right-8 top-1/2 -translate-y-1/2 space-y-4 w-48">
-          <div className="bg-jp-accent rounded-xl p-4 text-white shadow-lg">
-            <div className="flex items-center gap-2 mb-1">
-              <CheckCircle2 className="w-5 h-5" />
-              <span className="text-sm font-medium opacity-90">正確率</span>
-            </div>
-            <div className="text-3xl font-bold">{stats.totalAttempts > 0 ? Math.round((stats.totalCorrect / stats.totalAttempts) * 100) : 0}%</div>
-          </div>
-          <div className="bg-jp-secondary rounded-xl p-4 text-white shadow-lg">
-            <div className="flex items-center gap-2 mb-1">
-              <Sparkles className="w-5 h-5" />
-              <span className="text-sm font-medium opacity-90">總題數</span>
-            </div>
-            <div className="text-3xl font-bold">{stats.totalAttempts}</div>
-          </div>
-        </div>
-
         {/* 中間主要內容 */}
-        <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="max-w-4xl w-full">
           {/* 上方統計（窄螢幕） */}
           <div className="lg:hidden mb-6">
             <StatsBar {...stats} />
@@ -1721,6 +1714,24 @@ function App() {
             )}
           </AnimatePresence>
         )}
+        </div>
+
+        {/* 右側統計（寬螢幕） */}
+        <div className="hidden lg:flex flex-col gap-4 w-48 flex-shrink-0 sticky top-24 self-start">
+          <div className="bg-jp-accent rounded-xl p-4 text-white shadow-lg">
+            <div className="flex items-center gap-2 mb-1">
+              <CheckCircle2 className="w-5 h-5" />
+              <span className="text-sm font-medium opacity-90">正確率</span>
+            </div>
+            <div className="text-3xl font-bold">{stats.totalAttempts > 0 ? Math.round((stats.totalCorrect / stats.totalAttempts) * 100) : 0}%</div>
+          </div>
+          <div className="bg-jp-secondary rounded-xl p-4 text-white shadow-lg">
+            <div className="flex items-center gap-2 mb-1">
+              <Sparkles className="w-5 h-5" />
+              <span className="text-sm font-medium opacity-90">總題數</span>
+            </div>
+            <div className="text-3xl font-bold">{stats.totalAttempts}</div>
+          </div>
         </div>
       </div>
 
