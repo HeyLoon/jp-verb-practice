@@ -25,6 +25,7 @@ import {
   conjugate, 
   generateQuestion, 
   getQuestionDescription,
+  getMeaningExplanation,
   isModifierAllowed,
   getVerbTypeName,
   getVerbTypeShort,
@@ -1018,9 +1019,14 @@ function PerformMode({ question, onSubmit, onNext, feedback, userAnswer, voiceAv
                     <div className="flex items-center gap-2 text-sm">
                       <span className="font-semibold text-jp-text">辭書形:</span>
                       <span className="japanese-text text-lg text-jp-text">{question.verb.dictionary}</span>
+                      <span className="text-gray-500">({question.verb.meaning})</span>
                       <ChevronRight className="w-4 h-4 text-gray-400" />
                       <span className="font-semibold text-jp-text">變化:</span>
                       <span className="text-jp-primary font-medium">{getQuestionDescription(question.voice, question.mode, question.modifiers)}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="font-semibold text-jp-text">語感:</span>
+                      <span className="text-jp-accent font-medium">{getMeaningExplanation(question.voice, question.mode, question.modifiers)}{question.verb.meaning}</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
                       <span className="font-semibold text-jp-text">正確答案:</span>
@@ -1377,9 +1383,14 @@ function RecognizeMode({ question, onSubmit, onNext, feedback, voiceAvailable, s
                   <div className="flex items-center gap-2 text-sm">
                     <span className="font-semibold text-jp-text">辭書形:</span>
                     <span className="japanese-text text-lg text-jp-text">{question.verb.dictionary}</span>
+                    <span className="text-gray-500">({question.verb.meaning})</span>
                     <ChevronRight className="w-4 h-4 text-gray-400" />
                     <span className="font-semibold text-jp-text">變化:</span>
                     <span className="text-jp-primary font-medium">{getQuestionDescription(question.voice, question.mode, question.modifiers)}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="font-semibold text-jp-text">語感:</span>
+                    <span className="text-jp-accent font-medium">{getMeaningExplanation(question.voice, question.mode, question.modifiers)}{question.verb.meaning}</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <span className="font-semibold text-jp-text">變化結果:</span>

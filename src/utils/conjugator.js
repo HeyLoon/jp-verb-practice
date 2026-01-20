@@ -535,6 +535,128 @@ export function getVerbTypeShort(type) {
 }
 
 /**
+ * 生成變化形式的語感說明（中文解釋）
+ * 根據 Voice + Mode + Modifiers 組合生成實際用法說明
+ */
+export function getMeaningExplanation(voice, mode, modifiers = {}) {
+  const { polite, negative, past } = modifiers;
+  
+  // === Voice 層的基礎語感 ===
+  let voiceMeaning = '';
+  switch (voice) {
+    case VOICES.DICTIONARY:
+      voiceMeaning = '';
+      break;
+    case VOICES.POTENTIAL:
+      voiceMeaning = '能夠/可以';
+      break;
+    case VOICES.PASSIVE:
+      voiceMeaning = '被';
+      break;
+    case VOICES.CAUSATIVE:
+      voiceMeaning = '使/讓';
+      break;
+    case VOICES.CAUSATIVE_PASSIVE:
+      voiceMeaning = '被迫/被要求';
+      break;
+  }
+  
+  // === Mode 層的語感修飾 ===
+  let modeMeaning = '';
+  let timeExpression = '';
+  
+  switch (mode) {
+    case MODES.STANDARD:
+      // 標準形根據修飾詞決定
+      if (past) {
+        timeExpression = negative ? '沒有' : '了';
+      } else {
+        timeExpression = negative ? '不' : '';
+      }
+      modeMeaning = '';
+      break;
+      
+    case MODES.TE_FORM:
+      if (negative) {
+        modeMeaning = '不～的話/不～而';
+        timeExpression = '';
+      } else {
+        modeMeaning = '～然後/～著';
+        timeExpression = '';
+      }
+      break;
+      
+    case MODES.VOLITIONAL:
+      if (polite) {
+        modeMeaning = '一起～吧（禮貌）';
+      } else {
+        modeMeaning = '～吧/打算～';
+      }
+      timeExpression = '';
+      break;
+      
+    case MODES.IMPERATIVE:
+      modeMeaning = '～！（命令）';
+      timeExpression = '';
+      break;
+  }
+  
+  // === 組合語感 ===
+  let fullMeaning = '';
+  
+  // 處理丁寧語（標準形）
+  if (mode === MODES.STANDARD && polite) {
+    if (voice === VOICES.DICTIONARY) {
+      fullMeaning = negative 
+        ? (past ? '沒有～（禮貌）' : '不～（禮貌）')
+        : (past ? '～了（禮貌）' : '～（禮貌）');
+    } else {
+      fullMeaning = `${timeExpression}${voiceMeaning}～（禮貌）`;
+    }
+  } 
+  // 處理て形
+  else if (mode === MODES.TE_FORM) {
+    if (voice === VOICES.DICTIONARY) {
+      fullMeaning = negative ? '不～而/沒～' : '～然後/～著';
+    } else {
+      fullMeaning = negative 
+        ? `不${voiceMeaning}～而`
+        : `${voiceMeaning}～然後`;
+    }
+  }
+  // 處理意向形
+  else if (mode === MODES.VOLITIONAL) {
+    if (voice === VOICES.DICTIONARY) {
+      fullMeaning = polite ? '一起～吧（禮貌）' : '～吧/打算～';
+    } else {
+      fullMeaning = polite 
+        ? `一起${voiceMeaning}～吧（禮貌）`
+        : `${voiceMeaning}～吧`;
+    }
+  }
+  // 處理命令形
+  else if (mode === MODES.IMPERATIVE) {
+    fullMeaning = voice === VOICES.DICTIONARY 
+      ? '～！（命令）' 
+      : `${voiceMeaning}～！（命令）`;
+  }
+  // 處理標準形（非丁寧語）
+  else {
+    if (voice === VOICES.DICTIONARY) {
+      fullMeaning = negative 
+        ? (past ? '沒有～' : '不～')
+        : (past ? '～了' : '～');
+    } else {
+      const negPrefix = negative ? '不' : '';
+      const timePrefix = past ? '了' : '';
+      fullMeaning = `${timePrefix}${negPrefix}${voiceMeaning}～`;
+    }
+  }
+  
+  return fullMeaning;
+}
+
+/**
  * 將變化後的答案轉換為純平假名版本
  * 策略：找到變化後答案中源自辭書形的部分，替換為讀音
  */
@@ -577,6 +699,7 @@ export default {
   conjugate,
   generateQuestion,
   getQuestionDescription,
+  getMeaningExplanation,
   isModifierAllowed,
   getVerbTypeName,
   getVerbTypeShort,
