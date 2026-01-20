@@ -28,6 +28,7 @@ import {
   isModifierAllowed,
   getVerbTypeName,
   getVerbTypeShort,
+  getHiraganaAnswer,
   VOICES,
   VOICE_NAMES,
   MODES,
@@ -1489,7 +1490,13 @@ function App() {
 
   // 處理答案提交 (模式 A)
   const handlePerformSubmit = (answer) => {
-    const isCorrect = answer.trim() === currentQuestion.answer;
+    const userAnswer = answer.trim();
+    const correctAnswer = currentQuestion.answer;
+    const hiraganaAnswer = getHiraganaAnswer(correctAnswer, currentQuestion.verb);
+    
+    // 接受漢字版本或平假名版本
+    const isCorrect = userAnswer === correctAnswer || userAnswer === hiraganaAnswer;
+    
     setUserAnswer(answer);
     setFeedback({ correct: isCorrect });
 
