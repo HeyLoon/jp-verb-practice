@@ -222,10 +222,11 @@ function VoiceWarning({ show, onClose }) {
 
 // === 元件: 教學面板 ===
 function TutorialModal({ isOpen, onClose }) {
-  const [expandedType, setExpandedType] = useState('GODAN');
-  const [expandedRule, setExpandedRule] = useState(0);
+  const [activeTab, setActiveTab] = useState('GODAN');
 
   if (!isOpen) return null;
+
+  const currentGuide = conjugationGuides[activeTab];
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -233,7 +234,7 @@ function TutorialModal({ isOpen, onClose }) {
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+        className="bg-jp-bg rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col"
       >
         {/* 標題 */}
         <div className="p-6 border-b border-gray-200 bg-jp-primary text-white">
@@ -241,8 +242,8 @@ function TutorialModal({ isOpen, onClose }) {
             <div className="flex items-center gap-3">
               <BookOpen className="w-8 h-8" />
               <div>
-                <h2 className="text-2xl font-bold">動詞變化教學</h2>
-                <p className="text-white/80 text-sm">Japanese Verb Conjugation Guide</p>
+                <h2 className="text-2xl font-bold">動詞變化速查表</h2>
+                <p className="text-white/90 text-sm">Conjugation Quick Reference</p>
               </div>
             </div>
             <button 
@@ -254,125 +255,115 @@ function TutorialModal({ isOpen, onClose }) {
           </div>
         </div>
 
-        {/* 動詞類型選擇 */}
-        <div className="flex border-b border-gray-200 bg-white overflow-x-auto">
+        {/* Tab 導航 */}
+        <div className="flex border-b-2 border-gray-200 bg-white px-6">
           {Object.entries(conjugationGuides).map(([type, guide]) => (
             <button
               key={type}
-              onClick={() => { setExpandedType(type); setExpandedRule(0); }}
-              className={`px-6 py-4 font-medium whitespace-nowrap transition-colors ${
-                expandedType === type
-                  ? 'bg-white text-jp-text border-b-2 border-jp-primary'
-                  : 'text-gray-500 hover:text-jp-text hover:bg-gray-50'
+              onClick={() => setActiveTab(type)}
+              className={`px-6 py-3 font-semibold transition-all relative ${
+                activeTab === type
+                  ? 'text-jp-primary'
+                  : 'text-gray-500 hover:text-jp-text'
               }`}
             >
               {getVerbTypeShort(type)}
+              {activeTab === type && (
+                <motion.div
+                  layoutId="activeTab"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-jp-primary"
+                />
+              )}
             </button>
           ))}
         </div>
 
-        {/* 教學內容 */}
+        {/* 表格內容 */}
         <div className="flex-1 overflow-y-auto p-6">
-          {conjugationGuides[expandedType] && (
-            <div className="space-y-6">
-              {/* 標題與描述 */}
-              <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
-                <h3 className="text-xl font-bold text-jp-text mb-2">
-                  {conjugationGuides[expandedType].title}
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {conjugationGuides[expandedType].description}
-                </p>
+          {currentGuide && (
+            <div className="space-y-4">
+              {/* 簡介 */}
+              <div className="bg-white rounded-xl p-4 border-l-4 border-jp-primary">
+                <p className="text-jp-text font-medium">{currentGuide.description}</p>
               </div>
 
-              {/* 變化規則 */}
-              <div className="space-y-4">
-                {conjugationGuides[expandedType].rules.map((rule, idx) => (
-                  <div 
-                    key={idx}
-                    className="border border-gray-200 rounded-xl overflow-hidden"
-                  >
-                    <button
-                      onClick={() => setExpandedRule(expandedRule === idx ? -1 : idx)}
-                      className="w-full flex items-center justify-between p-4 bg-white hover:bg-gray-50 transition-colors"
-                    >
-                      <div className="flex items-center gap-3">
-                        <span className="bg-jp-primary/20 text-jp-text px-3 py-1 rounded-full text-sm font-medium">
-                          {rule.form}
-                        </span>
-                        <span className="text-jp-text font-medium">{rule.rule}</span>
-                      </div>
-                      {expandedRule === idx ? (
-                        <ChevronUp className="w-5 h-5 text-gray-500" />
-                      ) : (
-                        <ChevronDown className="w-5 h-5 text-gray-500" />
-                      )}
-                    </button>
-                    
-                    <AnimatePresence>
-                      {expandedRule === idx && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          className="border-t border-gray-200 bg-gray-50"
-                        >
-                          <div className="p-4 space-y-3">
+              {/* 變化規則表格 */}
+              <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                <table className="w-full">
+                  <thead>
+                    <tr className="bg-jp-text text-white">
+                      <th className="px-4 py-3 text-left font-semibold w-1/5">目標形式</th>
+                      <th className="px-4 py-3 text-left font-semibold w-2/5">變化規則</th>
+                      <th className="px-4 py-3 text-left font-semibold w-2/5">範例</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {currentGuide.rules.map((rule, idx) => (
+                      <tr 
+                        key={idx}
+                        className={`border-t border-gray-200 ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-jp-primary/5 transition-colors`}
+                      >
+                        <td className="px-4 py-4">
+                          <span className="inline-block bg-jp-primary/20 text-jp-text px-3 py-1 rounded-lg font-bold text-sm">
+                            {rule.form}
+                          </span>
+                        </td>
+                        <td className="px-4 py-4">
+                          <div className="text-jp-text font-medium text-sm leading-relaxed">
+                            {rule.rule}
+                          </div>
+                        </td>
+                        <td className="px-4 py-4">
+                          <div className="space-y-2">
                             {rule.examples.map((ex, exIdx) => (
-                              <div 
-                                key={exIdx}
-                                className="flex items-center gap-4 bg-white p-3 rounded-lg border border-gray-200"
-                              >
-                                <span className="text-2xl font-bold text-jp-text japanese-text min-w-[80px]">
+                              <div key={exIdx} className="flex items-center gap-2 text-sm">
+                                <span className="japanese-text font-bold text-jp-text">
                                   {ex.base}
                                 </span>
-                                <ChevronRight className="w-5 h-5 text-gray-400" />
-                                <span className="text-2xl font-bold text-jp-primary japanese-text min-w-[120px]">
+                                <ChevronRight className="w-3 h-3 text-gray-400 flex-shrink-0" />
+                                <span className="japanese-text font-bold text-jp-primary">
                                   {ex.result}
-                                </span>
-                                <span className="text-sm text-gray-600 flex-1">
-                                  {ex.explanation}
                                 </span>
                               </div>
                             ))}
                           </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                ))}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
 
-              {/* 音便規則詳解 (僅五段動詞) */}
-              {expandedType === 'GODAN' && (
-                <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
-                  <h4 className="font-bold text-jp-text mb-4 flex items-center gap-2">
-                    <Info className="w-5 h-5" />
-                    音便規則速記表
+              {/* 音便規則 (僅五段) */}
+              {activeTab === 'GODAN' && (
+                <div className="bg-white border border-gray-200 rounded-xl p-5">
+                  <h4 className="font-bold text-jp-text mb-3 flex items-center gap-2 text-lg">
+                    <Info className="w-5 h-5 text-jp-primary" />
+                    音便規則速記
                   </h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                    <div className="bg-white p-3 rounded-lg border border-gray-200">
-                      <span className="font-bold text-jp-primary">く → いた/いて</span>
-                      <span className="text-gray-600 ml-2">書く → 書いた</span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <div className="bg-jp-bg p-3 rounded-lg border border-gray-200">
+                      <span className="font-bold text-jp-primary japanese-text">く → いた/いて</span>
+                      <div className="text-gray-600 text-sm mt-1">書く → 書いた</div>
                     </div>
-                    <div className="bg-white p-3 rounded-lg border border-gray-200">
-                      <span className="font-bold text-jp-primary">ぐ → いだ/いで</span>
-                      <span className="text-gray-600 ml-2">泳ぐ → 泳いだ</span>
+                    <div className="bg-jp-bg p-3 rounded-lg border border-gray-200">
+                      <span className="font-bold text-jp-primary japanese-text">ぐ → いだ/いで</span>
+                      <div className="text-gray-600 text-sm mt-1">泳ぐ → 泳いだ</div>
                     </div>
-                    <div className="bg-white p-3 rounded-lg border border-gray-200">
-                      <span className="font-bold text-jp-primary">す → した/して</span>
-                      <span className="text-gray-600 ml-2">話す → 話した</span>
+                    <div className="bg-jp-bg p-3 rounded-lg border border-gray-200">
+                      <span className="font-bold text-jp-primary japanese-text">す → した/して</span>
+                      <div className="text-gray-600 text-sm mt-1">話す → 話した</div>
                     </div>
-                    <div className="bg-white p-3 rounded-lg border border-gray-200">
-                      <span className="font-bold text-jp-primary">つ/う/る → った/って</span>
-                      <span className="text-gray-600 ml-2">待つ → 待った</span>
+                    <div className="bg-jp-bg p-3 rounded-lg border border-gray-200">
+                      <span className="font-bold text-jp-primary japanese-text">つ/う/る → った/って</span>
+                      <div className="text-gray-600 text-sm mt-1">待つ → 待った</div>
                     </div>
-                    <div className="bg-white p-3 rounded-lg border border-gray-200">
-                      <span className="font-bold text-jp-primary">ぬ/ぶ/む → んだ/んで</span>
-                      <span className="text-gray-600 ml-2">読む → 読んだ</span>
+                    <div className="bg-jp-bg p-3 rounded-lg border border-gray-200">
+                      <span className="font-bold text-jp-primary japanese-text">ぬ/ぶ/む → んだ/んで</span>
+                      <div className="text-gray-600 text-sm mt-1">読む → 読んだ</div>
                     </div>
-                    <div className="bg-white p-3 rounded-lg border-2 border-jp-secondary">
-                      <span className="font-bold text-jp-secondary">特例: 行く → 行った</span>
+                    <div className="bg-jp-secondary/10 p-3 rounded-lg border-2 border-jp-secondary">
+                      <span className="font-bold text-jp-secondary japanese-text">特例: 行く → 行った</span>
                     </div>
                   </div>
                 </div>
@@ -639,6 +630,28 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
               </label>
             </div>
           </div>
+
+          {/* 遊戲難度設定 */}
+          <div>
+            <h3 className="text-lg font-semibold text-jp-text mb-3">遊戲難度</h3>
+            <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={settings.showVerbGroupHint}
+                  onChange={(e) => onSettingsChange({
+                    ...settings,
+                    showVerbGroupHint: e.target.checked
+                  })}
+                  className="w-4 h-4 text-jp-primary rounded mt-1"
+                />
+                <div>
+                  <div className="font-medium text-jp-text">顯示動詞組別提示</div>
+                  <div className="text-sm text-gray-600">在題目卡片上顯示動詞類型（五段/一段/不規則）。關閉此選項可提升真實感，需要自行判斷變化規則。</div>
+                </div>
+              </label>
+            </div>
+          </div>
         </div>
 
         <div className="p-6 border-t border-gray-200 bg-white">
@@ -813,7 +826,7 @@ function QuestionTable({ question }) {
 }
 
 // === 元件: 模式 A - 執行變化 ===
-function PerformMode({ question, onSubmit, onNext, feedback, userAnswer, voiceAvailable }) {
+function PerformMode({ question, onSubmit, onNext, feedback, userAnswer, voiceAvailable, showVerbGroupHint }) {
   const [inputValue, setInputValue] = useState('');
   const [convertedValue, setConvertedValue] = useState('');
   const inputRef = useRef(null); // 新增 ref
@@ -886,14 +899,23 @@ function PerformMode({ question, onSubmit, onNext, feedback, userAnswer, voiceAv
       {/* 動詞卡片 */}
       <div className="bg-jp-primary rounded-2xl p-8 text-white shadow-xl relative">
         <div className="text-center">
-          <div className="flex justify-center gap-2 mb-2">
-            <span className="bg-white/20 px-3 py-1 rounded-full text-sm">
-              {getVerbTypeShort(question.verb.type)}
-            </span>
-            <span className="bg-white/20 px-3 py-1 rounded-full text-sm">
-              {question.verb.level}
-            </span>
-          </div>
+          {showVerbGroupHint && (
+            <div className="flex justify-center gap-2 mb-2">
+              <span className="bg-white/20 px-3 py-1 rounded-full text-sm">
+                {getVerbTypeShort(question.verb.type)}
+              </span>
+              <span className="bg-white/20 px-3 py-1 rounded-full text-sm">
+                {question.verb.level}
+              </span>
+            </div>
+          )}
+          {!showVerbGroupHint && (
+            <div className="flex justify-center gap-2 mb-2">
+              <span className="bg-white/20 px-3 py-1 rounded-full text-sm">
+                {question.verb.level}
+              </span>
+            </div>
+          )}
           <div className="flex items-center justify-center gap-3 mb-4">
             {voiceAvailable && (
               <button
@@ -1146,7 +1168,7 @@ function InteractiveQuestionTable({ selectedTags, onTagToggle, disabled }) {
 }
 
 // === 元件: 模式 B - 識別變化 ===
-function RecognizeMode({ question, onSubmit, onNext, feedback, voiceAvailable }) {
+function RecognizeMode({ question, onSubmit, onNext, feedback, voiceAvailable, showVerbGroupHint }) {
   const [selectedTags, setSelectedTags] = useState({
     voice: null,
     mode: null,
@@ -1248,14 +1270,23 @@ function RecognizeMode({ question, onSubmit, onNext, feedback, voiceAvailable })
             )}
             <div className="text-6xl font-bold japanese-text">{question.answer}</div>
           </div>
-          <div className="flex justify-center gap-2 mt-4">
-            <span className="bg-white/20 px-3 py-1 rounded-full text-sm">
-              {getVerbTypeShort(question.verb.type)}
-            </span>
-            <span className="bg-white/20 px-3 py-1 rounded-full text-sm">
-              {question.verb.level}
-            </span>
-          </div>
+          {showVerbGroupHint && (
+            <div className="flex justify-center gap-2 mt-4">
+              <span className="bg-white/20 px-3 py-1 rounded-full text-sm">
+                {getVerbTypeShort(question.verb.type)}
+              </span>
+              <span className="bg-white/20 px-3 py-1 rounded-full text-sm">
+                {question.verb.level}
+              </span>
+            </div>
+          )}
+          {!showVerbGroupHint && (
+            <div className="flex justify-center gap-2 mt-4">
+              <span className="bg-white/20 px-3 py-1 rounded-full text-sm">
+                {question.verb.level}
+              </span>
+            </div>
+          )}
           <div className="flex items-center justify-center gap-2 text-lg opacity-75 mt-2">
             <span>(來自: {question.verb.dictionary} - {question.verb.meaning})</span>
             <button
@@ -1363,7 +1394,8 @@ function App() {
       polite: true,
       negative: true,
       past: true
-    }
+    },
+    showVerbGroupHint: false  // 新增：預設不顯示動詞組別提示
   });
 
   const [showSettings, setShowSettings] = useState(false);
@@ -1562,6 +1594,7 @@ function App() {
                   feedback={feedback}
                   userAnswer={userAnswer}
                   voiceAvailable={voiceAvailable}
+                  showVerbGroupHint={settings.showVerbGroupHint}
                 />
               ) : (
                 <RecognizeMode
@@ -1571,6 +1604,7 @@ function App() {
                   onNext={generateNewQuestion}
                   feedback={feedback}
                   voiceAvailable={voiceAvailable}
+                  showVerbGroupHint={settings.showVerbGroupHint}
                 />
               )
             )}
