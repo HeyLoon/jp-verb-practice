@@ -245,6 +245,10 @@ function applyModeAndModifiers(voicedVerb, originalVerbType, voice, mode, modifi
     if (effectiveType === 'GODAN') {
       return getGodanERow(voicedVerb);
     }
+    if (effectiveType === 'SURU' || voicedVerb.endsWith('する')) {
+      // SURU 動詞：成功する → 成功しろ
+      return voicedVerb.slice(0, -2) + 'しろ';
+    }
     if (voicedVerb === 'する') return 'しろ';
     if (voicedVerb === '来る') return '来い';
   }
@@ -258,6 +262,9 @@ function applyModeAndModifiers(voicedVerb, originalVerbType, voice, mode, modifi
       volitionalForm = voicedVerb.slice(0, -1) + 'よう';
     } else if (effectiveType === 'GODAN') {
       volitionalForm = getGodanORow(voicedVerb) + 'う';
+    } else if (effectiveType === 'SURU' || voicedVerb.endsWith('する')) {
+      // SURU 動詞：成功する → 成功しよう
+      volitionalForm = voicedVerb.slice(0, -2) + 'しよう';
     } else if (voicedVerb === 'する') {
       volitionalForm = 'しよう';
     } else if (voicedVerb === '来る') {
@@ -271,6 +278,9 @@ function applyModeAndModifiers(voicedVerb, originalVerbType, voice, mode, modifi
         masuStem = voicedVerb.slice(0, -1);
       } else if (effectiveType === 'GODAN') {
         masuStem = getGodanIRow(voicedVerb);
+      } else if (effectiveType === 'SURU' || voicedVerb.endsWith('する')) {
+        // SURU 動詞：成功する → 成功し
+        masuStem = voicedVerb.slice(0, -2) + 'し';
       } else if (voicedVerb === 'する') {
         masuStem = 'し';
       } else if (voicedVerb === '来る') {
@@ -291,6 +301,9 @@ function applyModeAndModifiers(voicedVerb, originalVerbType, voice, mode, modifi
       teForm = voicedVerb.slice(0, -1) + 'て';
     } else if (effectiveType === 'GODAN') {
       teForm = getGodanTaTeForm(voicedVerb, true);
+    } else if (effectiveType === 'SURU' || voicedVerb.endsWith('する')) {
+      // SURU 動詞：成功する → 成功して
+      teForm = voicedVerb.slice(0, -2) + 'して';
     } else if (voicedVerb === 'する') {
       teForm = 'して';
     } else if (voicedVerb === '来る') {
@@ -304,6 +317,9 @@ function applyModeAndModifiers(voicedVerb, originalVerbType, voice, mode, modifi
         naiStem = voicedVerb.slice(0, -1);
       } else if (effectiveType === 'GODAN') {
         naiStem = getGodanARow(voicedVerb);
+      } else if (effectiveType === 'SURU' || voicedVerb.endsWith('する')) {
+        // SURU 動詞：成功する → 成功し
+        naiStem = voicedVerb.slice(0, -2) + 'し';
       } else if (voicedVerb === 'する') {
         naiStem = 'し';
       } else if (voicedVerb === '来る') {
@@ -327,6 +343,10 @@ function applyModeAndModifiers(voicedVerb, originalVerbType, voice, mode, modifi
     } else if (effectiveType === 'GODAN') {
       masuStem = getGodanIRow(voicedVerb);
       naiStem = getGodanARow(voicedVerb);
+    } else if (effectiveType === 'SURU' || voicedVerb.endsWith('する')) {
+      // SURU 動詞：成功する → 成功し
+      masuStem = voicedVerb.slice(0, -2) + 'し';
+      naiStem = voicedVerb.slice(0, -2) + 'し';
     } else if (voicedVerb === 'する') {
       masuStem = 'し';
       naiStem = 'し';
@@ -353,6 +373,10 @@ function applyModeAndModifiers(voicedVerb, originalVerbType, voice, mode, modifi
       }
       if (effectiveType === 'GODAN') {
         return getGodanTaTeForm(voicedVerb, false);
+      }
+      if (effectiveType === 'SURU' || voicedVerb.endsWith('する')) {
+        // SURU 動詞：成功する → 成功した
+        return voicedVerb.slice(0, -2) + 'した';
       }
       if (voicedVerb === 'する') return 'した';
       if (voicedVerb === '来る') return '来た';
