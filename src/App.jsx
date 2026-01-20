@@ -1474,27 +1474,24 @@ function App() {
       return;
     }
     
-    // 生成新問題
-    const randomVerb = filteredVerbs[Math.floor(Math.random() * filteredVerbs.length)];
-    const question = generateQuestion(randomVerb, settings.enabledVoices, settings.enabledModes, settings.enabledModifiers);
+    // 先立即重置狀態
+    setFeedback(null);
+    setUserAnswer('');
     
-    // 更新問題ID和問題（這會觸發 useEffect 來重置狀態）
-    setQuestionId(prev => prev + 1);
-    setCurrentQuestion(question);
+    // 然後生成並設置新問題
+    setTimeout(() => {
+      const randomVerb = filteredVerbs[Math.floor(Math.random() * filteredVerbs.length)];
+      const question = generateQuestion(randomVerb, settings.enabledVoices, settings.enabledModes, settings.enabledModifiers);
+      
+      setQuestionId(prev => prev + 1);
+      setCurrentQuestion(question);
+    }, 0);
   };
 
   // 初始化第一個問題
   useEffect(() => {
     generateNewQuestion();
   }, [filteredVerbs, settings.enabledVoices, settings.enabledModes]);
-
-  // 當問題改變時，重置反饋和答案狀態
-  useEffect(() => {
-    if (currentQuestion) {
-      setFeedback(null);
-      setUserAnswer('');
-    }
-  }, [currentQuestion]);
 
   // 當模式切換時，重置反饋和答案狀態
   useEffect(() => {
