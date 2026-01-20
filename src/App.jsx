@@ -651,6 +651,116 @@ function StatsBar({ currentStreak, maxStreak, totalCorrect, totalAttempts }) {
   );
 }
 
+// === 元件: 題目表格顯示器 (僅用於顯示題目要求) ===
+function QuestionTable({ question }) {
+  // 計算哪些選項應該被標記為綠色（被選中的狀態）
+  const isFormSelected = (form) => {
+    return question.form === form;
+  };
+
+  const isModifierSelected = (modifier) => {
+    return question.modifiers && question.modifiers[modifier];
+  };
+
+  // 所有可用的基本形式
+  const allForms = [
+    CONJUGATION_FORMS.POLITE,
+    CONJUGATION_FORMS.NEGATIVE,
+    CONJUGATION_FORMS.PAST,
+    CONJUGATION_FORMS.TE_FORM,
+    CONJUGATION_FORMS.POTENTIAL,
+    CONJUGATION_FORMS.PASSIVE,
+    CONJUGATION_FORMS.CAUSATIVE,
+    CONJUGATION_FORMS.IMPERATIVE,
+    CONJUGATION_FORMS.VOLITIONAL,
+  ];
+
+  // 修飾詞選項
+  const modifiers = [
+    { key: 'polite', label: 'Polite' },
+    { key: 'negative', label: 'Negative' },
+    { key: 'past', label: 'Past' },
+  ];
+
+  return (
+    <div className="space-y-4">
+      {/* 提示文字 */}
+      <div className="text-center">
+        <div className="text-xl font-bold text-sumi">Conjugate it to:</div>
+      </div>
+
+      {/* 表格 */}
+      <div className="bg-sumi-light/10 rounded-xl overflow-hidden border-2 border-sumi-light/20">
+        {/* 表頭 */}
+        <div className="grid grid-cols-2 bg-sumi text-white">
+          <div className="px-6 py-3 text-center font-semibold border-r border-white/20">
+            Form<br/><span className="text-sm font-normal opacity-75">Conjugation</span>
+          </div>
+          <div className="px-6 py-3 text-center font-semibold">
+            Dictionary<br/><span className="text-sm font-normal opacity-75">None</span>
+          </div>
+        </div>
+
+        {/* 表格內容 */}
+        <div>
+          {/* Form 行 - 基本變化形式 */}
+          <div className="grid grid-cols-2 border-b border-sumi-light/20">
+            <div className="px-4 py-4 bg-sumi-light/5 border-r border-sumi-light/20">
+              <div className="grid grid-cols-3 gap-1.5">
+                {allForms.map(form => {
+                  const selected = isFormSelected(form);
+                  return (
+                    <div
+                      key={form}
+                      className={`px-2 py-1.5 rounded text-xs font-medium text-center ${
+                        selected
+                          ? 'bg-matcha text-white'
+                          : 'bg-washi border border-sumi-light/20 text-sumi-light'
+                      }`}
+                    >
+                      {FORM_NAMES[form]}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="px-6 py-4 flex items-center justify-center bg-washi-dark">
+              <div 
+                className={`w-6 h-6 rounded-full border-4 ${
+                  allForms.some(f => isFormSelected(f))
+                    ? 'bg-matcha border-matcha' 
+                    : 'border-akane bg-transparent'
+                }`}
+              />
+            </div>
+          </div>
+
+          {/* Dictionary (Modifiers) 行 */}
+          {modifiers.map(modifier => {
+            const selected = isModifierSelected(modifier.key);
+            return (
+              <div key={modifier.key} className="grid grid-cols-2 border-b last:border-b-0 border-sumi-light/20">
+                <div className="px-6 py-3 bg-sumi-light/5 border-r border-sumi-light/20 flex items-center">
+                  <span className="text-sumi font-medium text-sm">{modifier.label}</span>
+                </div>
+                <div className="px-6 py-3 flex items-center justify-center bg-washi-dark">
+                  <div
+                    className={`w-6 h-6 rounded-full border-4 ${
+                      selected
+                        ? 'bg-matcha border-matcha'
+                        : 'border-akane bg-transparent'
+                    }`}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // === 元件: 模式 A - 執行變化 ===
 function PerformMode({ question, onSubmit, onNext, feedback, userAnswer, voiceAvailable }) {
   const [inputValue, setInputValue] = useState('');
@@ -757,15 +867,8 @@ function PerformMode({ question, onSubmit, onNext, feedback, userAnswer, voiceAv
         </div>
       </div>
 
-      {/* 問題說明 */}
-      <div className="bg-washi-dark rounded-xl p-6 border-2 border-sumi-light/20">
-        <div className="text-center">
-          <div className="text-sm text-sumi-light mb-2">請變化為:</div>
-          <div className="text-2xl font-bold text-sumi">
-            {getQuestionDescription(question.form, question.modifiers)}
-          </div>
-        </div>
-      </div>
+      {/* 問題表格 */}
+      <QuestionTable question={question} />
 
       {/* 輸入區域 */}
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -868,6 +971,123 @@ function PerformMode({ question, onSubmit, onNext, feedback, userAnswer, voiceAv
   );
 }
 
+// === 元件: 互動式選擇表格 (用於 RecognizeMode) ===
+function InteractiveQuestionTable({ selectedTags, onTagToggle, disabled }) {
+  // 所有可用的基本形式
+  const allForms = [
+    CONJUGATION_FORMS.POLITE,
+    CONJUGATION_FORMS.NEGATIVE,
+    CONJUGATION_FORMS.PAST,
+    CONJUGATION_FORMS.TE_FORM,
+    CONJUGATION_FORMS.POTENTIAL,
+    CONJUGATION_FORMS.PASSIVE,
+    CONJUGATION_FORMS.CAUSATIVE,
+    CONJUGATION_FORMS.IMPERATIVE,
+    CONJUGATION_FORMS.VOLITIONAL,
+  ];
+
+  // 修飾詞選項
+  const modifiers = [
+    { key: 'polite', label: 'Polite' },
+    { key: 'negative', label: 'Negative' },
+    { key: 'past', label: 'Past' },
+  ];
+
+  // 判斷某個修飾詞是否應該被禁用
+  const isModifierDisabled = (modifierKey) => {
+    if (modifierKey === 'negative') return selectedTags.form === CONJUGATION_FORMS.NEGATIVE;
+    if (modifierKey === 'polite') return selectedTags.form === CONJUGATION_FORMS.POLITE;
+    if (modifierKey === 'past') return selectedTags.form === CONJUGATION_FORMS.PAST;
+    return false;
+  };
+
+  return (
+    <div className="space-y-4">
+      {/* 提示文字 */}
+      <div className="text-center">
+        <div className="text-xl font-bold text-sumi">Conjugate it to:</div>
+      </div>
+
+      {/* 表格 */}
+      <div className="bg-sumi-light/10 rounded-xl overflow-hidden border-2 border-sumi-light/20">
+        {/* 表頭 */}
+        <div className="grid grid-cols-2 bg-sumi text-white">
+          <div className="px-6 py-3 text-center font-semibold border-r border-white/20">
+            Form<br/><span className="text-sm font-normal opacity-75">Conjugation</span>
+          </div>
+          <div className="px-6 py-3 text-center font-semibold">
+            Dictionary<br/><span className="text-sm font-normal opacity-75">None</span>
+          </div>
+        </div>
+
+        {/* 表格內容 */}
+        <div>
+          {/* Form 行 - 基本變化形式 */}
+          <div className="grid grid-cols-2 border-b border-sumi-light/20">
+            <div className="px-4 py-4 bg-sumi-light/5 border-r border-sumi-light/20">
+              <div className="grid grid-cols-3 gap-1.5">
+                {allForms.map(form => {
+                  const selected = selectedTags.form === form;
+                  return (
+                    <button
+                      key={form}
+                      onClick={() => !disabled && onTagToggle('form', form)}
+                      disabled={disabled}
+                      className={`px-2 py-1.5 rounded text-xs font-medium text-center transition-all ${
+                        selected
+                          ? 'bg-matcha text-white'
+                          : 'bg-washi border border-sumi-light/20 text-sumi hover:border-matcha'
+                      } ${disabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
+                    >
+                      {FORM_NAMES[form]}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="px-6 py-4 flex items-center justify-center bg-washi-dark">
+              <div 
+                className={`w-6 h-6 rounded-full border-4 ${
+                  selectedTags.form
+                    ? 'bg-matcha border-matcha' 
+                    : 'border-akane bg-transparent'
+                }`}
+              />
+            </div>
+          </div>
+
+          {/* Dictionary (Modifiers) 行 */}
+          {modifiers.map(modifier => {
+            const selected = selectedTags[modifier.key];
+            const modDisabled = isModifierDisabled(modifier.key);
+            return (
+              <div key={modifier.key} className="grid grid-cols-2 border-b last:border-b-0 border-sumi-light/20">
+                <div className="px-6 py-3 bg-sumi-light/5 border-r border-sumi-light/20 flex items-center">
+                  <span className="text-sumi font-medium text-sm">{modifier.label}</span>
+                </div>
+                <div className="px-6 py-3 flex items-center justify-center bg-washi-dark">
+                  <button
+                    onClick={() => !disabled && !modDisabled && onTagToggle('modifier', modifier.key)}
+                    disabled={disabled || modDisabled}
+                    className={`w-6 h-6 rounded-full border-4 transition-all ${
+                      modDisabled
+                        ? 'border-sumi-light/20 bg-sumi-light/10 cursor-not-allowed'
+                        : selected
+                          ? 'bg-matcha border-matcha cursor-pointer'
+                          : 'border-akane bg-transparent cursor-pointer hover:border-akane-dark'
+                    } ${disabled && !modDisabled ? 'cursor-not-allowed opacity-60' : ''}`}
+                    title={modDisabled ? `${FORM_NAMES[selectedTags.form]}已包含${modifier.label}` : ''}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // === 元件: 模式 B - 識別變化 ===
 function RecognizeMode({ question, onSubmit, onNext, feedback, voiceAvailable }) {
   const [selectedTags, setSelectedTags] = useState({
@@ -909,8 +1129,6 @@ function RecognizeMode({ question, onSubmit, onNext, feedback, voiceAvailable })
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [feedback, onNext]);
 
-  const allForms = Object.values(CONJUGATION_FORMS);
-
   const handleSubmit = () => {
     onSubmit(selectedTags);
   };
@@ -919,13 +1137,21 @@ function RecognizeMode({ question, onSubmit, onNext, feedback, voiceAvailable })
     window.open(`https://jisho.org/search/${question.verb.dictionary}`, '_blank');
   };
 
-  // 判斷修飾詞是否應該被禁用
-  // ない形 = NEGATIVE form，所以「否定」修飾詞應該被禁用
-  // ます形 = POLITE form，所以「丁寧」修飾詞應該被禁用  
-  // た形 = PAST form，所以「過去」修飾詞應該被禁用
-  const isNegativeDisabled = selectedTags.form === CONJUGATION_FORMS.NEGATIVE;
-  const isPoliteDisabled = selectedTags.form === CONJUGATION_FORMS.POLITE;
-  const isPastDisabled = selectedTags.form === CONJUGATION_FORMS.PAST;
+  const handleTagToggle = (type, value) => {
+    if (type === 'form') {
+      const newTags = { ...selectedTags, form: value };
+      // 當選擇特定形式時，自動清除對應的修飾詞
+      if (value === CONJUGATION_FORMS.NEGATIVE) newTags.negative = false;
+      if (value === CONJUGATION_FORMS.POLITE) newTags.polite = false;
+      if (value === CONJUGATION_FORMS.PAST) newTags.past = false;
+      setSelectedTags(newTags);
+    } else if (type === 'modifier') {
+      setSelectedTags(prev => ({
+        ...prev,
+        [value]: !prev[value]
+      }));
+    }
+  };
 
   return (
     <motion.div
@@ -972,90 +1198,12 @@ function RecognizeMode({ question, onSubmit, onNext, feedback, voiceAvailable })
         </div>
       </div>
 
-      {/* 選擇變化形式 */}
-      <div className="bg-washi-dark rounded-xl p-6 border-2 border-sumi-light/20">
-        <div className="text-sm font-semibold text-sumi mb-3">選擇變化形式:</div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-          {allForms.map(form => (
-            <button
-              key={form}
-              onClick={() => {
-                const newTags = { ...selectedTags, form };
-                // 當選擇ない形時，自動清除否定修飾詞
-                if (form === CONJUGATION_FORMS.NEGATIVE) {
-                  newTags.negative = false;
-                }
-                // 當選擇ます形時，自動清除丁寧修飾詞
-                if (form === CONJUGATION_FORMS.POLITE) {
-                  newTags.polite = false;
-                }
-                // 當選擇た形時，自動清除過去修飾詞
-                if (form === CONJUGATION_FORMS.PAST) {
-                  newTags.past = false;
-                }
-                setSelectedTags(newTags);
-              }}
-              disabled={feedback !== null}
-              className={`p-3 rounded-lg border-2 transition-all font-medium ${
-                selectedTags.form === form
-                  ? 'border-aizome bg-aizome/10 text-aizome'
-                  : 'border-sumi-light/20 hover:border-sumi-light/40 text-sumi'
-              } ${feedback !== null && 'cursor-not-allowed opacity-60'}`}
-            >
-              {FORM_NAMES[form]}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* 選擇修飾詞 */}
-      <div className="bg-washi-dark rounded-xl p-6 border-2 border-sumi-light/20">
-        <div className="text-sm font-semibold text-sumi mb-3">選擇修飾詞 (可多選):</div>
-        <div className="flex flex-wrap gap-2">
-          <button
-            onClick={() => !isPoliteDisabled && setSelectedTags({ ...selectedTags, polite: !selectedTags.polite })}
-            disabled={feedback !== null || isPoliteDisabled}
-            className={`px-4 py-2 rounded-lg border-2 transition-all font-medium ${
-              isPoliteDisabled
-                ? 'border-sumi-light/10 bg-sumi-light/5 text-sumi-light/40 cursor-not-allowed'
-                : selectedTags.polite
-                ? 'border-aizome bg-aizome/10 text-aizome'
-                : 'border-sumi-light/20 hover:border-sumi-light/40 text-sumi'
-            } ${feedback !== null && !isPoliteDisabled && 'cursor-not-allowed opacity-60'}`}
-            title={isPoliteDisabled ? 'ます形已包含丁寧' : ''}
-          >
-            丁寧
-          </button>
-          <button
-            onClick={() => !isNegativeDisabled && setSelectedTags({ ...selectedTags, negative: !selectedTags.negative })}
-            disabled={feedback !== null || isNegativeDisabled}
-            className={`px-4 py-2 rounded-lg border-2 transition-all font-medium ${
-              isNegativeDisabled
-                ? 'border-sumi-light/10 bg-sumi-light/5 text-sumi-light/40 cursor-not-allowed'
-                : selectedTags.negative
-                ? 'border-akane bg-akane/10 text-akane'
-                : 'border-sumi-light/20 hover:border-sumi-light/40 text-sumi'
-            } ${feedback !== null && !isNegativeDisabled && 'cursor-not-allowed opacity-60'}`}
-            title={isNegativeDisabled ? 'ない形已包含否定' : ''}
-          >
-            否定
-          </button>
-          <button
-            onClick={() => !isPastDisabled && setSelectedTags({ ...selectedTags, past: !selectedTags.past })}
-            disabled={feedback !== null || isPastDisabled}
-            className={`px-4 py-2 rounded-lg border-2 transition-all font-medium ${
-              isPastDisabled
-                ? 'border-sumi-light/10 bg-sumi-light/5 text-sumi-light/40 cursor-not-allowed'
-                : selectedTags.past
-                ? 'border-matcha bg-matcha/10 text-matcha-dark'
-                : 'border-sumi-light/20 hover:border-sumi-light/40 text-sumi'
-            } ${feedback !== null && !isPastDisabled && 'cursor-not-allowed opacity-60'}`}
-            title={isPastDisabled ? 'た形已包含過去' : ''}
-          >
-            過去
-          </button>
-        </div>
-      </div>
+      {/* 互動式選擇表格 */}
+      <InteractiveQuestionTable
+        selectedTags={selectedTags}
+        onTagToggle={handleTagToggle}
+        disabled={feedback !== null}
+      />
 
       {/* 提交按鈕 */}
       {feedback === null ? (
