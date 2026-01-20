@@ -12,7 +12,8 @@ export default {
         'jp-bg': '#f8f9fb',         // 應用程式背景（淡白色）
         'jp-primary': '#EEB8C4',    // 主要按鈕/互動元素（櫻花粉）
         'jp-secondary': '#D0574E',  // 錯誤狀態/「答錯」回饋（柔和紅）
-        'jp-accent': '#E6D47B',     // 成功狀態/「正確」回饋/強調（柔和金）
+        'jp-accent': '#E6D47B',     // 強調色（柔和金）
+        'jp-success': '#8BA888',    // 成功狀態/「正確」回饋（抹茶綠）
         
         // === 以下為舊配色（保留以便漸進式遷移）===
         // Classic Japanese Indigo & Washi Paper Color Scheme

@@ -667,21 +667,21 @@ function StatsBar({ currentStreak, maxStreak, totalCorrect, totalAttempts }) {
         </div>
         <div className="text-3xl font-bold">{currentStreak}</div>
       </div>
-      <div className="bg-jp-accent rounded-xl p-4 text-white">
+      <div className="bg-jp-text rounded-xl p-4 text-white">
         <div className="flex items-center gap-2 mb-1">
           <Trophy className="w-5 h-5" />
           <span className="text-sm font-medium opacity-90">最高連勝</span>
         </div>
         <div className="text-3xl font-bold">{maxStreak}</div>
       </div>
-      <div className="bg-jp-accent/80 rounded-xl p-4 text-white">
+      <div className="bg-jp-accent rounded-xl p-4 text-white">
         <div className="flex items-center gap-2 mb-1">
           <CheckCircle2 className="w-5 h-5" />
           <span className="text-sm font-medium opacity-90">正確率</span>
         </div>
         <div className="text-3xl font-bold">{accuracy}%</div>
       </div>
-      <div className="bg-jp-text rounded-xl p-4 text-white">
+      <div className="bg-jp-secondary rounded-xl p-4 text-white">
         <div className="flex items-center gap-2 mb-1">
           <Sparkles className="w-5 h-5" />
           <span className="text-sm font-medium opacity-90">總題數</span>
@@ -750,7 +750,7 @@ function QuestionTable({ question }) {
                 key={voice}
                 className={`px-3 py-3 text-center border-r last:border-r-0 border-gray-200 transition-all ${
                   selected
-                    ? 'bg-jp-accent text-white font-bold'
+                    ? 'bg-jp-success text-white font-bold'
                     : 'bg-white text-gray-600'
                 }`}
               >
@@ -772,7 +772,7 @@ function QuestionTable({ question }) {
                 key={mode}
                 className={`px-3 py-3 text-center border-r last:border-r-0 border-gray-200 transition-all ${
                   selected
-                    ? 'bg-jp-accent text-white font-bold'
+                    ? 'bg-jp-success text-white font-bold'
                     : 'bg-white text-gray-600'
                 }`}
               >
@@ -797,7 +797,7 @@ function QuestionTable({ question }) {
                   !allowed
                     ? 'bg-gray-100 opacity-40'
                     : selected
-                      ? 'bg-jp-accent text-white font-bold'
+                      ? 'bg-jp-success text-white font-bold'
                       : 'bg-white text-gray-600'
                 }`}
               >
@@ -935,7 +935,7 @@ function PerformMode({ question, onSubmit, onNext, feedback, userAnswer, voiceAv
               feedback === null
                 ? 'border-gray-300 focus:border-jp-primary focus:ring-4 focus:ring-jp-primary/20 bg-white'
                 : feedback.correct
-                ? 'border-jp-accent bg-jp-accent/10'
+                ? 'border-jp-success bg-jp-success/10'
                 : 'border-jp-secondary bg-jp-secondary/10'
             } outline-none`}
           />
@@ -962,17 +962,17 @@ function PerformMode({ question, onSubmit, onNext, feedback, userAnswer, voiceAv
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               className={`p-6 rounded-xl ${
-                feedback.correct ? 'bg-jp-accent/20 border-2 border-jp-accent' : 'bg-jp-secondary/20 border-2 border-jp-secondary'
+                feedback.correct ? 'bg-jp-success/20 border-2 border-jp-success' : 'bg-jp-secondary/20 border-2 border-jp-secondary'
               }`}
             >
               <div className="flex items-start gap-4">
                 {feedback.correct ? (
-                  <CheckCircle2 className="w-8 h-8 text-jp-accent flex-shrink-0" />
+                  <CheckCircle2 className="w-8 h-8 text-jp-success flex-shrink-0" />
                 ) : (
                   <XCircle className="w-8 h-8 text-jp-secondary flex-shrink-0" />
                 )}
                 <div className="flex-1">
-                  <div className={`text-xl font-bold mb-3 ${feedback.correct ? 'text-jp-accent' : 'text-jp-secondary'}`}>
+                  <div className={`text-xl font-bold mb-3 ${feedback.correct ? 'text-jp-success' : 'text-jp-secondary'}`}>
                     {feedback.correct ? '正確! 太棒了!' : '答錯了,再接再厲!'}
                   </div>
                   
@@ -987,14 +987,14 @@ function PerformMode({ question, onSubmit, onNext, feedback, userAnswer, voiceAv
                     </div>
                     <div className="flex items-center gap-2 text-sm">
                       <span className="font-semibold text-jp-text">正確答案:</span>
-                      <span className="japanese-text text-xl text-jp-accent font-bold">{question.answer}</span>
+                      <span className="japanese-text text-xl text-jp-success font-bold">{question.answer}</span>
                       {voiceAvailable && (
                         <button
                           onClick={() => speakJapanese(question.answer)}
                           className="p-1 hover:bg-gray-100 rounded transition-colors"
                           title="朗讀答案"
                         >
-                          <Volume2 className="w-4 h-4 text-jp-accent" />
+                          <Volume2 className="w-4 h-4 text-jp-success" />
                         </button>
                       )}
                     </div>
@@ -1078,8 +1078,8 @@ function InteractiveQuestionTable({ selectedTags, onTagToggle, disabled }) {
                 disabled={disabled}
                 className={`px-3 py-3 text-center border-r last:border-r-0 border-gray-200 transition-all ${
                   selected
-                    ? 'bg-jp-accent text-white font-bold'
-                    : 'bg-white text-gray-600 hover:bg-jp-accent/20'
+                    ? 'bg-jp-success text-white font-bold'
+                    : 'bg-white text-gray-600 hover:bg-jp-success/20'
                 } ${disabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
               >
                 <div className="text-xs">{VOICE_NAMES[voice]}</div>
@@ -1102,8 +1102,8 @@ function InteractiveQuestionTable({ selectedTags, onTagToggle, disabled }) {
                 disabled={disabled}
                 className={`px-3 py-3 text-center border-r last:border-r-0 border-gray-200 transition-all ${
                   selected
-                    ? 'bg-jp-accent text-white font-bold'
-                    : 'bg-white text-gray-600 hover:bg-jp-accent/20'
+                    ? 'bg-jp-success text-white font-bold'
+                    : 'bg-white text-gray-600 hover:bg-jp-success/20'
                 } ${disabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}`}
               >
                 <div className="text-xs">{MODE_NAMES[mode]}</div>
@@ -1130,8 +1130,8 @@ function InteractiveQuestionTable({ selectedTags, onTagToggle, disabled }) {
                   modDisabled
                     ? 'bg-gray-100 text-gray-400 cursor-not-allowed opacity-40'
                     : selected
-                      ? 'bg-jp-accent text-white font-bold cursor-pointer'
-                      : 'bg-white text-gray-600 cursor-pointer hover:bg-jp-accent/20'
+                      ? 'bg-jp-success text-white font-bold cursor-pointer'
+                      : 'bg-white text-gray-600 cursor-pointer hover:bg-jp-success/20'
                 }`}
               >
                 <div className="text-xs">{modifier.labelCN}</div>
@@ -1292,17 +1292,17 @@ function RecognizeMode({ question, onSubmit, onNext, feedback, voiceAvailable })
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             className={`p-6 rounded-xl ${
-              feedback.correct ? 'bg-jp-accent/20 border-2 border-jp-accent' : 'bg-jp-secondary/20 border-2 border-jp-secondary'
+              feedback.correct ? 'bg-jp-success/20 border-2 border-jp-success' : 'bg-jp-secondary/20 border-2 border-jp-secondary'
             }`}
           >
             <div className="flex items-start gap-4">
               {feedback.correct ? (
-                <CheckCircle2 className="w-8 h-8 text-jp-accent flex-shrink-0" />
+                <CheckCircle2 className="w-8 h-8 text-jp-success flex-shrink-0" />
               ) : (
                 <XCircle className="w-8 h-8 text-jp-secondary flex-shrink-0" />
               )}
               <div className="flex-1">
-                <div className={`text-xl font-bold mb-3 ${feedback.correct ? 'text-jp-accent' : 'text-jp-secondary'}`}>
+                <div className={`text-xl font-bold mb-3 ${feedback.correct ? 'text-jp-success' : 'text-jp-secondary'}`}>
                   {feedback.correct ? '正確! 太棒了!' : '答錯了,再接再厵!'}
                 </div>
                 
@@ -1317,14 +1317,14 @@ function RecognizeMode({ question, onSubmit, onNext, feedback, voiceAvailable })
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <span className="font-semibold text-jp-text">變化結果:</span>
-                    <span className="japanese-text text-xl text-jp-accent font-bold">{question.answer}</span>
+                    <span className="japanese-text text-xl text-jp-success font-bold">{question.answer}</span>
                     {voiceAvailable && (
                       <button
                         onClick={() => speakJapanese(question.answer)}
                         className="p-1 hover:bg-gray-100 rounded transition-colors"
                         title="朗讀"
                       >
-                        <Volume2 className="w-4 h-4 text-jp-accent" />
+                        <Volume2 className="w-4 h-4 text-jp-success" />
                       </button>
                     )}
                   </div>
