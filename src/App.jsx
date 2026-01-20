@@ -514,8 +514,8 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
 
           {/* Voice Selection (Layer A: 態) */}
           <div>
-            <h3 className="text-lg font-semibold text-jp-text mb-3">第一層：態</h3>
-            <div className="text-sm text-gray-600 mb-2">選擇要練習的動詞態（基本形、可能形、受身形等）</div>
+            <h3 className="text-lg font-semibold text-jp-text mb-3">動詞型態</h3>
+            <div className="text-sm text-gray-600 mb-2">選擇要練習的動詞型態（基本形、可能形、受身形等）</div>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {allVoices.map(voice => (
                 <label
@@ -547,7 +547,7 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
 
           {/* Mode Selection (Layer B: 模式) */}
           <div>
-            <h3 className="text-lg font-semibold text-jp-text mb-3">第二層：模式</h3>
+            <h3 className="text-lg font-semibold text-jp-text mb-3">動詞模式</h3>
             <div className="text-sm text-gray-600 mb-2">選擇要練習的動詞模式（標準形、て形、意向形等）</div>
             <div className="grid grid-cols-2 sm:grid-cols-2 gap-2">
               {allModes.map(mode => (
@@ -580,7 +580,7 @@ function SettingsModal({ isOpen, onClose, settings, onSettingsChange }) {
 
           {/* Modifier Selection (Layer C: 修飾詞) */}
           <div>
-            <h3 className="text-lg font-semibold text-jp-text mb-3">第三層：修飾詞</h3>
+            <h3 className="text-lg font-semibold text-jp-text mb-3">修飾詞</h3>
             <div className="text-sm text-gray-600 mb-2">選擇要練習的修飾詞（丁寧、否定、過去）</div>
             <div className="space-y-2">
               <label className="flex items-center gap-3 p-3 rounded-lg border-2 border-gray-200 hover:border-gray-300 cursor-pointer transition-all">
@@ -753,7 +753,7 @@ function QuestionTable({ question }) {
         
         {/* === 第一層：態 === */}
         <div className="bg-jp-text text-white px-6 py-2 text-center font-semibold text-sm">
-          第一層：態
+          動詞型態
         </div>
         <div className="grid grid-cols-5 border-b-2 border-gray-200">
           {allVoices.map(voice => {
@@ -775,7 +775,7 @@ function QuestionTable({ question }) {
 
         {/* === 第二層：模式 === */}
         <div className="bg-jp-text text-white px-6 py-2 text-center font-semibold text-sm">
-          第二層：模式
+          動詞型式
         </div>
         <div className="grid grid-cols-4 border-b-2 border-gray-200">
           {allModes.map(mode => {
@@ -797,7 +797,7 @@ function QuestionTable({ question }) {
 
         {/* === 第三層：修飾詞 === */}
         <div className="bg-jp-text text-white px-6 py-2 text-center font-semibold text-sm">
-          第三層：修飾詞
+          修飾詞
         </div>
         <div className="grid grid-cols-3">
           {allModifiers.map(modifier => {
@@ -1088,7 +1088,7 @@ function InteractiveQuestionTable({ selectedTags, onTagToggle, disabled }) {
         
         {/* === 第一層：態 === */}
         <div className="bg-jp-text text-white px-6 py-2 text-center font-semibold text-sm">
-          第一層：態
+          動詞型態
         </div>
         <div className="grid grid-cols-5 border-b-2 border-gray-200">
           {allVoices.map(voice => {
@@ -1112,7 +1112,7 @@ function InteractiveQuestionTable({ selectedTags, onTagToggle, disabled }) {
 
         {/* === 第二層：模式 === */}
         <div className="bg-jp-text text-white px-6 py-2 text-center font-semibold text-sm">
-          第二層：模式
+          動詞模式
         </div>
         <div className="grid grid-cols-4 border-b-2 border-gray-200">
           {allModes.map(mode => {
@@ -1136,7 +1136,7 @@ function InteractiveQuestionTable({ selectedTags, onTagToggle, disabled }) {
 
         {/* === 第三層：修飾詞 === */}
         <div className="bg-jp-text text-white px-6 py-2 text-center font-semibold text-sm">
-          第三層：修飾詞
+          修飾詞
         </div>
         <div className="grid grid-cols-3">
           {allModifiers.map(modifier => {
