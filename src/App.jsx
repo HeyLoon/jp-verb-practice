@@ -844,6 +844,14 @@ function PerformMode({ question, onSubmit, onNext, feedback, userAnswer, voiceAv
     }, 100);
   }, [question]);
 
+  // 當 feedback 被重置時，也清除輸入框
+  useEffect(() => {
+    if (feedback === null) {
+      setInputValue('');
+      setConvertedValue('');
+    }
+  }, [feedback]);
+
   const handleInputChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
@@ -1192,6 +1200,21 @@ function RecognizeMode({ question, onSubmit, onNext, feedback, voiceAvailable, s
     // 自動朗讀變化後的動詞
     speakJapanese(question.answer);
   }, [question]);
+
+  // 當 feedback 被重置時，也清除選擇狀態
+  useEffect(() => {
+    if (feedback === null) {
+      setSelectedTags({
+        voice: null,
+        mode: null,
+        modifiers: {
+          polite: false,
+          negative: false,
+          past: false
+        }
+      });
+    }
+  }, [feedback]);
 
   // 答對時再次朗讀
   useEffect(() => {
