@@ -1473,20 +1473,34 @@ function App() {
     if (filteredVerbs.length === 0) {
       return;
     }
-    // 先重置狀態
-    setFeedback(null);
-    setUserAnswer('');
-    // 然後生成新問題
+    
+    // 生成新問題
     const randomVerb = filteredVerbs[Math.floor(Math.random() * filteredVerbs.length)];
     const question = generateQuestion(randomVerb, settings.enabledVoices, settings.enabledModes, settings.enabledModifiers);
+    
+    // 更新問題ID和問題（這會觸發 useEffect 來重置狀態）
+    setQuestionId(prev => prev + 1);
     setCurrentQuestion(question);
-    setQuestionId(prev => prev + 1); // 更新問題ID，強制重新渲染
   };
 
   // 初始化第一個問題
   useEffect(() => {
     generateNewQuestion();
   }, [filteredVerbs, settings.enabledVoices, settings.enabledModes]);
+
+  // 當問題改變時，重置反饋和答案狀態
+  useEffect(() => {
+    if (currentQuestion) {
+      setFeedback(null);
+      setUserAnswer('');
+    }
+  }, [currentQuestion]);
+
+  // 當模式切換時，重置反饋和答案狀態
+  useEffect(() => {
+    setFeedback(null);
+    setUserAnswer('');
+  }, [settings.mode]);
 
   // 處理答案提交 (模式 A)
   const handlePerformSubmit = (answer) => {
@@ -1636,7 +1650,10 @@ function App() {
                   userAnswer={userAnswer}
                   voiceAvailable={voiceAvailable}
                   showVerbGroupHint={settings.showVerbGroupHint}
-                  onInputStart={() => setFeedback(null)}
+                  onInputStart={() => {
+                    setFeedback(null);
+                    setUserAnswer('');
+                  }}
                 />
               ) : (
                 <RecognizeMode
@@ -1647,7 +1664,10 @@ function App() {
                   feedback={feedback}
                   voiceAvailable={voiceAvailable}
                   showVerbGroupHint={settings.showVerbGroupHint}
-                  onInputStart={() => setFeedback(null)}
+                  onInputStart={() => {
+                    setFeedback(null);
+                    setUserAnswer('');
+                  }}
                 />
               )
             )}
